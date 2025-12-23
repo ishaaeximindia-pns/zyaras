@@ -108,16 +108,18 @@ export default function AdminOrdersPage() {
                             </Badge>
                         </div>
                         {order.status === 'Shipped' && (
-                            <div className="grid grid-cols-2 gap-2 mt-2">
+                            <div className="flex items-center gap-2">
                                 <Input 
                                     placeholder="Carrier Name" 
                                     value={order.carrier || ''}
                                     onChange={(e) => handleShippingInfoChange(order.id, 'carrier', e.target.value)}
+                                    className="h-9"
                                 />
                                 <Input 
                                     placeholder="Tracking Number" 
                                     value={order.trackingNumber || ''}
                                     onChange={(e) => handleShippingInfoChange(order.id, 'trackingNumber', e.target.value)}
+                                    className="h-9"
                                 />
                             </div>
                         )}
