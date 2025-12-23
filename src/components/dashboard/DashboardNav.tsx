@@ -36,7 +36,7 @@ import CartSheet from '../cart/CartSheet';
 import { useCart } from '@/context/CartContext';
 import { products } from '@/data';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 
 interface CategoryWithSubcategories {
@@ -45,16 +45,13 @@ interface CategoryWithSubcategories {
   icon: React.ElementType;
 }
 
-export default function DashboardNav() {
-  const pathname = usePathname();
+function CategoryList() {
   const searchParams = useSearchParams();
-  const isActive = (path: string) => pathname === path;
-  const { cart } = useCart();
-  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const model = searchParams.get('model') || 'B2C';
+  const activeCategory = searchParams.get('category');
+  const activeSubcategory = searchParams.get('subcategory');
 
   const [openCategories, setOpenCategories] = useState<string[]>(['Women', 'Men', 'Kids', 'Services']);
-
-  const model = searchParams.get('model') || 'B2C';
 
   const categories = useMemo(() => {
     const productModel = model as 'B2C' | 'B2B';
@@ -71,7 +68,6 @@ export default function DashboardNav() {
       if (categoryMap[p.category]) {
         categoryMap[p.category].subcategories.add(p.subcategory);
       } else {
-        // Fallback for other categories
         if (!categoryMap[p.category]) {
            categoryMap[p.category] = { icon: Tag, subcategories: new Set() };
         }
@@ -89,17 +85,67 @@ export default function DashboardNav() {
 
   }, [model]);
 
-  const activeCategory = searchParams.get('category');
-  const activeSubcategory = searchParams.get('subcategory');
-
   const toggleCategory = (categoryName: string) => {
-    setOpenCategories(prev => 
+    setOpenCategories(prev =>
       prev.includes(categoryName)
         ? prev.filter(c => c !== categoryName)
         : [...prev, categoryName]
     );
   };
-  
+
+  return (
+    <>
+      {categories.map((category) => {
+        const Icon = category.icon;
+        return (
+          <SidebarMenuItem key={category.name}>
+            <Collapsible open={openCategories.includes(category.name)} onOpenChange={() => toggleCategory(category.name)}>
+              <CollapsibleTrigger asChild>
+                 <SidebarMenuButton variant="ghost" className="w-full justify-start pr-2">
+                   <Icon className="h-4 w-4 mr-2" />
+                  <span>{category.name}</span>
+                  <ChevronDown className={cn("ml-auto h-4 w-4 transition-transform", openCategories.includes(category.name) && "rotate-180")} />
+                </SidebarMenuButton>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <SidebarMenuSub>
+                  {category.subcategories.map((subcategory) => (
+                    <SidebarMenuSubItem key={subcategory}>
+                      <SidebarMenuSubButton
+                        asChild
+                        isActive={activeSubcategory === subcategory}
+                      >
+                        <Link href={`/dashboard?model=${model}&category=${category.name}&subcategory=${subcategory}`}>
+                          {subcategory}
+                        </Link>
+                      </SidebarMenuSubButton>
+                    </SidebarMenuSubItem>
+                  ))}
+                </SidebarMenuSub>
+              </CollapsibleContent>
+            </Collapsible>
+          </SidebarMenuItem>
+        )
+      })}
+    </>
+  );
+}
+
+
+export default function DashboardNav() {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const isActive = (path: string) => pathname === path;
+  const { cart } = useCart();
+  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+  const model = searchParams.get('model') || 'B2C';
+
+  const [isClient, setIsClient] = useState(false);
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   return (
     <Sidebar>
       <SidebarHeader>
@@ -125,48 +171,19 @@ export default function DashboardNav() {
           </SidebarGroup>
           <SidebarGroup>
             <SidebarGroupLabel>Shop</SidebarGroupLabel>
-            
+
             <SidebarMenuItem>
-              <SidebarMenuButton 
-                asChild 
-                isActive={!activeCategory || activeCategory === 'all'}
+              <SidebarMenuButton
+                asChild
+                isActive={!searchParams.get('category') || searchParams.get('category') === 'all'}
               >
                 <Link href={`/dashboard?model=${model}&category=all`}>
                   <Tag /> All Products
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
-            
-            {categories.map((category) => {
-              const Icon = category.icon;
-              return (
-                <Collapsible key={category.name} open={openCategories.includes(category.name)} onOpenChange={() => toggleCategory(category.name)}>
-                  <CollapsibleTrigger asChild>
-                     <SidebarMenuButton variant="ghost" className="w-full justify-start pr-2">
-                       <Icon className="h-4 w-4 mr-2" />
-                      <span>{category.name}</span>
-                      <ChevronDown className={cn("ml-auto h-4 w-4 transition-transform", openCategories.includes(category.name) && "rotate-180")} />
-                    </SidebarMenuButton>
-                  </CollapsibleTrigger>
-                  <CollapsibleContent>
-                    <SidebarMenuSub>
-                      {category.subcategories.map((subcategory) => (
-                        <SidebarMenuSubItem key={subcategory}>
-                          <SidebarMenuSubButton 
-                            asChild 
-                            isActive={activeSubcategory === subcategory}
-                          >
-                            <Link href={`/dashboard?model=${model}&category=${category.name}&subcategory=${subcategory}`}>
-                              {subcategory}
-                            </Link>
-                          </SidebarMenuSubButton>
-                        </SidebarMenuSubItem>
-                      ))}
-                    </SidebarMenuSub>
-                  </CollapsibleContent>
-                </Collapsible>
-              )
-            })}
+
+            {isClient && <CategoryList />}
 
              <SidebarMenuItem>
                 <CartSheet>
