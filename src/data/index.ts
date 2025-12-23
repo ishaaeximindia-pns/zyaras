@@ -134,7 +134,7 @@ export const products: Product[] = [
       'Our signature Oxford shirt is cut from high-quality cotton for a soft, breathable feel. A versatile piece for any wardrobe.',
     keyBenefit: 'All-Day Comfort',
     price: 55,
-    isFeatured: false,
+    isFeatured: true,
     heroImage: 'product-data-sphere',
     features: [
       {
@@ -309,7 +309,7 @@ export const products: Product[] = [
     description: 'A classic leather belt made from genuine leather with a solid brass buckle. A durable and stylish accessory for any man.',
     keyBenefit: 'Durable & Classic',
     price: 48,
-    status: 'Popular',
+    status: 'Sale',
     isFeatured: false,
     heroImage: 'use-case-2',
     features: [
@@ -321,6 +321,56 @@ export const products: Product[] = [
     faqs: [],
     pricing: [
       { name: 'Standard', price: '48', priceSuffix: '', features: ['5-Year Warranty', 'Free Shipping'], cta: 'Add to Cart', isFeatured: true },
+    ]
+  },
+  {
+    id: '8',
+    slug: 'floral-print-dress',
+    name: 'Floral Print Dress',
+    category: 'Women',
+    subcategory: 'Dresses',
+    model: 'B2C',
+    tagline: 'Bloom with style.',
+    description: 'A beautiful floral dress with a flattering silhouette. Made from lightweight fabric, it\'s perfect for sunny days.',
+    keyBenefit: 'Light & Airy',
+    price: 85,
+    status: 'New',
+    isFeatured: false,
+    heroImage: 'product-pixel-forge',
+    features: [
+      { title: 'Vibrant Floral Print', description: 'A stunning and colorful print that stands out.', icon: 'Flower' },
+      { title: 'Comfortable Fabric', description: 'Made from a soft, breathable material for all-day comfort.', icon: 'Wind' },
+      { title: 'Elegant Design', description: 'Features a cinched waist and flowing skirt for a classic look.', icon: 'Sparkles' },
+    ],
+    useCases: [],
+    faqs: [],
+    pricing: [
+      { name: 'Standard', price: '85', priceSuffix: '', features: ['Free Shipping', 'Easy Returns'], cta: 'Add to Cart', isFeatured: true },
+    ]
+  },
+  {
+    id: '9',
+    slug: 'graphic-print-tshirt',
+    name: 'Kids\' Graphic T-Shirt',
+    category: 'Kids',
+    subcategory: 'T-Shirts',
+    model: 'B2C',
+    tagline: 'Cool and comfy for everyday adventures.',
+    description: 'A fun and comfortable t-shirt with a playful graphic print. Made from 100% cotton for a soft feel.',
+    keyBenefit: 'Playful & Durable',
+    price: 22,
+    status: 'New',
+    isFeatured: false,
+    heroImage: 'product-connect-iq',
+    features: [
+      { title: '100% Cotton', description: 'Soft and breathable cotton that\'s perfect for kids.', icon: 'Leaf' },
+      { title: 'Fun Graphic', description: 'A cool, kid-friendly graphic that adds a touch of personality.', icon: 'Smile' },
+      { title: 'Durable Construction', description: 'Made to withstand playtime and frequent washing.', icon: 'ShieldCheck' },
+    ],
+    useCases: [],
+    faqs: [],
+    pricing: [
+      { name: 'Standard', price: '22', priceSuffix: '', features: ['Free Shipping on orders over $50', 'Easy Returns'], cta: 'Add to Cart', isFeatured: true },
     ]
   }
 ];
