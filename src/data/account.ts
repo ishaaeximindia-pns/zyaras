@@ -1,5 +1,7 @@
 
-export const orders = [
+import type { Order, Transaction } from '@/lib/types';
+
+export const orders: Order[] = [
   {
     id: 'ORD-001',
     transactionId: 'TRN-001',
@@ -45,7 +47,7 @@ export const orders = [
   },
 ];
 
-export const transactions = [
+export const transactions: Transaction[] = [
     {
         id: 'TRN-001',
         date: '2024-07-28',

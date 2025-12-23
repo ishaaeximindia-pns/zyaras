@@ -46,3 +46,26 @@ export type CartItem = {
   product: Product;
   quantity: number;
 };
+
+export type OrderItem = {
+  name: string;
+  quantity: number;
+  price: number;
+}
+
+export type Order = {
+  id: string;
+  transactionId: string;
+  date: string;
+  status: 'Processing' | 'Shipped' | 'Delivered' | 'Cancelled';
+  total: number;
+  items: OrderItem[];
+};
+
+export type Transaction = {
+    id: string;
+    date: string;
+    amount: number;
+    paymentMethod: string;
+    status: 'Completed' | 'Pending' | 'Failed';
+}

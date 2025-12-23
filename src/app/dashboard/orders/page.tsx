@@ -14,7 +14,7 @@ import { useCart } from '@/context/CartContext';
 import { products } from '@/data';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
-import type { CartItem } from '@/lib/types';
+import type { CartItem, OrderItem } from '@/lib/types';
 
 
 export default function OrdersPage() {
@@ -26,7 +26,7 @@ export default function OrdersPage() {
     setOpenOrderId(prevId => (prevId === orderId ? null : orderId));
   };
   
-  const handleRepeatOrder = (orderItems: { name: string; quantity: number; price: number }[]) => {
+  const handleRepeatOrder = (orderItems: OrderItem[]) => {
     const itemsToAdd: CartItem[] = [];
     orderItems.forEach(orderItem => {
       const product = products.find(p => p.name === orderItem.name);
@@ -109,6 +109,7 @@ export default function OrdersPage() {
                                 "bg-green-500/10 text-green-700 border-green-500/20": order.status === 'Delivered',
                                 "bg-yellow-500/10 text-yellow-700 border-yellow-500/20": order.status === 'Shipped',
                                 "bg-blue-500/10 text-blue-700 border-blue-500/20": order.status === 'Processing',
+                                "bg-gray-500/10 text-gray-700 border-gray-500/20": order.status === 'Cancelled',
                             })}
                           >
                             {order.status}
