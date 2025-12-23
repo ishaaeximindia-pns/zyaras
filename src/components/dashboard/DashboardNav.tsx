@@ -15,7 +15,6 @@ import {
   SidebarGroupLabel,
   SidebarMenuSub,
   SidebarMenuSubButton,
-  SidebarMenuSubItem,
 } from '@/components/ui/sidebar';
 import Logo from '@/components/shared/Logo';
 import {
@@ -110,7 +109,7 @@ function CategoryList() {
               <CollapsibleContent>
                 <SidebarMenuSub>
                   {category.subcategories.map((subcategory) => (
-                    <SidebarMenuSubItem key={subcategory}>
+                    <SidebarMenuItem key={subcategory}>
                       <SidebarMenuSubButton
                         asChild
                         isActive={activeSubcategory === subcategory}
@@ -119,7 +118,7 @@ function CategoryList() {
                           {subcategory}
                         </Link>
                       </SidebarMenuSubButton>
-                    </SidebarMenuSubItem>
+                    </SidebarMenuItem>
                   ))}
                 </SidebarMenuSub>
               </CollapsibleContent>
