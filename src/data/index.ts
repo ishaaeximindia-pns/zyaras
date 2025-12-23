@@ -3,258 +3,269 @@ import type { Product } from '@/lib/types';
 export const products: Product[] = [
   {
     id: '1',
-    slug: 'nexus-flow',
-    name: 'NexusFlow',
-    category: 'Productivity',
-    subcategory: 'Task Management',
+    slug: 'classic-blue-jeans',
+    name: 'Classic Blue Jeans',
+    category: 'Women',
+    subcategory: 'Jeans',
     model: 'B2C',
-    tagline: 'Orchestrate Your Workflow, Seamlessly.',
+    tagline: 'Timeless style and comfort.',
     description:
-      'NexusFlow is a revolutionary productivity tool that integrates all your apps into a single, intuitive dashboard. Automate tasks, manage projects, and collaborate with your team like never before.',
-    keyBenefit: 'Unified Workflow',
-    price: 25,
+      'Our Classic Blue Jeans are made from premium denim for a perfect fit that lasts. A wardrobe staple for any occasion.',
+    keyBenefit: 'Perfect Fit',
+    price: 68,
     status: 'Popular',
     heroImage: 'product-nexus-flow',
     features: [
       {
-        title: 'Unified Dashboard',
-        description: 'Connect all your tools and view them in one centralized hub.',
-        icon: 'LayoutGrid',
+        title: 'Premium Denim',
+        description: 'Made with high-quality, durable denim that softens with every wash.',
+        icon: 'Copy',
       },
       {
-        title: 'Advanced Automation',
-        description: 'Create complex automation rules with a simple drag-and-drop interface.',
-        icon: 'Cpu',
+        title: 'Flattering Fit',
+        description: 'Designed to hug your curves in all the right places for a confident look.',
+        icon: 'PersonStanding',
       },
       {
-        title: 'Team Collaboration',
-        description: 'Assign tasks, share files, and communicate with your team in real-time.',
-        icon: 'Users',
+        title: 'Versatile Style',
+        description: 'Easily dress them up or down for a casual day out or a night on the town.',
+        icon: 'Sparkles',
       },
     ],
     useCases: [
       {
-        title: 'Project Management for Agile Teams',
+        title: 'Casual Weekend Wear',
         description:
-          'Use NexusFlow to manage sprints, track progress, and facilitate communication, ensuring your projects are delivered on time.',
+          'Pair with a simple t-shirt and sneakers for a relaxed and stylish weekend outfit.',
         image: 'use-case-1',
       },
       {
-        title: 'Automated Client Onboarding',
+        title: 'Evening Out',
         description:
-          'Set up automated workflows to onboard new clients, from sending welcome emails to creating project folders and assigning team members.',
+          'Combine with a chic blouse and heels for a sophisticated evening look.',
         image: 'use-case-2',
       },
     ],
     faqs: [
       {
-        question: 'What integrations does NexusFlow support?',
-        answer: 'NexusFlow supports over 100 popular apps, including Slack, Google Drive, Trello, and Salesforce. We are constantly adding new integrations.',
+        question: 'What is the inseam length?',
+        answer: 'Our Classic Blue Jeans come in three inseam lengths: 28" (petite), 30" (regular), and 32" (tall).',
       },
       {
-        question: 'Is there a limit to the number of automations I can create?',
+        question: 'How should I care for my jeans?',
         answer:
-          'The number of automations depends on your pricing plan. Our Enterprise plan offers unlimited automations.',
+          'To maintain the color and fit, we recommend washing in cold water and hanging to dry.',
       },
     ],
-    pricing: [
-      { name: 'Basic', price: '15', priceSuffix: '/ user / mo', features: ['5 Integrations', '10 Automations', 'Basic Support'], cta: 'Choose Basic' },
-      { name: 'Pro', price: '25', priceSuffix: '/ user / mo', features: ['50 Integrations', 'Unlimited Automations', 'Priority Support', 'Team Collaboration'], cta: 'Choose Pro', isFeatured: true },
-      { name: 'Enterprise', price: 'Contact Us', priceSuffix: '', features: ['Unlimited Integrations', 'Advanced Security', 'Dedicated Account Manager'], cta: 'Contact Sales' }
+     pricing: [
+      { name: 'Standard', price: '68', priceSuffix: '', features: ['1-Year Warranty', 'Free Returns', 'Standard Shipping'], cta: 'Add to Cart', isFeatured: true },
     ]
   },
   {
     id: '2',
-    slug: 'pixel-forge',
-    name: 'PixelForge',
-    category: 'Design',
-    subcategory: 'Graphics',
+    slug: 'leather-tote-bag',
+    name: 'Leather Tote Bag',
+    category: 'Women',
+    subcategory: 'Handbags',
     model: 'B2C',
-    tagline: 'Craft Stunning Visuals, Effortlessly.',
+    tagline: 'Effortless elegance for your daily essentials.',
     description:
-      'PixelForge is a powerful yet intuitive design tool for creating beautiful graphics, mockups, and prototypes. With a vast library of assets and AI-powered features, your creativity knows no bounds.',
-    keyBenefit: 'AI-Powered Design',
-    price: 49,
+      'This luxurious leather tote bag is handcrafted from the finest materials, offering both style and functionality. Spacious enough for your laptop and daily necessities.',
+    keyBenefit: 'Spacious & Stylish',
+    price: 125,
     status: 'New',
     heroImage: 'product-pixel-forge',
     features: [
       {
-        title: 'AI-Assisted Design',
-        description: 'Generate color palettes, suggest layouts, and create assets with the power of AI.',
-        icon: 'Palette',
+        title: 'Genuine Leather',
+        description: 'Crafted from soft, full-grain leather that develops a beautiful patina over time.',
+        icon: 'Gem',
       },
       {
-        title: 'Vector Editing Suite',
-        description: 'A full-featured vector editor that is powerful for pros and easy for newcomers.',
-        icon: 'Brush',
+        title: 'Spacious Interior',
+        description: 'Features multiple compartments, including a padded laptop sleeve.',
+        icon: 'Laptop',
       },
       {
-        title: 'Real-time Collaboration',
-        description: 'Design together with your team in the same canvas, at the same time.',
-        icon: 'Feather',
+        title: 'Handmade Quality',
+        description: 'Meticulously stitched by artisans for a bag that is built to last.',
+        icon: 'Hand',
       },
     ],
     useCases: [
       {
-        title: 'UI/UX Design for Web and Mobile',
-        description: 'Create high-fidelity mockups and interactive prototypes for your next application.',
+        title: 'For the Office',
+        description: 'A professional and stylish companion to carry your work essentials.',
         image: 'use-case-2',
       },
       {
-        title: 'Marketing and Social Media Graphics',
+        title: 'For Weekend Trips',
         description:
-          'Design engaging visuals for your marketing campaigns, social media posts, and brand identity.',
+          'The perfect size for a weekend getaway, fitting all your essentials with ease.',
         image: 'use-case-1',
       },
     ],
     faqs: [
       {
-        question: 'Can I import my files from other design tools?',
-        answer: 'Yes, PixelForge supports importing files from Sketch, Figma, and Adobe XD, making your transition seamless.',
+        question: 'What are the dimensions of the bag?',
+        answer: 'The tote measures 15" W x 12" H x 6" D, with a handle drop of 10 inches.',
       },
       {
-        question: 'Is there a desktop app available?',
+        question: 'How do I care for the leather?',
         answer:
-          'PixelForge is currently a web-based application, but a desktop version for both Mac and Windows is in active development and will be released soon.',
+          'Wipe with a damp cloth and use a quality leather conditioner periodically to keep it supple.',
       },
     ],
     pricing: [
-        { name: 'Hobby', price: '19', priceSuffix: '/ mo', features: ['3 Projects', 'Basic AI Features', 'Community Support'], cta: 'Choose Hobby' },
-        { name: 'Professional', price: '49', priceSuffix: '/ mo', features: ['Unlimited Projects', 'Full AI Suite', 'Real-time Collaboration', 'Priority Support'], cta: 'Choose Pro', isFeatured: true },
-        { name: 'Organization', price: 'Contact Us', priceSuffix: '', features: ['Design Systems', 'Shared Asset Libraries', 'Admin Controls', 'Dedicated Support'], cta: 'Contact Sales' }
+       { name: 'Standard', price: '125', priceSuffix: '', features: ['Lifetime Warranty', 'Free Returns', 'Standard Shipping'], cta: 'Add to Cart', isFeatured: true },
     ]
   },
   {
     id: '3',
-    slug: 'data-sphere',
-    name: 'DataSphere',
-    category: 'Business',
-    subcategory: 'Analytics',
-    model: 'B2B',
-    tagline: 'Unlock Insights from Your Data.',
+    slug: 'mens-oxford-shirt',
+    name: 'Men\'s Oxford Shirt',
+    category: 'Men',
+    subcategory: 'Shirts',
+    model: 'B2C',
+    tagline: 'A timeless classic for the modern man.',
     description:
-      'DataSphere is an enterprise-grade business intelligence platform that turns raw data into actionable insights. Connect your data sources, build interactive dashboards, and share reports with your team.',
-    keyBenefit: 'Actionable Insights',
-    price: 99,
+      'Our signature Oxford shirt is cut from high-quality cotton for a soft, breathable feel. A versatile piece for any wardrobe.',
+    keyBenefit: 'All-Day Comfort',
+    price: 55,
     heroImage: 'product-data-sphere',
     features: [
       {
-        title: 'Powerful Data Connectors',
-        description: 'Connect to databases, spreadsheets, and cloud services with our extensive library of connectors.',
-        icon: 'Database',
+        title: '100% Cotton',
+        description: 'Woven from premium long-staple cotton for superior softness and durability.',
+        icon: 'Leaf',
       },
       {
-        title: 'Interactive Dashboards',
-        description: 'Build beautiful, interactive dashboards with a simple drag-and-drop interface.',
-        icon: 'BarChart',
+        title: 'Modern Fit',
+        description: 'A tailored silhouette that looks sharp on its own or layered under a blazer.',
+        icon: 'PersonStanding',
       },
       {
-        title: 'Enterprise-Grade Security',
-        description: 'Your data is protected with industry-leading security features and compliance certifications.',
-        icon: 'Shield',
+        title: 'Button-Down Collar',
+        description: 'A classic button-down collar that maintains its shape for a polished look.',
+        icon: 'Check',
       },
     ],
     useCases: [
         {
-            title: "Financial Performance Tracking",
-            description: "Aggregate financial data from multiple sources to create comprehensive performance dashboards for stakeholders.",
+            title: "Business Casual",
+            description: "Pair with chinos and loafers for a smart, business-casual ensemble.",
             image: "use-case-1"
         },
         {
-            title: "Sales and Marketing Analytics",
-            description: "Track key metrics, analyze campaign effectiveness, and identify growth opportunities with custom reports.",
+            title: "Weekend Ready",
+            description: "Wear it untucked with jeans for a relaxed yet put-together weekend style.",
             image: "use-case-2"
         }
     ],
     faqs: [
         {
-            question: "What level of technical skill is required to use DataSphere?",
-            answer: "DataSphere is designed for both technical and non-technical users. Our intuitive interface allows business users to create reports, while data analysts can leverage advanced features and SQL editing."
+            question: "Is this shirt machine washable?",
+            answer: "Yes, it is machine washable. We recommend washing on a gentle cycle and tumble drying on low."
         },
         {
-            question: "How does DataSphere ensure data security?",
-            answer: "We employ end-to-end encryption, role-based access control, and regular security audits. DataSphere is compliant with GDPR, SOC 2, and HIPAA."
+            question: "Does the shirt run true to size?",
+            answer: "Our Oxford shirts have a modern, tailored fit. If you prefer a more relaxed fit, we recommend sizing up."
         }
     ],
     pricing: [
-        { name: 'Starter', price: '99', priceSuffix: '/ mo', features: ['2 Data Sources', '5 Dashboards', 'Standard Connectors'], cta: 'Choose Starter' },
-        { name: 'Business', price: '499', priceSuffix: '/ mo', features: ['10 Data Sources', 'Unlimited Dashboards', 'Advanced Connectors', 'Email Support'], cta: 'Choose Business', isFeatured: true },
-        { name: 'Enterprise', price: 'Contact Us', priceSuffix: '', features: ['Unlimited Data Sources', 'Embedded Analytics', 'SSO & Advanced Security', 'Dedicated Support'], cta: 'Contact Sales' }
+        { name: 'Standard', price: '55', priceSuffix: '', features: ['1-Year Warranty', 'Free Returns', 'Standard Shipping'], cta: 'Add to Cart', isFeatured: true },
     ]
   },
   {
     id: '4',
-    slug: 'connect-iq',
-    name: 'ConnectIQ',
-    category: 'Development',
-    subcategory: 'APIs',
-    model: 'B2B',
-    tagline: 'Build & Deploy APIs in Minutes.',
-    description: 'ConnectIQ is a developer-first platform for building, deploying, and managing APIs. With a powerful code editor, built-in testing, and one-click deployments, you can focus on writing code, not managing infrastructure.',
-    keyBenefit: 'Accelerated Development',
-    price: 79,
+    slug: 'kids-dino-pajamas',
+    name: 'Kids\' Dino Pajamas',
+    category: 'Kids',
+    subcategory: 'Pajamas',
+    model: 'B2C',
+    tagline: 'Roar into dreamland!',
+    description: 'These fun dinosaur-print pajamas are made from ultra-soft organic cotton, perfect for a cozy night\'s sleep.',
+    keyBenefit: 'Ultra-Soft Comfort',
+    price: 35,
     status: 'Popular',
     heroImage: 'product-connect-iq',
     features: [
         {
-            title: "Integrated Code Editor",
-            description: "A web-based IDE with linting, debugging, and version control integration (Git).",
-            icon: 'Code'
+            title: "Organic Cotton",
+            description: "GOTS-certified organic cotton that's gentle on sensitive skin.",
+            icon: 'Sprout'
         },
         {
-            title: "One-Click Deployments",
-            description: "Deploy your APIs to a global, serverless infrastructure with a single click.",
-            icon: 'Globe'
+            title: "Fun Dinosaur Print",
+            description: "A playful and vibrant print that kids will love.",
+            icon: 'Laugh'
         },
         {
-            title: "Secure & Scalable",
-            description: "Automatic scaling, DDoS protection, and authentication middleware built-in.",
-            icon: 'Server'
+            title: "Snug Fit",
+            description: "Designed for safety and comfort, with a snug fit that stays in place.",
+            icon: 'Bed'
         }
     ],
     useCases: [
         {
-            title: "Rapid Prototyping for Startups",
-            description: "Quickly build and iterate on backend services for new applications without worrying about infrastructure.",
+            title: "Bedtime Stories",
+            description: "The perfect comfy attire for snuggling up with a good book before bed.",
             image: "use-case-2"
         },
         {
-            title: "Microservices for Enterprises",
-            description: "Deconstruct monolithic applications into scalable, manageable microservices with ease.",
+            title: "Pajama Day at School",
+            description: "Let your little one show off their cool dino style on pajama day.",
             image: "use-case-1"
         }
     ],
     faqs: [
         {
-            question: "What languages are supported?",
-            answer: "ConnectIQ currently supports Node.js, Python, and Go. We are planning to add support for Java and Ruby in the near future."
+            question: "What sizes are available?",
+            answer: "Our pajamas are available in sizes 2T through 8Y."
         },
         {
-            question: "Can I use my own domain?",
-            answer: "Yes, all paid plans support custom domains with free, auto-renewing SSL certificates."
+            question: "Are these pajamas flame-resistant?",
+            answer: "For child's safety, this garment should fit snugly. This garment is not flame resistant."
         }
     ],
     pricing: [
-        { name: 'Developer', price: '29', priceSuffix: '/ dev / mo', features: ['5 APIs', '100k Requests/mo', 'Community Support'], cta: 'Choose Developer' },
-        { name: 'Team', price: '79', priceSuffix: '/ dev / mo', features: ['Unlimited APIs', '1M Requests/mo', 'Team Collaboration', 'Email Support'], cta: 'Choose Team', isFeatured: true },
-        { name: 'Enterprise', price: 'Contact Us', priceSuffix: '', features: ['Custom Rate Limits', 'VPC Integration', 'On-premise Options', '24/7 Support'], cta: 'Contact Sales' }
+        { name: 'Standard', price: '35', priceSuffix: '', features: ['6-Month Warranty', 'Free Returns', 'Standard Shipping'], cta: 'Add to Cart', isFeatured: true },
     ]
   },
   {
     id: '5',
-    slug: 'nexus-flow-plus',
-    name: 'NexusFlow+',
-    category: 'Productivity',
-    subcategory: 'Automation',
-    model: 'B2C',
-    tagline: 'Automate Everything.',
+    slug: 'business-consulting-package',
+    name: 'Business Consulting',
+    category: 'Services',
+    subcategory: 'Consulting',
+    model: 'B2B',
+    tagline: 'Strategic guidance for growth.',
     description:
-      'NexusFlow+ extends the power of NexusFlow with advanced automation capabilities.',
-    keyBenefit: 'Advanced Automation',
-    price: 45,
-    heroImage: 'product-nexus-flow',
-    features: [],
+      'Our business consulting package provides expert advice to help you scale your operations, optimize your strategy, and increase profitability.',
+    keyBenefit: 'Expert Strategy',
+    price: 2500,
+    heroImage: 'use-case-1',
+    features: [
+        {
+            title: "Market Analysis",
+            description: "In-depth analysis of your market landscape and competitive positioning.",
+            icon: 'PieChart'
+        },
+        {
+            title: "Strategic Roadmap",
+            description: "A tailored roadmap with actionable steps to achieve your business goals.",
+            icon: 'Map'
+        },
+        {
+            title: "Dedicated Consultant",
+            description: "A dedicated consultant to guide you through every step of the process.",
+            icon: 'UserCheck'
+        }
+    ],
     useCases: [],
     faqs: [],
+    pricing: [
+        { name: 'Standard', price: '2500', priceSuffix: '/ project', features: ['Initial Consultation', 'Market Analysis Report', 'Strategic Roadmap'], cta: 'Inquire Now', isFeatured: true },
+    ]
   },
 ];

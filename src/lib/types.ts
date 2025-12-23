@@ -24,7 +24,7 @@ export type Product = {
   id: string;
   slug: string;
   name: string;
-  category: 'Productivity' | 'Design' | 'Business' | 'Development';
+  category: 'Women' | 'Men' | 'Kids' | 'Services';
   subcategory: string;
   model: 'B2B' | 'B2C';
   tagline: string;
