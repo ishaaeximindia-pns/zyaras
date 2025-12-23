@@ -31,6 +31,8 @@ export type Product = {
   description: string;
   keyBenefit: string;
   price: number;
+  discountPrice?: number;
+  offer?: 'BOGO' | 'B2G1';
   status?: 'New' | 'Popular' | 'Sale';
   isFeatured?: boolean;
   heroImage: string;

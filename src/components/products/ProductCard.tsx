@@ -72,16 +72,23 @@ export default function ProductCard({ product }: ProductCardProps) {
             ) : (
               <div className="h-full w-full bg-muted" />
             )}
-            {product.status && (
-              <Badge
-                className={cn('absolute right-2 top-2', {
-                  'bg-red-500 text-white': product.status === 'Sale',
-                })}
-                variant={product.status === 'New' ? 'default' : 'secondary'}
-              >
-                {product.status}
-              </Badge>
-            )}
+            <div className="absolute top-2 right-2 flex flex-col items-end gap-1">
+              {product.status && (
+                <Badge
+                  className={cn({
+                    'bg-red-500 text-white border-red-500': product.status === 'Sale',
+                  })}
+                  variant={product.status === 'Sale' ? 'destructive' : 'secondary'}
+                >
+                  {product.status}
+                </Badge>
+              )}
+               {product.offer && (
+                <Badge variant="destructive">
+                  {product.offer === 'BOGO' ? 'BOGO' : 'B2G1'}
+                </Badge>
+              )}
+            </div>
           </div>
         </Link>
       </CardHeader>
@@ -93,10 +100,18 @@ export default function ProductCard({ product }: ProductCardProps) {
         <CardDescription className="mt-2 text-sm">{product.tagline}</CardDescription>
       </CardContent>
       <CardFooter className="flex items-center justify-between p-4 pt-0">
-        <p className="text-lg font-semibold">
-          ${product.price}
-          <span className="text-sm font-normal text-muted-foreground">/mo</span>
-        </p>
+        <div className="flex flex-col">
+            {product.discountPrice ? (
+              <>
+                <p className="text-lg font-semibold">${product.discountPrice.toFixed(2)}</p>
+                <p className="text-sm font-normal text-muted-foreground line-through">
+                  ${product.price.toFixed(2)}
+                </p>
+              </>
+            ) : (
+               <p className="text-lg font-semibold">${product.price.toFixed(2)}</p>
+            )}
+        </div>
         {cartItem ? (
           <div className="flex items-center gap-2">
             <Button variant="outline" size="icon" className="h-8 w-8" onClick={handleDecreaseQuantity}>

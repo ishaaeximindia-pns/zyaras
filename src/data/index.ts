@@ -190,6 +190,7 @@ export const products: Product[] = [
     description: 'These fun dinosaur-print pajamas are made from ultra-soft organic cotton, perfect for a cozy night\'s sleep.',
     keyBenefit: 'Ultra-Soft Comfort',
     price: 35,
+    discountPrice: 28,
     status: 'Sale',
     isFeatured: false,
     heroImage: 'product-connect-iq',
@@ -284,8 +285,9 @@ export const products: Product[] = [
     description: 'A beautiful and lightweight scarf made from a blend of silk and modal. Perfect for adding a pop of color to any outfit.',
     keyBenefit: 'Lightweight & Versatile',
     price: 45,
+    discountPrice: 35,
     status: 'Sale',
-    isFeatured: false,
+    isFeatured: true,
     heroImage: 'use-case-1',
     features: [
       { title: 'Vibrant Colors', description: 'Available in a wide range of rich, vibrant colors.', icon: 'Palette' },
@@ -309,8 +311,9 @@ export const products: Product[] = [
     description: 'A classic leather belt made from genuine leather with a solid brass buckle. A durable and stylish accessory for any man.',
     keyBenefit: 'Durable & Classic',
     price: 48,
-    status: 'Sale',
-    isFeatured: false,
+    status: 'Popular',
+    isFeatured: true,
+    offer: 'BOGO',
     heroImage: 'use-case-2',
     features: [
       { title: 'Full-Grain Leather', description: 'Made from high-quality full-grain leather that will last for years.', icon: 'ShieldCheck' },
@@ -335,7 +338,7 @@ export const products: Product[] = [
     keyBenefit: 'Light & Airy',
     price: 85,
     status: 'New',
-    isFeatured: false,
+    isFeatured: true,
     heroImage: 'product-pixel-forge',
     features: [
       { title: 'Vibrant Floral Print', description: 'A stunning and colorful print that stands out.', icon: 'Flower' },
@@ -361,6 +364,7 @@ export const products: Product[] = [
     price: 22,
     status: 'New',
     isFeatured: false,
+    offer: 'B2G1',
     heroImage: 'product-connect-iq',
     features: [
       { title: '100% Cotton', description: 'Soft and breathable cotton that\'s perfect for kids.', icon: 'Leaf' },

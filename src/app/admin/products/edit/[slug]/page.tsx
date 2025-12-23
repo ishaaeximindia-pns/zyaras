@@ -9,7 +9,6 @@ import * as z from 'zod';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -26,6 +25,8 @@ const productSchema = z.object({
   tagline: z.string().min(1, 'Tagline is required'),
   description: z.string().min(1, 'Description is required'),
   price: z.coerce.number().min(0, 'Price must be a positive number'),
+  discountPrice: z.coerce.number().optional(),
+  offer: z.enum(['BOGO', 'B2G1']).optional(),
   status: z.enum(['New', 'Popular', 'Sale']).optional(),
   isFeatured: z.boolean().optional(),
   features: z.array(z.object({
@@ -59,6 +60,8 @@ export default function ProductEditPage() {
       tagline: '',
       description: '',
       price: 0,
+      discountPrice: undefined,
+      offer: undefined,
       status: 'New',
       isFeatured: false,
       features: [],
@@ -268,7 +271,7 @@ export default function ProductEditPage() {
 
             <Card>
               <CardHeader>
-                <CardTitle>Pricing & Status</CardTitle>
+                <CardTitle>Pricing & Offers</CardTitle>
               </CardHeader>
               <CardContent className="grid gap-4">
                  <FormField
@@ -278,6 +281,36 @@ export default function ProductEditPage() {
                     <FormItem>
                       <FormLabel>Price</FormLabel>
                       <FormControl><Input type="number" step="0.01" {...field} /></FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="discountPrice"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Discount Price</FormLabel>
+                      <FormControl><Input type="number" step="0.01" {...field} placeholder="e.g. 49.99" /></FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="offer"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Offer Type</FormLabel>
+                       <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger><SelectValue placeholder="Select an offer" /></SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="BOGO">Buy One, Get One Free</SelectItem>
+                          <SelectItem value="B2G1">Buy 2, Get 1 Free</SelectItem>
+                        </SelectContent>
+                      </Select>
                       <FormMessage />
                     </FormItem>
                   )}

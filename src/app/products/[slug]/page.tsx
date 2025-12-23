@@ -11,6 +11,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import * as icons from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useToast } from '@/hooks/use-toast';
+import { Badge } from '@/components/ui/badge';
 
 export default function ProductPage({ params }: { params: { slug: string } }) {
   const { addToCart } = useCart();
@@ -39,10 +40,25 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
         <div className="container mx-auto px-4 md:px-6">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
+              {product.offer && (
+                <Badge variant="destructive" className="text-sm mb-2">
+                  {product.offer === 'BOGO' ? 'Buy One Get One' : 'Buy 2 Get 1 Free'}
+                </Badge>
+              )}
               <h1 className="text-4xl md:text-5xl font-headline font-extrabold tracking-tighter text-foreground">
                 {product.name}
               </h1>
               <p className="text-xl text-muted-foreground">{product.tagline}</p>
+              <div className="flex items-center gap-4">
+                {product.discountPrice ? (
+                  <>
+                    <span className="text-4xl font-bold">${product.discountPrice.toFixed(2)}</span>
+                    <span className="text-2xl font-medium text-muted-foreground line-through">${product.price.toFixed(2)}</span>
+                  </>
+                ) : (
+                  <span className="text-4xl font-bold">${product.price.toFixed(2)}</span>
+                )}
+              </div>
               <p className="text-base text-muted-foreground">{product.description}</p>
               <Button onClick={handleAddToCart} size="lg">
                 Add to Cart
