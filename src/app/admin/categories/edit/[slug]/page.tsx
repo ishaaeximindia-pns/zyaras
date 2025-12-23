@@ -3,7 +3,7 @@
 
 import { products } from '@/data';
 import { useParams, useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
+import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Button } from '@/components/ui/button';
@@ -11,12 +11,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft, PlusCircle, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 
 const categorySchema = z.object({
   name: z.string().min(1, 'Category name is required'),
-  subcategories: z.string().min(1, 'Enter at least one subcategory, comma-separated'),
+  subcategories: z.array(z.object({ name: z.string().min(1, 'Subcategory name cannot be empty') })),
 });
 
 type CategoryFormValues = z.infer<typeof categorySchema>;
@@ -29,20 +29,25 @@ export default function CategoryEditPage() {
   const { toast } = useToast();
 
   const categoryName = isNewCategory ? '' : decodeURIComponent(slug as string);
-  const subcategories = isNewCategory ? [] : Array.from(new Set(products.filter(p => p.category === categoryName).map(p => p.subcategory)));
+  const existingSubcategories = isNewCategory ? [] : Array.from(new Set(products.filter(p => p.category === categoryName).map(p => p.subcategory)));
 
   const form = useForm<CategoryFormValues>({
     resolver: zodResolver(categorySchema),
     defaultValues: {
       name: categoryName,
-      subcategories: subcategories.join(', '),
+      subcategories: isNewCategory ? [{ name: '' }] : existingSubcategories.map(name => ({ name })),
     },
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: 'subcategories',
   });
 
   const onSubmit = (data: CategoryFormValues) => {
     toast({
       title: `Category ${isNewCategory ? 'created' : 'updated'}`,
-      description: `${data.name} has been saved. (This is a mock-up, data is not persisted).`,
+      description: `${data.name} with subcategories: ${data.subcategories.map(s => s.name).join(', ')}. (This is a mock-up, data is not persisted).`,
     });
     router.push('/admin/categories');
   };
@@ -77,17 +82,37 @@ export default function CategoryEditPage() {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="subcategories"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Subcategories (comma-separated)</FormLabel>
-                    <FormControl><Input {...field} /></FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div>
+                <FormLabel>Subcategories</FormLabel>
+                <div className="grid gap-4 mt-2">
+                  {fields.map((field, index) => (
+                    <div key={field.id} className="flex items-center gap-2">
+                       <FormField
+                          control={form.control}
+                          name={`subcategories.${index}.name`}
+                          render={({ field }) => (
+                            <FormItem className="flex-1">
+                              <FormControl><Input {...field} placeholder="Subcategory Name" /></FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="icon"
+                        onClick={() => remove(index)}
+                        disabled={fields.length <= 1}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ))}
+                  <Button type="button" variant="outline" onClick={() => append({ name: '' })}>
+                    <PlusCircle className="mr-2 h-4 w-4" /> Add Subcategory
+                  </Button>
+                </div>
+              </div>
             </CardContent>
           </Card>
           <Button type="submit" size="lg">Save Category</Button>
