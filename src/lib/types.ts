@@ -35,5 +35,10 @@ export type Product = {
   features: ProductFeature[];
   useCases: { title: string; description: string; image: string }[];
   faqs: ProductFAQ[];
-  pricing: PricingTier[];
+  pricing?: PricingTier[]; // Optional pricing tiers
+};
+
+export type CartItem = {
+  product: Product;
+  quantity: number;
 };

@@ -1,3 +1,5 @@
+'use client';
+
 import { products } from '@/data';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
@@ -8,13 +10,26 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import PricingTable from '@/components/products/PricingTable';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import * as icons from 'lucide-react';
+import { useCart } from '@/context/CartContext';
+import { useToast } from '@/hooks/use-toast';
 
 export default function ProductPage({ params }: { params: { slug: string } }) {
+  const { addToCart } = useCart();
+  const { toast } = useToast();
+
   const product = products.find((p) => p.slug === params.slug);
 
   if (!product) {
     notFound();
   }
+  
+  const handleAddToCart = () => {
+    addToCart(product);
+    toast({
+      title: "Added to cart",
+      description: `${product.name} has been added to your cart.`,
+    });
+  };
 
   const heroImage = PlaceHolderImages.find((p) => p.id === product.heroImage);
 
@@ -30,8 +45,8 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
               </h1>
               <p className="text-xl text-muted-foreground">{product.tagline}</p>
               <p className="text-base text-muted-foreground">{product.description}</p>
-              <Button asChild size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90">
-                <Link href="/signup">Get Started with {product.name}</Link>
+              <Button onClick={handleAddToCart} size="lg">
+                Add to Cart
               </Button>
             </div>
             <div className="relative aspect-video rounded-xl shadow-2xl overflow-hidden">
@@ -99,19 +114,6 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
              )
            })}
          </div>
-      </section>
-
-      {/* Pricing Section */}
-      <section className="py-16 md:py-24">
-        <div className="container mx-auto px-4 md:px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-headline font-bold">Find the Right Plan</h2>
-            <p className="mt-4 max-w-2xl mx-auto text-muted-foreground">
-              Choose the plan that best fits your needs and budget.
-            </p>
-          </div>
-          <PricingTable tiers={product.pricing} />
-        </div>
       </section>
       
       {/* FAQ Section */}

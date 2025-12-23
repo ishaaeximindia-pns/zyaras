@@ -21,13 +21,18 @@ import {
   LogOut,
   Settings,
   Package,
+  ShoppingCart,
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '../ui/button';
+import CartSheet from '../cart/CartSheet';
+import { useCart } from '@/context/CartContext';
 
 export default function DashboardNav() {
   const pathname = usePathname();
   const isActive = (path: string) => pathname === path;
+  const { cart } = useCart();
+  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
     <Sidebar>
@@ -51,18 +56,21 @@ export default function DashboardNav() {
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton
-                href="/dashboard/billing"
-                asChild
-                isActive={isActive('/dashboard/billing')}
-                tooltip="Billing"
-              >
-                <Link href="#">
-                  <CreditCard />
-                  <span>Billing</span>
-                </Link>
-              </SidebarMenuButton>
+          </SidebarGroup>
+          <SidebarGroup>
+            <SidebarGroupLabel>Shop</SidebarGroupLabel>
+             <SidebarMenuItem>
+                <CartSheet>
+                  <SidebarMenuButton tooltip="Cart">
+                    <ShoppingCart />
+                    <span>Cart</span>
+                    {totalItems > 0 && (
+                       <span className="ml-auto inline-flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs">
+                        {totalItems}
+                      </span>
+                    )}
+                  </SidebarMenuButton>
+                </CartSheet>
             </SidebarMenuItem>
           </SidebarGroup>
           <SidebarGroup>

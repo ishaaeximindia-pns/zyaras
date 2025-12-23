@@ -3,6 +3,7 @@ import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import DashboardNav from '@/components/dashboard/DashboardNav';
+import { CartProvider } from '@/context/CartContext';
 
 export const metadata: Metadata = {
   title: 'Synergy Digital Suite',
@@ -25,10 +26,12 @@ export default function RootLayout({
         />
       </head>
       <body className="font-body antialiased">
-        <SidebarProvider>
-          <DashboardNav />
-          <SidebarInset>{children}</SidebarInset>
-        </SidebarProvider>
+        <CartProvider>
+          <SidebarProvider>
+            <DashboardNav />
+            <SidebarInset>{children}</SidebarInset>
+          </SidebarProvider>
+        </CartProvider>
         <Toaster />
       </body>
     </html>
