@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
 import {
@@ -12,7 +14,9 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import type { Product } from '@/lib/types';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Plus, Minus } from 'lucide-react';
+import { useCart } from '@/context/CartContext';
+import { useToast } from '@/hooks/use-toast';
 
 type ProductCardProps = {
   product: Product;
@@ -20,6 +24,35 @@ type ProductCardProps = {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const productImage = PlaceHolderImages.find((p) => p.id === product.heroImage);
+  const { cart, addToCart, updateQuantity, removeFromCart } = useCart();
+  const { toast } = useToast();
+
+  const cartItem = cart.find((item) => item.product.id === product.id);
+
+  const handleAddToCart = () => {
+    addToCart(product);
+    toast({
+      title: "Added to cart",
+      description: `${product.name} has been added to your cart.`,
+    });
+  };
+
+  const handleIncreaseQuantity = () => {
+    if (cartItem) {
+      updateQuantity(product.id, cartItem.quantity + 1);
+    }
+  };
+
+  const handleDecreaseQuantity = () => {
+    if (cartItem) {
+      if (cartItem.quantity > 1) {
+        updateQuantity(product.id, cartItem.quantity - 1);
+      } else {
+        removeFromCart(product.id);
+      }
+    }
+  };
+
 
   return (
     <Card className="flex h-full flex-col overflow-hidden transition-transform duration-300 hover:scale-105 hover:shadow-xl">
@@ -58,11 +91,21 @@ export default function ProductCard({ product }: ProductCardProps) {
           ${product.price}
           <span className="text-sm font-normal text-muted-foreground">/mo</span>
         </p>
-        <Button asChild size="sm" variant="ghost">
-          <Link href={`/products/${product.slug}`}>
-            Learn More <ArrowRight className="ml-2 h-4 w-4" />
-          </Link>
-        </Button>
+        {cartItem ? (
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="icon" className="h-8 w-8" onClick={handleDecreaseQuantity}>
+              <Minus className="h-4 w-4" />
+            </Button>
+            <span className="font-bold">{cartItem.quantity}</span>
+            <Button variant="outline" size="icon" className="h-8 w-8" onClick={handleIncreaseQuantity}>
+              <Plus className="h-4 w-4" />
+            </Button>
+          </div>
+        ) : (
+          <Button onClick={handleAddToCart} size="sm">
+            <Plus className="mr-2 h-4 w-4" /> Add
+          </Button>
+        )}
       </CardFooter>
     </Card>
   );
