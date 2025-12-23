@@ -5,6 +5,7 @@ import { PlusCircle, MoreHorizontal } from 'lucide-react';
 import { products } from '@/data';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import Link from 'next/link';
 
 const getCategories = () => {
     const categoryMap: Record<string, Set<string>> = {};
@@ -29,8 +30,10 @@ export default function AdminCategoriesPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-bold">Manage Categories</h1>
-        <Button>
-          <PlusCircle className="mr-2 h-4 w-4" /> Add Category
+        <Button asChild>
+            <Link href="/admin/categories/edit/new">
+                <PlusCircle className="mr-2 h-4 w-4" /> Add Category
+            </Link>
         </Button>
       </div>
       <Card>
@@ -63,7 +66,9 @@ export default function AdminCategoriesPage() {
                                   </DropdownMenuTrigger>
                                   <DropdownMenuContent align="end">
                                       <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                      <DropdownMenuItem>Edit</DropdownMenuItem>
+                                       <DropdownMenuItem asChild>
+                                        <Link href={`/admin/categories/edit/${encodeURIComponent(category.name)}`}>Edit</Link>
+                                       </DropdownMenuItem>
                                       <DropdownMenuItem>Delete</DropdownMenuItem>
                                   </DropdownMenuContent>
                               </DropdownMenu>

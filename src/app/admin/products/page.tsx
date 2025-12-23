@@ -8,14 +8,17 @@ import { Badge } from '@/components/ui/badge';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import Link from 'next/link';
 
 export default function AdminProductsPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-bold">Manage Products</h1>
-        <Button>
-          <PlusCircle className="mr-2 h-4 w-4" /> Add Product
+        <Button asChild>
+          <Link href="/admin/products/edit/new">
+            <PlusCircle className="mr-2 h-4 w-4" /> Add Product
+          </Link>
         </Button>
       </div>
       <Card>
@@ -72,7 +75,9 @@ export default function AdminProductsPage() {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuItem>Edit</DropdownMenuItem>
+                            <DropdownMenuItem asChild>
+                              <Link href={`/admin/products/edit/${product.slug}`}>Edit</Link>
+                            </DropdownMenuItem>
                             <DropdownMenuItem>Delete</DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
