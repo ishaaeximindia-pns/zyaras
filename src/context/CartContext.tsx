@@ -7,6 +7,7 @@ import type { Product, CartItem } from '@/lib/types';
 interface CartContextType {
   cart: CartItem[];
   addToCart: (product: Product) => void;
+  addMultipleToCart: (items: CartItem[]) => void;
   removeFromCart: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
   clearCart: () => void;
@@ -26,6 +27,23 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         );
       }
       return [...prevCart, { product, quantity: 1 }];
+    });
+  };
+  
+  const addMultipleToCart = (items: CartItem[]) => {
+    setCart(prevCart => {
+      const newCart = [...prevCart];
+      items.forEach(itemToAdd => {
+        const existingItemIndex = newCart.findIndex(
+          item => item.product.id === itemToAdd.product.id
+        );
+        if (existingItemIndex > -1) {
+          newCart[existingItemIndex].quantity += itemToAdd.quantity;
+        } else {
+          newCart.push(itemToAdd);
+        }
+      });
+      return newCart;
     });
   };
 
@@ -50,7 +68,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart, updateQuantity, clearCart }}>
+    <CartContext.Provider value={{ cart, addToCart, addMultipleToCart, removeFromCart, updateQuantity, clearCart }}>
       {children}
     </CartContext.Provider>
   );
