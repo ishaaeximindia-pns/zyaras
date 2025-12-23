@@ -47,7 +47,6 @@ interface CategoryWithSubcategories {
 function CategoryList() {
   const searchParams = useSearchParams();
   const model = searchParams.get('model') || 'B2C';
-  const activeCategory = searchParams.get('category');
   const activeSubcategory = searchParams.get('subcategory');
 
   const [openCategories, setOpenCategories] = useState<string[]>(['Women', 'Men', 'Kids', 'Services']);
@@ -97,8 +96,8 @@ function CategoryList() {
       {categories.map((category) => {
         const Icon = category.icon;
         return (
-          <SidebarMenuItem key={category.name}>
-            <Collapsible open={openCategories.includes(category.name)} onOpenChange={() => toggleCategory(category.name)}>
+          <Collapsible asChild key={category.name} open={openCategories.includes(category.name)} onOpenChange={() => toggleCategory(category.name)}>
+            <SidebarMenuItem>
               <CollapsibleTrigger asChild>
                  <SidebarMenuButton variant="ghost" className="w-full justify-start pr-2">
                    <Icon className="h-4 w-4 mr-2" />
@@ -122,8 +121,8 @@ function CategoryList() {
                   ))}
                 </SidebarMenuSub>
               </CollapsibleContent>
-            </Collapsible>
-          </SidebarMenuItem>
+            </SidebarMenuItem>
+          </Collapsible>
         )
       })}
     </>
