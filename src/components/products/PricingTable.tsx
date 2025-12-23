@@ -1,15 +1,18 @@
+
 import { CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import type { PricingTier } from '@/lib/types';
 import Link from 'next/link';
+import { storeSettings } from '@/data/settings';
 
 type PricingTableProps = {
   tiers: PricingTier[];
 };
 
 export default function PricingTable({ tiers }: PricingTableProps) {
+  const currencySymbol = storeSettings.currency === 'INR' ? '₹' : '$';
   return (
     <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
       {tiers.map((tier) => (
@@ -32,7 +35,7 @@ export default function PricingTable({ tiers }: PricingTableProps) {
                 <span className="text-4xl font-bold">Contact Us</span>
               ) : (
                 <>
-                  <span className="text-4xl font-bold">${tier.price}</span>
+                  <span className="text-4xl font-bold">{currencySymbol}{tier.price}</span>
                   <span className="text-muted-foreground">{tier.priceSuffix}</span>
                 </>
               )}

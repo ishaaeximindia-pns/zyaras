@@ -1,4 +1,5 @@
 
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { PlusCircle, MoreHorizontal } from 'lucide-react';
@@ -9,8 +10,10 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import Link from 'next/link';
+import { storeSettings } from '@/data/settings';
 
 export default function AdminProductsPage() {
+  const currencySymbol = storeSettings.currency === 'INR' ? '₹' : '$';
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
@@ -61,7 +64,7 @@ export default function AdminProductsPage() {
                         <TableCell>
                             {product.status && <Badge variant={product.status === 'Sale' ? 'destructive' : 'outline'}>{product.status}</Badge>}
                         </TableCell>
-                        <TableCell>${product.price.toFixed(2)}</TableCell>
+                        <TableCell>{currencySymbol}{product.price.toFixed(2)}</TableCell>
                         <TableCell>
                             {product.category} / {product.subcategory}
                         </TableCell>

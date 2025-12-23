@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -18,6 +19,7 @@ import { ArrowRight, Plus, Minus } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
+import { storeSettings } from '@/data/settings';
 
 type ProductCardProps = {
   product: Product;
@@ -29,6 +31,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   const { toast } = useToast();
 
   const cartItem = cart.find((item) => item.product.id === product.id);
+  const currencySymbol = storeSettings.currency === 'INR' ? '₹' : '$';
 
   const handleAddToCart = () => {
     addToCart(product);
@@ -103,13 +106,13 @@ export default function ProductCard({ product }: ProductCardProps) {
         <div className="flex flex-col">
             {product.discountPrice ? (
               <>
-                <p className="text-lg font-semibold">${product.discountPrice.toFixed(2)}</p>
+                <p className="text-lg font-semibold">{currencySymbol}{product.discountPrice.toFixed(2)}</p>
                 <p className="text-sm font-normal text-muted-foreground line-through">
-                  ${product.price.toFixed(2)}
+                  {currencySymbol}{product.price.toFixed(2)}
                 </p>
               </>
             ) : (
-               <p className="text-lg font-semibold">${product.price.toFixed(2)}</p>
+               <p className="text-lg font-semibold">{currencySymbol}{product.price.toFixed(2)}</p>
             )}
         </div>
         {cartItem ? (

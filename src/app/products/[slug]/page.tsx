@@ -1,3 +1,4 @@
+
 'use client';
 
 import { products } from '@/data';
@@ -12,6 +13,7 @@ import * as icons from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
+import { storeSettings } from '@/data/settings';
 
 export default function ProductPage({ params }: { params: { slug: string } }) {
   const { addToCart } = useCart();
@@ -32,6 +34,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
   };
 
   const heroImage = PlaceHolderImages.find((p) => p.id === product.heroImage);
+  const currencySymbol = storeSettings.currency === 'INR' ? '₹' : '$';
 
   return (
     <div className="bg-background">
@@ -52,11 +55,11 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
               <div className="flex items-center gap-4">
                 {product.discountPrice ? (
                   <>
-                    <span className="text-4xl font-bold">${product.discountPrice.toFixed(2)}</span>
-                    <span className="text-2xl font-medium text-muted-foreground line-through">${product.price.toFixed(2)}</span>
+                    <span className="text-4xl font-bold">{currencySymbol}{product.discountPrice.toFixed(2)}</span>
+                    <span className="text-2xl font-medium text-muted-foreground line-through">{currencySymbol}{product.price.toFixed(2)}</span>
                   </>
                 ) : (
-                  <span className="text-4xl font-bold">${product.price.toFixed(2)}</span>
+                  <span className="text-4xl font-bold">{currencySymbol}{product.price.toFixed(2)}</span>
                 )}
               </div>
               <p className="text-base text-muted-foreground">{product.description}</p>
@@ -80,6 +83,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
       </section>
 
       {/* Features Section */}
+      {product.features && product.features.length > 0 && (
       <section className="py-16 md:py-24">
         <div className="container mx-auto px-4 md:px-6">
           <div className="text-center mb-12">
@@ -104,6 +108,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
           </div>
         </div>
       </section>
+      )}
 
       {/* Pricing Section */}
       {product.pricing && product.pricing.length > 0 && (
@@ -121,6 +126,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
       )}
 
       {/* Use Cases Section */}
+      {product.useCases && product.useCases.length > 0 && (
       <section className="py-16 md:py-24">
          <div className="container mx-auto px-4 md:px-6">
            <div className="text-center mb-12">
@@ -145,8 +151,10 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
            })}
          </div>
       </section>
+      )}
       
       {/* FAQ Section */}
+      {product.faqs && product.faqs.length > 0 && (
       <section className="py-16 md:py-24 bg-card">
         <div className="container mx-auto px-4 md:px-6 max-w-3xl">
           <div className="text-center mb-12">
@@ -164,6 +172,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
           </Accordion>
         </div>
       </section>
+      )}
     </div>
   );
 }

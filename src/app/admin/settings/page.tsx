@@ -11,6 +11,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
+import { storeSettings } from '@/data/settings';
 
 const settingsSchema = z.object({
   storeName: z.string().min(1, 'Store name is required'),
@@ -24,6 +25,9 @@ const settingsSchema = z.object({
 
   currency: z.enum(['USD', 'EUR', 'GBP', 'JPY', 'INR']),
   language: z.enum(['en', 'es', 'fr']),
+
+  additionalFeeName: z.string().optional(),
+  additionalFeeAmount: z.coerce.number().min(0).optional(),
 });
 
 type SettingsFormValues = z.infer<typeof settingsSchema>;
@@ -33,17 +37,9 @@ export default function AdminSettingsPage() {
 
   const form = useForm<SettingsFormValues>({
     resolver: zodResolver(settingsSchema),
-    // Mock default values
     defaultValues: {
-      storeName: 'Synergy Suite',
-      storeEmail: 'contact@synergysuite.com',
-      storePhone: '123-456-7890',
-      storeAddress: '123 Tech Lane, Innovation City, 12345',
-      shippingFlatRate: 5.00,
-      enableTaxes: false,
-      taxRate: "18",
-      currency: 'INR',
-      language: 'en',
+      ...storeSettings,
+      taxRate: storeSettings.taxRate.toString(),
     },
   });
   
@@ -123,8 +119,8 @@ export default function AdminSettingsPage() {
 
             <Card>
               <CardHeader>
-                <CardTitle>Shipping & Taxes</CardTitle>
-                <CardDescription>Configure how you handle shipping and taxes.</CardDescription>
+                <CardTitle>Shipping, Taxes & Fees</CardTitle>
+                <CardDescription>Configure how you handle shipping and other charges.</CardDescription>
               </CardHeader>
               <CardContent className="grid gap-4">
                 <FormField
@@ -132,9 +128,9 @@ export default function AdminSettingsPage() {
                   name="shippingFlatRate"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Flat Shipping Rate ($)</FormLabel>
+                      <FormLabel>Flat Shipping Rate</FormLabel>
                       <FormControl><Input type="number" step="0.01" {...field} placeholder="5.00" /></FormControl>
-                       <FormDescription>Set a flat rate for all shipping. Leave blank to disable.</FormDescription>
+                       <FormDescription>Set a flat rate for all shipping. Leave blank or 0 to disable.</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -179,6 +175,32 @@ export default function AdminSettingsPage() {
                     )}
                   />
                 )}
+                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t">
+                    <FormField
+                      control={form.control}
+                      name="additionalFeeName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Additional Fee Name</FormLabel>
+                          <FormControl><Input {...field} placeholder="e.g. Handling Fee" /></FormControl>
+                           <FormDescription>Label for the extra charge.</FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="additionalFeeAmount"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Additional Fee Amount</FormLabel>
+                          <FormControl><Input type="number" step="0.01" {...field} placeholder="2.50" /></FormControl>
+                          <FormDescription>The amount for the fee.</FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
               </CardContent>
             </Card>
           </div>

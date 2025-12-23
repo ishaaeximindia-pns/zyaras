@@ -17,16 +17,24 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Input } from '../ui/input';
 import { Trash2 } from 'lucide-react';
 import { Alert, AlertDescription } from '../ui/alert';
+import { storeSettings } from '@/data/settings';
 
 const B2B_MINIMUM_CART_VALUE = 15000;
 
 export default function CartSheet({ children, model }: { children: React.ReactNode, model: 'B2C' | 'B2B' }) {
   const { cart, updateQuantity, removeFromCart, clearCart } = useCart();
-  const subtotal = cart.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
+  const subtotal = cart.reduce((acc, item) => acc + (item.product.discountPrice || item.product.price) * item.quantity, 0);
 
   const isB2B = model === 'B2B';
   const isBelowB2BMinimum = isB2B && subtotal < B2B_MINIMUM_CART_VALUE;
   const amountNeededForB2B = B2B_MINIMUM_CART_VALUE - subtotal;
+  
+  const currencySymbol = storeSettings.currency === 'INR' ? '₹' : '$';
+
+  const taxAmount = storeSettings.enableTaxes ? subtotal * (storeSettings.taxRate / 100) : 0;
+  const shippingAmount = storeSettings.shippingFlatRate > 0 ? storeSettings.shippingFlatRate : 0;
+  const additionalFee = storeSettings.additionalFeeAmount || 0;
+  const grandTotal = subtotal + taxAmount + shippingAmount + additionalFee;
 
   return (
     <Sheet>
@@ -35,7 +43,7 @@ export default function CartSheet({ children, model }: { children: React.ReactNo
         <SheetHeader>
           <SheetTitle>Shopping Cart</SheetTitle>
         </SheetHeader>
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto pr-4">
           {cart.length > 0 ? (
             <div className="space-y-4">
               {cart.map((item) => {
@@ -54,7 +62,16 @@ export default function CartSheet({ children, model }: { children: React.ReactNo
                      </div>
                     <div className="flex-1">
                       <p className="font-semibold">{item.product.name}</p>
-                      <p className="text-sm text-muted-foreground">${item.product.price.toFixed(2)}</p>
+                       <div className="flex items-center gap-2">
+                        {item.product.discountPrice ? (
+                            <>
+                                <p className="text-sm text-primary font-semibold">{currencySymbol}{item.product.discountPrice.toFixed(2)}</p>
+                                <p className="text-sm text-muted-foreground line-through">{currencySymbol}{item.product.price.toFixed(2)}</p>
+                            </>
+                        ) : (
+                            <p className="text-sm text-muted-foreground">{currencySymbol}{item.product.price.toFixed(2)}</p>
+                        )}
+                      </div>
                     </div>
                     <div className="flex items-center gap-2">
                        <Input
@@ -79,18 +96,43 @@ export default function CartSheet({ children, model }: { children: React.ReactNo
           )}
         </div>
         {cart.length > 0 && (
-          <SheetFooter className="mt-auto">
+          <SheetFooter className="mt-auto pr-4">
             <div className="w-full space-y-4">
               <Separator />
-              <div className="flex justify-between font-semibold">
-                <span>Subtotal</span>
-                <span>${subtotal.toFixed(2)}</span>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                    <span>Subtotal</span>
+                    <span>{currencySymbol}{subtotal.toFixed(2)}</span>
+                </div>
+                {shippingAmount > 0 && (
+                    <div className="flex justify-between">
+                        <span>Shipping</span>
+                        <span>{currencySymbol}{shippingAmount.toFixed(2)}</span>
+                    </div>
+                )}
+                {taxAmount > 0 && (
+                     <div className="flex justify-between">
+                        <span>GST ({storeSettings.taxRate}%)</span>
+                        <span>{currencySymbol}{taxAmount.toFixed(2)}</span>
+                    </div>
+                )}
+                {additionalFee > 0 && storeSettings.additionalFeeName && (
+                    <div className="flex justify-between">
+                        <span>{storeSettings.additionalFeeName}</span>
+                        <span>{currencySymbol}{additionalFee.toFixed(2)}</span>
+                    </div>
+                )}
+              </div>
+              <Separator />
+               <div className="flex justify-between font-semibold text-lg">
+                <span>Grand Total</span>
+                <span>{currencySymbol}{grandTotal.toFixed(2)}</span>
               </div>
               
               {isBelowB2BMinimum && (
                 <Alert variant="destructive">
                   <AlertDescription>
-                    For B2B orders, you need to add ${amountNeededForB2B.toFixed(2)} more to reach the minimum order value of ${B2B_MINIMUM_CART_VALUE.toFixed(2)}.
+                    For B2B orders, you need to add {currencySymbol}{(amountNeededForB2B).toFixed(2)} more to reach the minimum order value of {currencySymbol}{B2B_MINIMUM_CART_VALUE.toFixed(2)}.
                   </AlertDescription>
                 </Alert>
               )}
