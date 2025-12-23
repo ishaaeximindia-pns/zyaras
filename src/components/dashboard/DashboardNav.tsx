@@ -30,6 +30,7 @@ import {
   User,
   Baby,
   Package,
+  Shield,
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '../ui/button';
@@ -138,7 +139,7 @@ function CategoryList() {
 export default function DashboardNav() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const isActive = (path: string) => pathname === path;
+  const isActive = (path: string) => pathname === path || pathname.startsWith(`${path}/`);
   const { cart } = useCart();
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
@@ -239,6 +240,24 @@ export default function DashboardNav() {
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarGroup>
+
+          <SidebarGroup>
+            <SidebarGroupLabel>Admin</SidebarGroupLabel>
+             <SidebarMenuItem>
+              <SidebarMenuButton
+                href="/admin"
+                asChild
+                isActive={isActive('/admin')}
+                tooltip="Admin Panel"
+              >
+                <Link href="/admin">
+                  <Shield />
+                  <span>Admin Panel</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarGroup>
+
         </SidebarMenu>
       </SidebarContent>
       <SidebarFooter>
