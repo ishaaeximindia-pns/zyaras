@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import Link from 'next/link';
@@ -28,6 +29,8 @@ import {
   Briefcase,
   User,
   Baby,
+  Package,
+  CreditCard,
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '../ui/button';
@@ -90,6 +93,8 @@ function CategoryList() {
         : [...prev, categoryName]
     );
   };
+  
+  if (!categories.length) return null;
 
   return (
     <>
@@ -97,33 +102,33 @@ function CategoryList() {
         const Icon = category.icon;
         const isOpen = openCategories.includes(category.name);
         return (
-          <SidebarMenuItem key={category.name}>
-            <Collapsible open={isOpen} onOpenChange={() => toggleCategory(category.name)}>
-              <CollapsibleTrigger asChild>
-                 <SidebarMenuButton variant="ghost" className="w-full justify-start pr-2">
-                   <Icon className="h-4 w-4 mr-2" />
-                  <span>{category.name}</span>
-                  <ChevronDown className={cn("ml-auto h-4 w-4 transition-transform", isOpen && "rotate-180")} />
-                </SidebarMenuButton>
-              </CollapsibleTrigger>
-              <CollapsibleContent>
-                <SidebarMenuSub>
-                  {category.subcategories.map((subcategory) => (
-                    <SidebarMenuItem key={subcategory}>
-                      <SidebarMenuSubButton
-                        asChild
-                        isActive={activeSubcategory === subcategory}
-                      >
-                        <Link href={`/dashboard?model=${model}&category=${category.name}&subcategory=${subcategory}`}>
-                          {subcategory}
-                        </Link>
-                      </SidebarMenuSubButton>
-                    </SidebarMenuItem>
-                  ))}
-                </SidebarMenuSub>
-              </CollapsibleContent>
-            </Collapsible>
-          </SidebarMenuItem>
+            <SidebarMenuItem key={category.name}>
+               <Collapsible open={isOpen} onOpenChange={() => toggleCategory(category.name)}>
+                <CollapsibleTrigger asChild>
+                  <SidebarMenuButton variant="ghost" className="w-full justify-start pr-2">
+                    <Icon className="h-4 w-4 mr-2" />
+                    <span>{category.name}</span>
+                    <ChevronDown className={cn("ml-auto h-4 w-4 transition-transform", isOpen && "rotate-180")} />
+                  </SidebarMenuButton>
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <SidebarMenuSub>
+                    {category.subcategories.map((subcategory) => (
+                      <SidebarMenuItem key={subcategory}>
+                        <SidebarMenuSubButton
+                          asChild
+                          isActive={activeSubcategory === subcategory}
+                        >
+                          <Link href={`/dashboard?model=${model}&category=${category.name}&subcategory=${subcategory}`}>
+                            {subcategory}
+                          </Link>
+                        </SidebarMenuSubButton>
+                      </SidebarMenuItem>
+                    ))}
+                  </SidebarMenuSub>
+                </CollapsibleContent>
+              </Collapsible>
+            </SidebarMenuItem>
         )
       })}
     </>
@@ -174,7 +179,7 @@ export default function DashboardNav() {
             <SidebarMenuItem>
               <SidebarMenuButton
                 asChild
-                isActive={!searchParams.get('category') || searchParams.get('category') === 'all'}
+                isActive={searchParams.get('category') === 'all'}
               >
                 <Link href={`/dashboard?model=${model}&category=all`}>
                   <Tag /> All Products
@@ -200,6 +205,32 @@ export default function DashboardNav() {
           </SidebarGroup>
           <SidebarGroup>
             <SidebarGroupLabel>Account</SidebarGroupLabel>
+             <SidebarMenuItem>
+              <SidebarMenuButton
+                href="/dashboard/orders"
+                asChild
+                isActive={isActive('/dashboard/orders')}
+                tooltip="Orders"
+              >
+                <Link href="/dashboard/orders">
+                  <Package />
+                  <span>Orders</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+             <SidebarMenuItem>
+              <SidebarMenuButton
+                href="/dashboard/transactions"
+                asChild
+                isActive={isActive('/dashboard/transactions')}
+                tooltip="Transactions"
+              >
+                <Link href="/dashboard/transactions">
+                  <CreditCard />
+                  <span>Transactions</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
             <SidebarMenuItem>
               <SidebarMenuButton
                 href="/dashboard/settings"
