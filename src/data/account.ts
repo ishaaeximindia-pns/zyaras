@@ -12,6 +12,8 @@ export const orders: Order[] = [
       { name: 'Classic Blue Jeans', quantity: 1, price: 68.00 },
       { name: 'Silk Blend Scarf', quantity: 1, price: 45.00 },
     ],
+    carrier: 'UPS',
+    trackingNumber: '1Z9999W99999999999',
   },
   {
     id: 'ORD-002',
@@ -22,6 +24,8 @@ export const orders: Order[] = [
     items: [
       { name: 'Men\'s Oxford Shirt', quantity: 1, price: 55.00 },
     ],
+    carrier: 'FedEx',
+    trackingNumber: '999999999999',
   },
   {
     id: 'ORD-003',
@@ -34,6 +38,8 @@ export const orders: Order[] = [
       { name: 'Men\'s Leather Belt', quantity: 1, price: 48.00 },
       { name: 'Kids\' Graphic T-Shirt', quantity: 1, price: 22.00 },
     ],
+    carrier: 'USPS',
+    trackingNumber: '9400100000000000000000',
   },
    {
     id: 'ORD-004',

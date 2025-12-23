@@ -60,6 +60,8 @@ export type Order = {
   status: 'Processing' | 'Shipped' | 'Delivered' | 'Cancelled';
   total: number;
   items: OrderItem[];
+  carrier?: string;
+  trackingNumber?: string;
 };
 
 export type Transaction = {

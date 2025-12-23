@@ -13,6 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import type { Order } from '@/lib/types';
+import { Input } from '@/components/ui/input';
 
 
 export default function AdminOrdersPage() {
@@ -31,6 +32,19 @@ export default function AdminOrdersPage() {
     });
   };
 
+  const handleShippingInfoChange = (orderId: string, field: 'carrier' | 'trackingNumber', value: string) => {
+    setOrders(prevOrders =>
+      prevOrders.map(order =>
+        order.id === orderId ? { ...order, [field]: value } : order
+      )
+    );
+     toast({
+      title: 'Shipping Info Updated',
+      description: `Updated ${field} for order ${orderId}. (This is a mock-up, data is not persisted).`,
+    });
+  };
+
+
   return (
     <div>
       <h1 className="text-3xl font-bold mb-6">Manage Orders</h1>
@@ -46,8 +60,7 @@ export default function AdminOrdersPage() {
                 <TableHead>Customer</TableHead>
                 <TableHead>Date</TableHead>
                 <TableHead className="text-right">Total</TableHead>
-                <TableHead>Current Status</TableHead>
-                <TableHead>Update Status</TableHead>
+                <TableHead>Status & Shipping</TableHead>
                 <TableHead>
                   <span className="sr-only">Actions</span>
                 </TableHead>
@@ -61,38 +74,59 @@ export default function AdminOrdersPage() {
                   <TableCell>{order.date}</TableCell>
                   <TableCell className="text-right">${order.total.toFixed(2)}</TableCell>
                   <TableCell>
-                     <Badge
-                        variant={
-                            order.status === "Delivered"
-                            ? "default"
-                            : order.status === "Shipped"
-                            ? "secondary"
-                            : "outline"
-                        }
-                        className={cn({
-                            "bg-green-500/10 text-green-700 border-green-500/20": order.status === 'Delivered',
-                            "bg-yellow-500/10 text-yellow-700 border-yellow-500/20": order.status === 'Shipped',
-                            "bg-blue-500/10 text-blue-700 border-blue-500/20": order.status === 'Processing',
-                        })}
-                        >
-                        {order.status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <Select
-                      value={order.status}
-                      onValueChange={(newStatus: Order['status']) => handleStatusChange(order.id, newStatus)}
-                    >
-                      <SelectTrigger className="w-[150px]">
-                        <SelectValue placeholder="Change status" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Processing">Processing</SelectItem>
-                        <SelectItem value="Shipped">Shipped</SelectItem>
-                        <SelectItem value="Delivered">Delivered</SelectItem>
-                        <SelectItem value="Cancelled">Cancelled</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <div className="flex flex-col gap-2">
+                        <div className="flex items-center gap-2">
+                            <Select
+                            value={order.status}
+                            onValueChange={(newStatus: Order['status']) => handleStatusChange(order.id, newStatus)}
+                            >
+                            <SelectTrigger className="w-[150px]">
+                                <SelectValue placeholder="Change status" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="Processing">Processing</SelectItem>
+                                <SelectItem value="Shipped">Shipped</SelectItem>
+                                <SelectItem value="Delivered">Delivered</SelectItem>
+                                <SelectItem value="Cancelled">Cancelled</SelectItem>
+                            </SelectContent>
+                            </Select>
+                            <Badge
+                                variant={
+                                    order.status === "Delivered"
+                                    ? "default"
+                                    : order.status === "Shipped"
+                                    ? "secondary"
+                                    : "outline"
+                                }
+                                className={cn({
+                                    "bg-green-500/10 text-green-700 border-green-500/20": order.status === 'Delivered',
+                                    "bg-yellow-500/10 text-yellow-700 border-yellow-500/20": order.status === 'Shipped',
+                                    "bg-blue-500/10 text-blue-700 border-blue-500/20": order.status === 'Processing',
+                                })}
+                                >
+                                {order.status}
+                            </Badge>
+                        </div>
+                        {order.status === 'Shipped' && (
+                            <div className="grid grid-cols-2 gap-2 mt-2">
+                                <Input 
+                                    placeholder="Carrier Name" 
+                                    value={order.carrier || ''}
+                                    onChange={(e) => handleShippingInfoChange(order.id, 'carrier', e.target.value)}
+                                />
+                                <Input 
+                                    placeholder="Tracking Number" 
+                                    value={order.trackingNumber || ''}
+                                    onChange={(e) => handleShippingInfoChange(order.id, 'trackingNumber', e.target.value)}
+                                />
+                            </div>
+                        )}
+                        {order.status === 'Delivered' && order.carrier && (
+                             <div className="text-xs text-muted-foreground mt-1">
+                                Shipped via {order.carrier} ({order.trackingNumber})
+                            </div>
+                        )}
+                    </div>
                   </TableCell>
                   <TableCell>
                     <DropdownMenu>
