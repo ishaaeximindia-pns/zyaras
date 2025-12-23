@@ -19,11 +19,9 @@ import {
 import Logo from '@/components/shared/Logo';
 import {
   LayoutDashboard,
-  CreditCard,
   LifeBuoy,
   LogOut,
   Settings,
-  Package,
   ShoppingCart,
   ChevronDown,
   Tag,
@@ -34,8 +32,13 @@ import CartSheet from '../cart/CartSheet';
 import { useCart } from '@/context/CartContext';
 import { products } from '@/data';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { cn } from '@/lib/utils';
+
+interface CategoryWithSubcategories {
+  name: string;
+  subcategories: string[];
+}
 
 export default function DashboardNav() {
   const pathname = usePathname();
@@ -44,12 +47,31 @@ export default function DashboardNav() {
   const { cart } = useCart();
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
-  const [isCategoryOpen, setIsCategoryOpen] = useState(true);
+  const [openCategories, setOpenCategories] = useState<string[]>([]);
 
-  const categories = ['All', ...Array.from(new Set(products.map((p) => p.category)))];
-  const activeCategory = searchParams.get('category') || 'All';
+  const categories = useMemo(() => {
+    const cats: CategoryWithSubcategories[] = [];
+    const categoryNames = [...new Set(products.map((p) => p.category))];
 
+    categoryNames.forEach(catName => {
+      const subcategories = [...new Set(products.filter(p => p.category === catName).map(p => p.subcategory))];
+      cats.push({ name: catName, subcategories });
+    });
 
+    return cats;
+  }, []);
+
+  const activeCategory = searchParams.get('category');
+  const activeSubcategory = searchParams.get('subcategory');
+
+  const toggleCategory = (categoryName: string) => {
+    setOpenCategories(prev => 
+      prev.includes(categoryName)
+        ? prev.filter(c => c !== categoryName)
+        : [...prev, categoryName]
+    );
+  };
+  
   return (
     <Sidebar>
       <SidebarHeader>
@@ -75,31 +97,45 @@ export default function DashboardNav() {
           </SidebarGroup>
           <SidebarGroup>
             <SidebarGroupLabel>Shop</SidebarGroupLabel>
-            <Collapsible open={isCategoryOpen} onOpenChange={setIsCategoryOpen}>
-              <CollapsibleTrigger asChild>
-                <SidebarMenuButton variant="ghost" className="w-full justify-start">
-                   <Tag />
-                  <span>Categories</span>
-                  <ChevronDown className={cn("ml-auto h-4 w-4 transition-transform", isCategoryOpen && "rotate-180")} />
-                </SidebarMenuButton>
-              </CollapsibleTrigger>
-              <CollapsibleContent>
-                <SidebarMenuSub>
-                  {categories.map((category) => (
-                    <SidebarMenuSubItem key={category}>
-                      <SidebarMenuSubButton 
-                        asChild 
-                        isActive={activeCategory === category || (category === 'All' && !searchParams.get('category'))}
-                      >
-                         <Link href={`/dashboard?category=${category === 'All' ? 'all' : category}`}>
-                          {category}
-                        </Link>
-                      </SidebarMenuSubButton>
-                    </SidebarMenuSubItem>
-                  ))}
-                </SidebarMenuSub>
-              </CollapsibleContent>
-            </Collapsible>
+            
+            <SidebarMenuSubItem>
+              <SidebarMenuSubButton 
+                asChild 
+                isActive={!activeCategory || activeCategory === 'all'}
+              >
+                <Link href="/dashboard?category=all">
+                  <Tag className="mr-2 h-4 w-4" /> All Products
+                </Link>
+              </SidebarMenuSubButton>
+            </SidebarMenuSubItem>
+            
+            {categories.map((category) => (
+              <Collapsible key={category.name} open={openCategories.includes(category.name)} onOpenChange={() => toggleCategory(category.name)}>
+                <CollapsibleTrigger asChild>
+                  <SidebarMenuButton variant="ghost" className="w-full justify-start">
+                    <span>{category.name}</span>
+                    <ChevronDown className={cn("ml-auto h-4 w-4 transition-transform", openCategories.includes(category.name) && "rotate-180")} />
+                  </SidebarMenuButton>
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <SidebarMenuSub>
+                    {category.subcategories.map((subcategory) => (
+                      <SidebarMenuSubItem key={subcategory}>
+                        <SidebarMenuSubButton 
+                          asChild 
+                          isActive={activeSubcategory === subcategory}
+                        >
+                          <Link href={`/dashboard?category=${category.name}&subcategory=${subcategory}`}>
+                            {subcategory}
+                          </Link>
+                        </SidebarMenuSubButton>
+                      </SidebarMenuSubItem>
+                    ))}
+                  </SidebarMenuSub>
+                </CollapsibleContent>
+              </Collapsible>
+            ))}
+
              <SidebarMenuItem>
                 <CartSheet>
                   <SidebarMenuButton tooltip="Cart">

@@ -10,19 +10,23 @@ export default function DashboardPage() {
   const [model, setModel] = useState<'B2C' | 'B2B'>('B2C');
   const searchParams = useSearchParams();
   const category = searchParams.get('category');
+  const subcategory = searchParams.get('subcategory');
 
   const recommendedProducts = products.filter(p => {
     const modelMatch = p.model === model;
     const categoryMatch = !category || category === 'all' || p.category === category;
-    return modelMatch && categoryMatch;
+    const subcategoryMatch = !subcategory || p.subcategory === subcategory;
+    return modelMatch && categoryMatch && subcategoryMatch;
   });
+
+  const pageTitle = subcategory || (category && category !== 'all' ? category : 'Products');
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 space-y-8">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-headline font-bold">
-            {category && category !== 'all' ? category : 'Products'}
+          <h1 className="text-3xl font-headline font-bold capitalize">
+            {pageTitle}
           </h1>
           <p className="text-muted-foreground">Browse our products and find the best fit for you.</p>
         </div>

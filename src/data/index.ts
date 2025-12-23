@@ -6,6 +6,7 @@ export const products: Product[] = [
     slug: 'nexus-flow',
     name: 'NexusFlow',
     category: 'Productivity',
+    subcategory: 'Task Management',
     model: 'B2C',
     tagline: 'Orchestrate Your Workflow, Seamlessly.',
     description:
@@ -67,6 +68,7 @@ export const products: Product[] = [
     slug: 'pixel-forge',
     name: 'PixelForge',
     category: 'Design',
+    subcategory: 'Graphics',
     model: 'B2C',
     tagline: 'Craft Stunning Visuals, Effortlessly.',
     description:
@@ -127,6 +129,7 @@ export const products: Product[] = [
     slug: 'data-sphere',
     name: 'DataSphere',
     category: 'Business',
+    subcategory: 'Analytics',
     model: 'B2B',
     tagline: 'Unlock Insights from Your Data.',
     description:
@@ -184,6 +187,7 @@ export const products: Product[] = [
     slug: 'connect-iq',
     name: 'ConnectIQ',
     category: 'Development',
+    subcategory: 'APIs',
     model: 'B2B',
     tagline: 'Build & Deploy APIs in Minutes.',
     description: 'ConnectIQ is a developer-first platform for building, deploying, and managing APIs. With a powerful code editor, built-in testing, and one-click deployments, you can focus on writing code, not managing infrastructure.',
@@ -235,5 +239,22 @@ export const products: Product[] = [
         { name: 'Team', price: '79', priceSuffix: '/ dev / mo', features: ['Unlimited APIs', '1M Requests/mo', 'Team Collaboration', 'Email Support'], cta: 'Choose Team', isFeatured: true },
         { name: 'Enterprise', price: 'Contact Us', priceSuffix: '', features: ['Custom Rate Limits', 'VPC Integration', 'On-premise Options', '24/7 Support'], cta: 'Contact Sales' }
     ]
+  },
+  {
+    id: '5',
+    slug: 'nexus-flow-plus',
+    name: 'NexusFlow+',
+    category: 'Productivity',
+    subcategory: 'Automation',
+    model: 'B2C',
+    tagline: 'Automate Everything.',
+    description:
+      'NexusFlow+ extends the power of NexusFlow with advanced automation capabilities.',
+    keyBenefit: 'Advanced Automation',
+    price: 45,
+    heroImage: 'product-nexus-flow',
+    features: [],
+    useCases: [],
+    faqs: [],
   },
 ];
