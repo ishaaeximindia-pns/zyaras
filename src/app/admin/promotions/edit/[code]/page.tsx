@@ -21,13 +21,18 @@ import { format } from 'date-fns';
 
 const promotionSchema = z.object({
   code: z.string().min(1, 'Coupon code is required'),
-  discount: z.coerce.number().min(1, 'Discount must be at least 1%').max(100, 'Discount cannot exceed 100%'),
+  discountType: z.enum(['Percentage', 'Fixed Amount']),
+  discount: z.coerce.number().min(1, 'Discount value is required'),
   expiryDate: z.date({
     required_error: "An expiration date is required.",
   }),
   status: z.enum(['Active', 'Expired']),
   usageLimit: z.coerce.number().min(0, 'Usage limit must be a positive number'),
+}).refine(data => !(data.discountType === 'Percentage' && data.discount > 100), {
+  message: "Percentage discount cannot exceed 100%",
+  path: ["discount"],
 });
+
 
 type PromotionFormValues = z.infer<typeof promotionSchema>;
 
@@ -47,12 +52,15 @@ export default function PromotionEditPage() {
         expiryDate: new Date(promotion.expiryDate),
     } : {
       code: '',
+      discountType: 'Percentage',
       discount: 10,
       expiryDate: new Date(),
       status: 'Active',
       usageLimit: 100,
     },
   });
+
+  const watchDiscountType = form.watch('discountType');
 
   const onSubmit = (data: PromotionFormValues) => {
     toast({
@@ -92,17 +100,52 @@ export default function PromotionEditPage() {
                   </FormItem>
                 )}
               />
-               <FormField
-                control={form.control}
-                name="discount"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Discount Percentage</FormLabel>
-                    <FormControl><Input type="number" {...field} placeholder="e.g. 20" /></FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                    control={form.control}
+                    name="discountType"
+                    render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Discount Type</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                            <SelectTrigger><SelectValue /></SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                            <SelectItem value="Percentage">Percentage</SelectItem>
+                            <SelectItem value="Fixed Amount">Fixed Amount</SelectItem>
+                        </SelectContent>
+                        </Select>
+                        <FormMessage />
+                    </FormItem>
+                    )}
+                />
+                <FormField
+                  control={form.control}
+                  name="discount"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Discount Value</FormLabel>
+                      <div className="relative">
+                         <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                          <span className="text-gray-500 sm:text-sm">
+                            {watchDiscountType === 'Percentage' ? '%' : '$'}
+                          </span>
+                        </div>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            {...field}
+                            placeholder={watchDiscountType === 'Percentage' ? "20" : "20.00"}
+                            className="pl-7"
+                          />
+                        </FormControl>
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
               <FormField
                 control={form.control}
                 name="expiryDate"

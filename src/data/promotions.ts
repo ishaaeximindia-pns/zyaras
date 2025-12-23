@@ -1,7 +1,8 @@
 
 export type Promotion = {
   code: string;
-  discount: number; // percentage
+  discountType: 'Percentage' | 'Fixed Amount';
+  discount: number;
   status: 'Active' | 'Expired';
   expiryDate: string;
   usageCount: number;
@@ -11,6 +12,7 @@ export type Promotion = {
 export const promotions: Promotion[] = [
   {
     code: 'SUMMER20',
+    discountType: 'Percentage',
     discount: 20,
     status: 'Active',
     expiryDate: '2024-08-31',
@@ -19,6 +21,7 @@ export const promotions: Promotion[] = [
   },
   {
     code: 'WELCOME10',
+    discountType: 'Fixed Amount',
     discount: 10,
     status: 'Active',
     expiryDate: '2024-12-31',
@@ -27,6 +30,7 @@ export const promotions: Promotion[] = [
   },
   {
     code: 'SPRINGCLEAN',
+    discountType: 'Percentage',
     discount: 15,
     status: 'Expired',
     expiryDate: '2024-04-30',
@@ -35,6 +39,7 @@ export const promotions: Promotion[] = [
   },
    {
     code: 'B2BLaunch',
+    discountType: 'Percentage',
     discount: 25,
     status: 'Active',
     expiryDate: '2024-09-30',

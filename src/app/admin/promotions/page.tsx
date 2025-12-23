@@ -43,7 +43,9 @@ export default function AdminPromotionsPage() {
               {promotions.map((promo) => (
                 <TableRow key={promo.code}>
                   <TableCell className="font-medium">{promo.code}</TableCell>
-                  <TableCell>{promo.discount}%</TableCell>
+                  <TableCell>
+                    {promo.discountType === 'Percentage' ? `${promo.discount}%` : `$${promo.discount.toFixed(2)}`}
+                  </TableCell>
                   <TableCell>
                     <Badge variant={promo.status === 'Active' ? 'default' : 'secondary'}>
                       {promo.status}
