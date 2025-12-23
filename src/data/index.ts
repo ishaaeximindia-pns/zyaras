@@ -134,7 +134,7 @@ export const products: Product[] = [
       'Our signature Oxford shirt is cut from high-quality cotton for a soft, breathable feel. A versatile piece for any wardrobe.',
     keyBenefit: 'All-Day Comfort',
     price: 55,
-    isFeatured: true,
+    isFeatured: false,
     heroImage: 'product-data-sphere',
     features: [
       {
@@ -190,7 +190,8 @@ export const products: Product[] = [
     description: 'These fun dinosaur-print pajamas are made from ultra-soft organic cotton, perfect for a cozy night\'s sleep.',
     keyBenefit: 'Ultra-Soft Comfort',
     price: 35,
-    status: 'Popular',
+    status: 'Sale',
+    isFeatured: false,
     heroImage: 'product-connect-iq',
     features: [
         {
@@ -283,7 +284,8 @@ export const products: Product[] = [
     description: 'A beautiful and lightweight scarf made from a blend of silk and modal. Perfect for adding a pop of color to any outfit.',
     keyBenefit: 'Lightweight & Versatile',
     price: 45,
-    status: 'New',
+    status: 'Sale',
+    isFeatured: false,
     heroImage: 'use-case-1',
     features: [
       { title: 'Vibrant Colors', description: 'Available in a wide range of rich, vibrant colors.', icon: 'Palette' },
@@ -308,6 +310,7 @@ export const products: Product[] = [
     keyBenefit: 'Durable & Classic',
     price: 48,
     status: 'Popular',
+    isFeatured: false,
     heroImage: 'use-case-2',
     features: [
       { title: 'Full-Grain Leather', description: 'Made from high-quality full-grain leather that will last for years.', icon: 'ShieldCheck' },

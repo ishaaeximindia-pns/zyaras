@@ -17,6 +17,7 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { ArrowRight, Plus, Minus } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useToast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
 
 type ProductCardProps = {
   product: Product;
@@ -72,7 +73,12 @@ export default function ProductCard({ product }: ProductCardProps) {
               <div className="h-full w-full bg-muted" />
             )}
             {product.status && (
-              <Badge className="absolute right-2 top-2" variant={product.status === 'New' ? 'default' : 'secondary'}>
+              <Badge
+                className={cn('absolute right-2 top-2', {
+                  'bg-red-500 text-white': product.status === 'Sale',
+                })}
+                variant={product.status === 'New' ? 'default' : 'secondary'}
+              >
                 {product.status}
               </Badge>
             )}

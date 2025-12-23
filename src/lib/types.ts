@@ -31,7 +31,7 @@ export type Product = {
   description: string;
   keyBenefit: string;
   price: number;
-  status?: 'New' | 'Popular';
+  status?: 'New' | 'Popular' | 'Sale';
   isFeatured?: boolean;
   heroImage: string;
   features: ProductFeature[];
