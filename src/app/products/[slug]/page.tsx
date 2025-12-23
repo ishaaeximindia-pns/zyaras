@@ -5,7 +5,6 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Button } from '@/components/ui/button';
-import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import PricingTable from '@/components/products/PricingTable';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -90,8 +89,23 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
         </div>
       </section>
 
+      {/* Pricing Section */}
+      {product.pricing && product.pricing.length > 0 && (
+        <section className="py-16 md:py-24 bg-card">
+          <div className="container mx-auto px-4 md:px-6">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-headline font-bold">Pricing Plans</h2>
+              <p className="mt-4 max-w-2xl mx-auto text-muted-foreground">
+                Choose the plan that's right for you.
+              </p>
+            </div>
+            <PricingTable tiers={product.pricing} />
+          </div>
+        </section>
+      )}
+
       {/* Use Cases Section */}
-      <section className="py-16 md:py-24 bg-card">
+      <section className="py-16 md:py-24">
          <div className="container mx-auto px-4 md:px-6">
            <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-headline font-bold">Real-World Applications</h2>

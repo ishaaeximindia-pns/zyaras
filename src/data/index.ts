@@ -56,6 +56,11 @@ export const products: Product[] = [
           'The number of automations depends on your pricing plan. Our Enterprise plan offers unlimited automations.',
       },
     ],
+    pricing: [
+      { name: 'Basic', price: '15', priceSuffix: '/ user / mo', features: ['5 Integrations', '10 Automations', 'Basic Support'], cta: 'Choose Basic' },
+      { name: 'Pro', price: '25', priceSuffix: '/ user / mo', features: ['50 Integrations', 'Unlimited Automations', 'Priority Support', 'Team Collaboration'], cta: 'Choose Pro', isFeatured: true },
+      { name: 'Enterprise', price: 'Contact Us', priceSuffix: '', features: ['Unlimited Integrations', 'Advanced Security', 'Dedicated Account Manager'], cta: 'Contact Sales' }
+    ]
   },
   {
     id: '2',
@@ -111,6 +116,11 @@ export const products: Product[] = [
           'PixelForge is currently a web-based application, but a desktop version for both Mac and Windows is in active development and will be released soon.',
       },
     ],
+    pricing: [
+        { name: 'Hobby', price: '19', priceSuffix: '/ mo', features: ['3 Projects', 'Basic AI Features', 'Community Support'], cta: 'Choose Hobby' },
+        { name: 'Professional', price: '49', priceSuffix: '/ mo', features: ['Unlimited Projects', 'Full AI Suite', 'Real-time Collaboration', 'Priority Support'], cta: 'Choose Pro', isFeatured: true },
+        { name: 'Organization', price: 'Contact Us', priceSuffix: '', features: ['Design Systems', 'Shared Asset Libraries', 'Admin Controls', 'Dedicated Support'], cta: 'Contact Sales' }
+    ]
   },
   {
     id: '3',
@@ -163,6 +173,11 @@ export const products: Product[] = [
             answer: "We employ end-to-end encryption, role-based access control, and regular security audits. DataSphere is compliant with GDPR, SOC 2, and HIPAA."
         }
     ],
+    pricing: [
+        { name: 'Starter', price: '99', priceSuffix: '/ mo', features: ['2 Data Sources', '5 Dashboards', 'Standard Connectors'], cta: 'Choose Starter' },
+        { name: 'Business', price: '499', priceSuffix: '/ mo', features: ['10 Data Sources', 'Unlimited Dashboards', 'Advanced Connectors', 'Email Support'], cta: 'Choose Business', isFeatured: true },
+        { name: 'Enterprise', price: 'Contact Us', priceSuffix: '', features: ['Unlimited Data Sources', 'Embedded Analytics', 'SSO & Advanced Security', 'Dedicated Support'], cta: 'Contact Sales' }
+    ]
   },
   {
     id: '4',
@@ -215,5 +230,10 @@ export const products: Product[] = [
             answer: "Yes, all paid plans support custom domains with free, auto-renewing SSL certificates."
         }
     ],
+    pricing: [
+        { name: 'Developer', price: '29', priceSuffix: '/ dev / mo', features: ['5 APIs', '100k Requests/mo', 'Community Support'], cta: 'Choose Developer' },
+        { name: 'Team', price: '79', priceSuffix: '/ dev / mo', features: ['Unlimited APIs', '1M Requests/mo', 'Team Collaboration', 'Email Support'], cta: 'Choose Team', isFeatured: true },
+        { name: 'Enterprise', price: 'Contact Us', priceSuffix: '', features: ['Custom Rate Limits', 'VPC Integration', 'On-premise Options', '24/7 Support'], cta: 'Contact Sales' }
+    ]
   },
 ];
