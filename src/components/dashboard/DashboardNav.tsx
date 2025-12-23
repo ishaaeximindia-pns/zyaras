@@ -95,14 +95,15 @@ function CategoryList() {
     <>
       {categories.map((category) => {
         const Icon = category.icon;
+        const isOpen = openCategories.includes(category.name);
         return (
           <SidebarMenuItem key={category.name}>
-            <Collapsible open={openCategories.includes(category.name)} onOpenChange={() => toggleCategory(category.name)}>
+            <Collapsible open={isOpen} onOpenChange={() => toggleCategory(category.name)}>
               <CollapsibleTrigger asChild>
                  <SidebarMenuButton variant="ghost" className="w-full justify-start pr-2">
                    <Icon className="h-4 w-4 mr-2" />
                   <span>{category.name}</span>
-                  <ChevronDown className={cn("ml-auto h-4 w-4 transition-transform", openCategories.includes(category.name) && "rotate-180")} />
+                  <ChevronDown className={cn("ml-auto h-4 w-4 transition-transform", isOpen && "rotate-180")} />
                 </SidebarMenuButton>
               </CollapsibleTrigger>
               <CollapsibleContent>
