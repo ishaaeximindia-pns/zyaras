@@ -5,17 +5,21 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import ProductCard from './ProductCard';
 import type { Product } from '@/lib/types';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 
 type ProductShowcaseProps = {
   allProducts: Product[];
 };
 
 export default function ProductShowcase({ allProducts }: ProductShowcaseProps) {
+  const [model, setModel] = useState<'B2C' | 'B2B'>('B2C');
   const [searchTerm, setSearchTerm] = useState('');
   const [category, setCategory] = useState('all');
   const [priceRange, setPriceRange] = useState('all');
 
-  const categories = ['all', ...Array.from(new Set(allProducts.map((p) => p.category)))];
+  const productsForModel = useMemo(() => allProducts.filter(p => p.model === model), [model, allProducts]);
+
+  const categories = ['all', ...Array.from(new Set(productsForModel.map((p) => p.category)))];
   const priceRanges = [
     { value: 'all', label: 'All Prices' },
     { value: '0-25', label: '< $25' },
@@ -24,7 +28,7 @@ export default function ProductShowcase({ allProducts }: ProductShowcaseProps) {
   ];
 
   const filteredProducts = useMemo(() => {
-    return allProducts.filter((product) => {
+    return productsForModel.filter((product) => {
       const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                             product.tagline.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesCategory = category === 'all' || product.category === category;
@@ -36,7 +40,7 @@ export default function ProductShowcase({ allProducts }: ProductShowcaseProps) {
 
       return matchesSearch && matchesCategory && matchesPrice;
     });
-  }, [searchTerm, category, priceRange, allProducts]);
+  }, [searchTerm, category, priceRange, productsForModel]);
 
   return (
     <section id="products" className="w-full py-16 md:py-24 bg-background">
@@ -49,6 +53,13 @@ export default function ProductShowcase({ allProducts }: ProductShowcaseProps) {
             Find the perfect tools to elevate your projects and streamline your workflow.
           </p>
         </div>
+
+        <Tabs value={model} onValueChange={(value) => setModel(value as 'B2B' | 'B2C')} className="w-full mb-8">
+          <TabsList className="grid w-full grid-cols-2 md:w-1/2 mx-auto">
+            <TabsTrigger value="B2C">For Individuals (B2C)</TabsTrigger>
+            <TabsTrigger value="B2B">For Business (B2B)</TabsTrigger>
+          </TabsList>
+        </Tabs>
 
         <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
           <Input

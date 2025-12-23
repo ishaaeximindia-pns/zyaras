@@ -6,6 +6,7 @@ export const products: Product[] = [
     slug: 'nexus-flow',
     name: 'NexusFlow',
     category: 'Productivity',
+    model: 'B2C',
     tagline: 'Orchestrate Your Workflow, Seamlessly.',
     description:
       'NexusFlow is a revolutionary productivity tool that integrates all your apps into a single, intuitive dashboard. Automate tasks, manage projects, and collaborate with your team like never before.',
@@ -85,6 +86,7 @@ export const products: Product[] = [
     slug: 'pixel-forge',
     name: 'PixelForge',
     category: 'Design',
+    model: 'B2C',
     tagline: 'Craft Stunning Visuals, Effortlessly.',
     description:
       'PixelForge is a powerful yet intuitive design tool for creating beautiful graphics, mockups, and prototypes. With a vast library of assets and AI-powered features, your creativity knows no bounds.',
@@ -163,6 +165,7 @@ export const products: Product[] = [
     slug: 'data-sphere',
     name: 'DataSphere',
     category: 'Business',
+    model: 'B2B',
     tagline: 'Unlock Insights from Your Data.',
     description:
       'DataSphere is an enterprise-grade business intelligence platform that turns raw data into actionable insights. Connect your data sources, build interactive dashboards, and share reports with your team.',
@@ -238,6 +241,7 @@ export const products: Product[] = [
     slug: 'connect-iq',
     name: 'ConnectIQ',
     category: 'Development',
+    model: 'B2B',
     tagline: 'Build & Deploy APIs in Minutes.',
     description: 'ConnectIQ is a developer-first platform for building, deploying, and managing APIs. With a powerful code editor, built-in testing, and one-click deployments, you can focus on writing code, not managing infrastructure.',
     keyBenefit: 'Accelerated Development',

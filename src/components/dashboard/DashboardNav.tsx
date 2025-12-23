@@ -53,19 +53,6 @@ export default function DashboardNav() {
             </SidebarMenuItem>
             <SidebarMenuItem>
               <SidebarMenuButton
-                href="/dashboard/subscriptions"
-                asChild
-                isActive={isActive('/dashboard/subscriptions')}
-                tooltip="Subscriptions"
-              >
-                <Link href="#">
-                  <Package />
-                  <span>Subscriptions</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton
                 href="/dashboard/billing"
                 asChild
                 isActive={isActive('/dashboard/billing')}
