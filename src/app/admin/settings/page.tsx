@@ -22,7 +22,7 @@ const settingsSchema = z.object({
   enableTaxes: z.boolean().default(false),
   taxRate: z.coerce.number().min(0).max(100).optional(),
 
-  currency: z.enum(['USD', 'EUR', 'GBP', 'JPY']),
+  currency: z.enum(['USD', 'EUR', 'GBP', 'JPY', 'INR']),
   language: z.enum(['en', 'es', 'fr']),
 });
 
@@ -42,7 +42,7 @@ export default function AdminSettingsPage() {
       shippingFlatRate: 5.00,
       enableTaxes: false,
       taxRate: 8,
-      currency: 'USD',
+      currency: 'INR',
       language: 'en',
     },
   });
@@ -191,6 +191,7 @@ export default function AdminSettingsPage() {
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                           <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
                           <SelectContent>
+                            <SelectItem value="INR">INR - Indian Rupee</SelectItem>
                             <SelectItem value="USD">USD - United States Dollar</SelectItem>
                             <SelectItem value="EUR">EUR - Euro</SelectItem>
                             <SelectItem value="GBP">GBP - British Pound</SelectItem>
