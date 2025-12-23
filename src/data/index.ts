@@ -14,6 +14,7 @@ export const products: Product[] = [
     keyBenefit: 'Perfect Fit',
     price: 68,
     status: 'Popular',
+    isFeatured: true,
     heroImage: 'product-nexus-flow',
     features: [
       {
@@ -74,6 +75,7 @@ export const products: Product[] = [
     keyBenefit: 'Spacious & Stylish',
     price: 125,
     status: 'New',
+    isFeatured: true,
     heroImage: 'product-pixel-forge',
     features: [
       {
@@ -132,6 +134,7 @@ export const products: Product[] = [
       'Our signature Oxford shirt is cut from high-quality cotton for a soft, breathable feel. A versatile piece for any wardrobe.',
     keyBenefit: 'All-Day Comfort',
     price: 55,
+    isFeatured: true,
     heroImage: 'product-data-sphere',
     features: [
       {
@@ -244,6 +247,7 @@ export const products: Product[] = [
       'Our business consulting package provides expert advice to help you scale your operations, optimize your strategy, and increase profitability.',
     keyBenefit: 'Expert Strategy',
     price: 2500,
+    isFeatured: true,
     heroImage: 'use-case-1',
     features: [
         {
@@ -268,4 +272,52 @@ export const products: Product[] = [
         { name: 'Standard', price: '2500', priceSuffix: '/ project', features: ['Initial Consultation', 'Market Analysis Report', 'Strategic Roadmap'], cta: 'Inquire Now', isFeatured: true },
     ]
   },
+  {
+    id: '6',
+    slug: 'silk-blend-scarf',
+    name: 'Silk Blend Scarf',
+    category: 'Women',
+    subcategory: 'Accessories',
+    model: 'B2C',
+    tagline: 'An elegant touch of color.',
+    description: 'A beautiful and lightweight scarf made from a blend of silk and modal. Perfect for adding a pop of color to any outfit.',
+    keyBenefit: 'Lightweight & Versatile',
+    price: 45,
+    status: 'New',
+    heroImage: 'use-case-1',
+    features: [
+      { title: 'Vibrant Colors', description: 'Available in a wide range of rich, vibrant colors.', icon: 'Palette' },
+      { title: 'Luxurious Feel', description: 'The silk-modal blend is incredibly soft and smooth to the touch.', icon: 'Feather' },
+      { title: 'Year-Round Wear', description: 'Lightweight enough for spring and summer, yet provides warmth in cooler months.', icon: 'CalendarDays' },
+    ],
+    useCases: [],
+    faqs: [],
+    pricing: [
+      { name: 'Standard', price: '45', priceSuffix: '', features: ['Free Shipping', 'Easy Returns'], cta: 'Add to Cart', isFeatured: true },
+    ]
+  },
+  {
+    id: '7',
+    slug: 'mens-leather-belt',
+    name: 'Men\'s Leather Belt',
+    category: 'Men',
+    subcategory: 'Accessories',
+    model: 'B2C',
+    tagline: 'The perfect finishing touch.',
+    description: 'A classic leather belt made from genuine leather with a solid brass buckle. A durable and stylish accessory for any man.',
+    keyBenefit: 'Durable & Classic',
+    price: 48,
+    status: 'Popular',
+    heroImage: 'use-case-2',
+    features: [
+      { title: 'Full-Grain Leather', description: 'Made from high-quality full-grain leather that will last for years.', icon: 'ShieldCheck' },
+      { title: 'Solid Brass Buckle', description: 'A sturdy and stylish buckle that resists corrosion.', icon: 'Gem' },
+      { title: 'Versatile Style', description: 'Perfect for both casual and formal occasions.', icon: 'Users' },
+    ],
+    useCases: [],
+    faqs: [],
+    pricing: [
+      { name: 'Standard', price: '48', priceSuffix: '', features: ['5-Year Warranty', 'Free Shipping'], cta: 'Add to Cart', isFeatured: true },
+    ]
+  }
 ];

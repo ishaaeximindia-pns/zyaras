@@ -32,6 +32,7 @@ export type Product = {
   keyBenefit: string;
   price: number;
   status?: 'New' | 'Popular';
+  isFeatured?: boolean;
   heroImage: string;
   features: ProductFeature[];
   useCases: { title: string; description: string; image: string }[];
