@@ -30,7 +30,6 @@ import {
   User,
   Baby,
   Package,
-  CreditCard,
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '../ui/button';
@@ -102,8 +101,8 @@ function CategoryList() {
         const Icon = category.icon;
         const isOpen = openCategories.includes(category.name);
         return (
-            <SidebarMenuItem key={category.name}>
-               <Collapsible open={isOpen} onOpenChange={() => toggleCategory(category.name)}>
+          <Collapsible asChild key={category.name} open={isOpen} onOpenChange={() => toggleCategory(category.name)}>
+            <SidebarMenuItem>
                 <CollapsibleTrigger asChild>
                   <SidebarMenuButton variant="ghost" className="w-full justify-start pr-2">
                     <Icon className="h-4 w-4 mr-2" />
@@ -127,8 +126,8 @@ function CategoryList() {
                     ))}
                   </SidebarMenuSub>
                 </CollapsibleContent>
-              </Collapsible>
             </SidebarMenuItem>
+           </Collapsible>
         )
       })}
     </>
@@ -215,19 +214,6 @@ export default function DashboardNav() {
                 <Link href="/dashboard/orders">
                   <Package />
                   <span>Orders</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-             <SidebarMenuItem>
-              <SidebarMenuButton
-                href="/dashboard/transactions"
-                asChild
-                isActive={isActive('/dashboard/transactions')}
-                tooltip="Transactions"
-              >
-                <Link href="/dashboard/transactions">
-                  <CreditCard />
-                  <span>Transactions</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>

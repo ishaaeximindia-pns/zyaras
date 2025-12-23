@@ -2,6 +2,7 @@
 export const orders = [
   {
     id: 'ORD-001',
+    transactionId: 'TRN-001',
     date: '2024-07-28',
     status: 'Delivered',
     total: 113.00,
@@ -12,6 +13,7 @@ export const orders = [
   },
   {
     id: 'ORD-002',
+    transactionId: 'TRN-002',
     date: '2024-07-25',
     status: 'Shipped',
     total: 55.00,
@@ -21,6 +23,7 @@ export const orders = [
   },
   {
     id: 'ORD-003',
+    transactionId: 'TRN-003',
     date: '2024-07-22',
     status: 'Delivered',
     total: 147.00,
@@ -32,6 +35,7 @@ export const orders = [
   },
    {
     id: 'ORD-004',
+    transactionId: 'TRN-004',
     date: '2024-07-20',
     status: 'Processing',
     total: 35.00,
