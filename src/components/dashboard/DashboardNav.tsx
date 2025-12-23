@@ -96,8 +96,8 @@ function CategoryList() {
       {categories.map((category) => {
         const Icon = category.icon;
         return (
-          <Collapsible asChild key={category.name} open={openCategories.includes(category.name)} onOpenChange={() => toggleCategory(category.name)}>
-            <SidebarMenuItem>
+          <SidebarMenuItem key={category.name}>
+            <Collapsible open={openCategories.includes(category.name)} onOpenChange={() => toggleCategory(category.name)}>
               <CollapsibleTrigger asChild>
                  <SidebarMenuButton variant="ghost" className="w-full justify-start pr-2">
                    <Icon className="h-4 w-4 mr-2" />
@@ -121,8 +121,8 @@ function CategoryList() {
                   ))}
                 </SidebarMenuSub>
               </CollapsibleContent>
-            </SidebarMenuItem>
-          </Collapsible>
+            </Collapsible>
+          </SidebarMenuItem>
         )
       })}
     </>
