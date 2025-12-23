@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { products } from '@/data';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ProductCard from '@/components/products/ProductCard';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 
@@ -13,16 +13,22 @@ export default function DashboardPage() {
   const searchParams = useSearchParams();
   
   const [model, setModel] = useState<'B2C' | 'B2B'>( (searchParams.get('model') as 'B2C' | 'B2B') || 'B2C');
+  const [isClient, setIsClient] = useState(false);
   
   const category = searchParams.get('category');
   const subcategory = searchParams.get('subcategory');
 
   useEffect(() => {
+    setIsClient(true);
     const currentModel = searchParams.get('model');
     if (currentModel && (currentModel === 'B2B' || currentModel === 'B2C')) {
       setModel(currentModel);
     } else {
-      handleModelChange('B2C');
+      // It's important to set the initial state correctly and then let effects handle updates.
+      // The default state is already 'B2C', so we only need to push the new param if it's missing.
+      if (!currentModel) {
+        handleModelChange('B2C');
+      }
     }
   }, [searchParams]);
 
@@ -47,6 +53,10 @@ export default function DashboardPage() {
   const saleProducts = products.filter(p => p.status === 'Sale' && p.model === model);
 
   const showFilterResults = category || subcategory;
+
+  if (!isClient) {
+    return null; // Or a loading spinner
+  }
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 space-y-8">
