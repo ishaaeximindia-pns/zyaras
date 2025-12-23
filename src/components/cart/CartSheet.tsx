@@ -16,10 +16,17 @@ import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Input } from '../ui/input';
 import { Trash2 } from 'lucide-react';
+import { Alert, AlertDescription } from '../ui/alert';
 
-export default function CartSheet({ children }: { children: React.ReactNode }) {
+const B2B_MINIMUM_CART_VALUE = 15000;
+
+export default function CartSheet({ children, model }: { children: React.ReactNode, model: 'B2C' | 'B2B' }) {
   const { cart, updateQuantity, removeFromCart, clearCart } = useCart();
   const subtotal = cart.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
+
+  const isB2B = model === 'B2B';
+  const isBelowB2BMinimum = isB2B && subtotal < B2B_MINIMUM_CART_VALUE;
+  const amountNeededForB2B = B2B_MINIMUM_CART_VALUE - subtotal;
 
   return (
     <Sheet>
@@ -79,7 +86,16 @@ export default function CartSheet({ children }: { children: React.ReactNode }) {
                 <span>Subtotal</span>
                 <span>${subtotal.toFixed(2)}</span>
               </div>
-              <Button className="w-full">
+              
+              {isBelowB2BMinimum && (
+                <Alert variant="destructive">
+                  <AlertDescription>
+                    For B2B orders, you need to add ${amountNeededForB2B.toFixed(2)} more to reach the minimum order value of ${B2B_MINIMUM_CART_VALUE.toFixed(2)}.
+                  </AlertDescription>
+                </Alert>
+              )}
+
+              <Button className="w-full" disabled={isBelowB2BMinimum}>
                 Proceed to Checkout
               </Button>
               <Button variant="outline" className="w-full" onClick={clearCart}>

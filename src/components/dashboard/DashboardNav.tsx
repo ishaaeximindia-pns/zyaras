@@ -191,7 +191,7 @@ export default function DashboardNav() {
 
              <SidebarMenuItem>
                 {isClient ? (
-                  <CartSheet>
+                  <CartSheet model={model as 'B2C' | 'B2B'}>
                     <SidebarMenuButton tooltip="Cart">
                       <ShoppingCart />
                       <span>Cart</span>
