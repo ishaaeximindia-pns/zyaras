@@ -1,18 +1,230 @@
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+'use client';
+
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
+import { useToast } from '@/hooks/use-toast';
+
+const settingsSchema = z.object({
+  storeName: z.string().min(1, 'Store name is required'),
+  storeEmail: z.string().email('Invalid email address'),
+  storePhone: z.string().optional(),
+  storeAddress: z.string().optional(),
+  
+  shippingFlatRate: z.coerce.number().min(0).optional(),
+  enableTaxes: z.boolean().default(false),
+  taxRate: z.coerce.number().min(0).max(100).optional(),
+
+  currency: z.enum(['USD', 'EUR', 'GBP', 'JPY']),
+  language: z.enum(['en', 'es', 'fr']),
+});
+
+type SettingsFormValues = z.infer<typeof settingsSchema>;
 
 export default function AdminSettingsPage() {
+  const { toast } = useToast();
+
+  const form = useForm<SettingsFormValues>({
+    resolver: zodResolver(settingsSchema),
+    // Mock default values
+    defaultValues: {
+      storeName: 'Synergy Suite',
+      storeEmail: 'contact@synergysuite.com',
+      storePhone: '123-456-7890',
+      storeAddress: '123 Tech Lane, Innovation City, 12345',
+      shippingFlatRate: 5.00,
+      enableTaxes: false,
+      taxRate: 8,
+      currency: 'USD',
+      language: 'en',
+    },
+  });
+  
+  const watchEnableTaxes = form.watch('enableTaxes');
+
+  const onSubmit = (data: SettingsFormValues) => {
+    toast({
+      title: 'Settings Saved',
+      description: 'Your general settings have been updated. (This is a mock-up, data is not persisted).',
+    });
+    console.log(data);
+  };
+
   return (
-    <div>
-      <h1 className="text-3xl font-bold mb-6">Admin Settings</h1>
-      <Card>
-        <CardHeader>
-          <CardTitle>General Settings</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-muted-foreground">Admin settings will be implemented here.</p>
-        </CardContent>
-      </Card>
+    <div className="space-y-6">
+      <h1 className="text-3xl font-bold">General Settings</h1>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-8 lg:grid-cols-3">
+          
+          {/* Left Column */}
+          <div className="lg:col-span-2 grid gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Store Details</CardTitle>
+                <CardDescription>Update your store's basic information.</CardDescription>
+              </CardHeader>
+              <CardContent className="grid gap-4">
+                <FormField
+                  control={form.control}
+                  name="storeName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Store Name</FormLabel>
+                      <FormControl><Input {...field} /></FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="storeEmail"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Contact Email</FormLabel>
+                      <FormControl><Input type="email" {...field} /></FormControl>
+                       <FormDescription>This email will be used for customer communication.</FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="storePhone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Store Phone</FormLabel>
+                      <FormControl><Input {...field} /></FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                 <FormField
+                  control={form.control}
+                  name="storeAddress"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Store Address</FormLabel>
+                      <FormControl><Input {...field} /></FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Shipping & Taxes</CardTitle>
+                <CardDescription>Configure how you handle shipping and taxes.</CardDescription>
+              </CardHeader>
+              <CardContent className="grid gap-4">
+                <FormField
+                  control={form.control}
+                  name="shippingFlatRate"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Flat Shipping Rate ($)</FormLabel>
+                      <FormControl><Input type="number" step="0.01" {...field} placeholder="5.00" /></FormControl>
+                       <FormDescription>Set a flat rate for all shipping. Leave blank to disable.</FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                 <FormField
+                  control={form.control}
+                  name="enableTaxes"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                      <div className="space-y-0.5">
+                        <FormLabel>Enable Taxes</FormLabel>
+                        <FormDescription>
+                          Enable this to calculate and collect sales tax at checkout.
+                        </FormDescription>
+                      </div>
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                {watchEnableTaxes && (
+                   <FormField
+                    control={form.control}
+                    name="taxRate"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Default Tax Rate (%)</FormLabel>
+                        <FormControl><Input type="number" step="0.1" {...field} placeholder="8" /></FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Right Column */}
+          <div className="lg:col-span-1 grid gap-6 content-start">
+             <Card>
+                <CardHeader>
+                  <CardTitle>Localization</CardTitle>
+                   <CardDescription>Set your store's currency and language.</CardDescription>
+                </CardHeader>
+                <CardContent className="grid gap-4">
+                  <FormField
+                    control={form.control}
+                    name="currency"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Currency</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
+                          <SelectContent>
+                            <SelectItem value="USD">USD - United States Dollar</SelectItem>
+                            <SelectItem value="EUR">EUR - Euro</SelectItem>
+                            <SelectItem value="GBP">GBP - British Pound</SelectItem>
+                            <SelectItem value="JPY">JPY - Japanese Yen</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                   <FormField
+                    control={form.control}
+                    name="language"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Language</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
+                          <SelectContent>
+                            <SelectItem value="en">English</SelectItem>
+                            <SelectItem value="es">Spanish</SelectItem>
+                            <SelectItem value="fr">French</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </CardContent>
+              </Card>
+               <Button type="submit" size="lg">Save Settings</Button>
+          </div>
+        </form>
+      </Form>
     </div>
   );
 }
