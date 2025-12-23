@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -12,7 +13,7 @@ export default function DashboardPage() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   
-  const [model, setModel] = useState<'B2C' | 'B2B'>( (searchParams.get('model') as 'B2C' | 'B2B') || 'B2C');
+  const [model, setModel] = useState<'B2C' | 'B2B'>('B2C');
   const [isClient, setIsClient] = useState(false);
   
   const category = searchParams.get('category');
@@ -20,17 +21,15 @@ export default function DashboardPage() {
 
   useEffect(() => {
     setIsClient(true);
-    const currentModel = searchParams.get('model');
-    if (currentModel && (currentModel === 'B2B' || currentModel === 'B2C')) {
+    const currentModel = searchParams.get('model') as 'B2C' | 'B2B';
+    if (currentModel && ['B2C', 'B2B'].includes(currentModel)) {
       setModel(currentModel);
     } else {
-      // It's important to set the initial state correctly and then let effects handle updates.
-      // The default state is already 'B2C', so we only need to push the new param if it's missing.
-      if (!currentModel) {
-        handleModelChange('B2C');
-      }
+       const newSearchParams = new URLSearchParams(searchParams.toString());
+       newSearchParams.set('model', 'B2C');
+       router.push(`${pathname}?${newSearchParams.toString()}`);
     }
-  }, [searchParams]);
+  }, [searchParams, pathname, router]);
 
   const handleModelChange = (newModel: 'B2B' | 'B2C') => {
     setModel(newModel);
@@ -138,7 +137,7 @@ export default function DashboardPage() {
 
             <section>
                 <h2 className="text-2xl font-headline font-bold mb-6">All Products</h2>
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                <div className="grid gap-6 md-grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {recommendedProducts.length > 0 ? recommendedProducts.map((product) => (
                     <ProductCard key={product.id} product={product} />
                 )) : <p>No products found.</p>}
