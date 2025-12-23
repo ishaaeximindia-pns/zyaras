@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
+import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
+import DashboardNav from '@/components/dashboard/DashboardNav';
 
 export const metadata: Metadata = {
   title: 'Synergy Digital Suite',
@@ -25,11 +25,10 @@ export default function RootLayout({
         />
       </head>
       <body className="font-body antialiased">
-        <div className="flex min-h-screen flex-col">
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
-        </div>
+        <SidebarProvider>
+          <DashboardNav />
+          <SidebarInset>{children}</SidebarInset>
+        </SidebarProvider>
         <Toaster />
       </body>
     </html>
