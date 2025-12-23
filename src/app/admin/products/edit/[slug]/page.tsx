@@ -11,10 +11,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
 import { ChevronLeft, PlusCircle, Trash2 } from 'lucide-react';
 import Link from 'next/link';
+import { Switch } from '@/components/ui/switch';
 
 const productSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -28,7 +29,7 @@ const productSchema = z.object({
   discountPrice: z.coerce.number().optional(),
   offer: z.enum(['BOGO', 'B2G1']).optional(),
   status: z.enum(['New', 'Popular', 'Sale']).optional(),
-  isFeatured: z.boolean().optional(),
+  isFeatured: z.boolean().default(false),
   features: z.array(z.object({
     title: z.string().min(1),
     description: z.string().min(1),
@@ -263,6 +264,26 @@ export default function ProductEditPage() {
                         </SelectContent>
                       </Select>
                       <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                 <FormField
+                  control={form.control}
+                  name="isFeatured"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm mt-4">
+                      <div className="space-y-0.5">
+                        <FormLabel>Featured Product</FormLabel>
+                        <FormDescription>
+                          Featured products appear on the main dashboard.
+                        </FormDescription>
+                      </div>
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
                     </FormItem>
                   )}
                 />

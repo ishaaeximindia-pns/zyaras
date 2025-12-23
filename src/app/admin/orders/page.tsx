@@ -107,25 +107,20 @@ export default function AdminOrdersPage() {
                                 {order.status}
                             </Badge>
                         </div>
-                        {order.status === 'Shipped' && (
+                        {(order.status === 'Shipped' || order.status === 'Delivered') && (
                             <div className="flex items-center gap-2">
                                 <Input 
                                     placeholder="Carrier Name" 
                                     value={order.carrier || ''}
                                     onChange={(e) => handleShippingInfoChange(order.id, 'carrier', e.target.value)}
-                                    className="h-9"
+                                    className="h-9 flex-1"
                                 />
                                 <Input 
                                     placeholder="Tracking Number" 
                                     value={order.trackingNumber || ''}
                                     onChange={(e) => handleShippingInfoChange(order.id, 'trackingNumber', e.target.value)}
-                                    className="h-9"
+                                    className="h-9 flex-1"
                                 />
-                            </div>
-                        )}
-                        {order.status === 'Delivered' && order.carrier && (
-                             <div className="text-xs text-muted-foreground mt-1">
-                                Shipped via {order.carrier} ({order.trackingNumber})
                             </div>
                         )}
                     </div>
