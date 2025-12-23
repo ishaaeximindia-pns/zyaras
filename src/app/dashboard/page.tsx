@@ -1,20 +1,29 @@
 'use client';
 
 import { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { products } from '@/data';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ProductCard from '@/components/products/ProductCard';
 
 export default function DashboardPage() {
-  const [model, setModel] = useState<'B2B' | 'B2C'>('B2C');
+  const [model, setModel] = useState<'B2C' | 'B2B'>('B2C');
+  const searchParams = useSearchParams();
+  const category = searchParams.get('category');
 
-  const recommendedProducts = products.filter(p => p.model === model);
+  const recommendedProducts = products.filter(p => {
+    const modelMatch = p.model === model;
+    const categoryMatch = !category || category === 'all' || p.category === category;
+    return modelMatch && categoryMatch;
+  });
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 space-y-8">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-headline font-bold">Products</h1>
+          <h1 className="text-3xl font-headline font-bold">
+            {category && category !== 'all' ? category : 'Products'}
+          </h1>
           <p className="text-muted-foreground">Browse our products and find the best fit for you.</p>
         </div>
         <Tabs value={model} onValueChange={(value) => setModel(value as 'B2B' | 'B2C')} className="w-full sm:w-auto">
@@ -29,18 +38,18 @@ export default function DashboardPage() {
         <TabsContent value="B2C">
            <section>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {recommendedProducts.map((product) => (
+              {recommendedProducts.length > 0 ? recommendedProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
-              ))}
+              )) : <p>No products found in this category.</p>}
             </div>
           </section>
         </TabsContent>
         <TabsContent value="B2B">
            <section>
              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {recommendedProducts.map((product) => (
+              {recommendedProducts.length > 0 ? recommendedProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
-              ))}
+              )) : <p>No products found in this category.</p>}
             </div>
           </section>
         </TabsContent>

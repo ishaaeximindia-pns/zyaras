@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import {
   Sidebar,
   SidebarContent,
@@ -12,6 +12,9 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarGroupLabel,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
 } from '@/components/ui/sidebar';
 import Logo from '@/components/shared/Logo';
 import {
@@ -22,17 +25,30 @@ import {
   Settings,
   Package,
   ShoppingCart,
+  ChevronDown,
+  Tag,
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '../ui/button';
 import CartSheet from '../cart/CartSheet';
 import { useCart } from '@/context/CartContext';
+import { products } from '@/data';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
+import { useState } from 'react';
+import { cn } from '@/lib/utils';
 
 export default function DashboardNav() {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const isActive = (path: string) => pathname === path;
   const { cart } = useCart();
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+  const [isCategoryOpen, setIsCategoryOpen] = useState(true);
+
+  const categories = ['All', ...Array.from(new Set(products.map((p) => p.category)))];
+  const activeCategory = searchParams.get('category') || 'All';
+
 
   return (
     <Sidebar>
@@ -47,7 +63,7 @@ export default function DashboardNav() {
               <SidebarMenuButton
                 href="/dashboard"
                 asChild
-                isActive={isActive('/dashboard')}
+                isActive={isActive('/dashboard') && !searchParams.get('category')}
                 tooltip="Dashboard"
               >
                 <Link href="/dashboard">
@@ -59,6 +75,31 @@ export default function DashboardNav() {
           </SidebarGroup>
           <SidebarGroup>
             <SidebarGroupLabel>Shop</SidebarGroupLabel>
+            <Collapsible open={isCategoryOpen} onOpenChange={setIsCategoryOpen}>
+              <CollapsibleTrigger asChild>
+                <SidebarMenuButton variant="ghost" className="w-full justify-start">
+                   <Tag />
+                  <span>Categories</span>
+                  <ChevronDown className={cn("ml-auto h-4 w-4 transition-transform", isCategoryOpen && "rotate-180")} />
+                </SidebarMenuButton>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <SidebarMenuSub>
+                  {categories.map((category) => (
+                    <SidebarMenuSubItem key={category}>
+                      <SidebarMenuSubButton 
+                        asChild 
+                        isActive={activeCategory === category || (category === 'All' && !searchParams.get('category'))}
+                      >
+                         <Link href={`/dashboard?category=${category === 'All' ? 'all' : category}`}>
+                          {category}
+                        </Link>
+                      </SidebarMenuSubButton>
+                    </SidebarMenuSubItem>
+                  ))}
+                </SidebarMenuSub>
+              </CollapsibleContent>
+            </Collapsible>
              <SidebarMenuItem>
                 <CartSheet>
                   <SidebarMenuButton tooltip="Cart">
