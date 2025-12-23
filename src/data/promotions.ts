@@ -1,12 +1,14 @@
 
 export type Promotion = {
   code: string;
-  discountType: 'Percentage' | 'Fixed Amount';
+  discountType: 'Percentage' | 'Fixed Amount' | 'Tiered Discount';
   discount: number;
   status: 'Active' | 'Expired';
   expiryDate: string;
   usageCount: number;
   usageLimit: number;
+  minimumSpend?: number;
+  tieredDiscount?: number;
 };
 
 export const promotions: Promotion[] = [
@@ -27,6 +29,17 @@ export const promotions: Promotion[] = [
     expiryDate: '2024-12-31',
     usageCount: 112,
     usageLimit: 1000,
+  },
+  {
+    code: 'SPENDSAVE100',
+    discountType: 'Tiered Discount',
+    discount: 10, // 10%
+    minimumSpend: 1000,
+    tieredDiscount: 100, // $100
+    status: 'Active',
+    expiryDate: '2024-10-31',
+    usageCount: 5,
+    usageLimit: 100,
   },
   {
     code: 'SPRINGCLEAN',

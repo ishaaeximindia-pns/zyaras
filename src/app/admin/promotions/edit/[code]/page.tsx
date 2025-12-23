@@ -9,7 +9,7 @@ import * as z from 'zod';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
@@ -21,13 +21,15 @@ import { format } from 'date-fns';
 
 const promotionSchema = z.object({
   code: z.string().min(1, 'Coupon code is required'),
-  discountType: z.enum(['Percentage', 'Fixed Amount']),
-  discount: z.coerce.number().min(1, 'Discount value is required'),
+  discountType: z.enum(['Percentage', 'Fixed Amount', 'Tiered Discount']),
+  discount: z.coerce.number().min(0, 'Discount value is required'),
   expiryDate: z.date({
     required_error: "An expiration date is required.",
   }),
   status: z.enum(['Active', 'Expired']),
   usageLimit: z.coerce.number().min(0, 'Usage limit must be a positive number'),
+  minimumSpend: z.coerce.number().optional(),
+  tieredDiscount: z.coerce.number().optional(),
 }).refine(data => !(data.discountType === 'Percentage' && data.discount > 100), {
   message: "Percentage discount cannot exceed 100%",
   path: ["discount"],
@@ -114,38 +116,87 @@ export default function PromotionEditPage() {
                         <SelectContent>
                             <SelectItem value="Percentage">Percentage</SelectItem>
                             <SelectItem value="Fixed Amount">Fixed Amount</SelectItem>
+                            <SelectItem value="Tiered Discount">Tiered Discount</SelectItem>
                         </SelectContent>
                         </Select>
                         <FormMessage />
                     </FormItem>
                     )}
                 />
-                <FormField
-                  control={form.control}
-                  name="discount"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Discount Value</FormLabel>
-                      <div className="relative">
-                         <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                          <span className="text-gray-500 sm:text-sm">
-                            {watchDiscountType === 'Percentage' ? '%' : '$'}
-                          </span>
+                 {watchDiscountType !== 'Tiered Discount' && (
+                  <FormField
+                    control={form.control}
+                    name="discount"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Discount Value</FormLabel>
+                        <div className="relative">
+                          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                            <span className="text-gray-500 sm:text-sm">
+                              {watchDiscountType === 'Percentage' ? '%' : '$'}
+                            </span>
+                          </div>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              {...field}
+                              placeholder={watchDiscountType === 'Percentage' ? "20" : "20.00"}
+                              className="pl-7"
+                            />
+                          </FormControl>
                         </div>
-                        <FormControl>
-                          <Input
-                            type="number"
-                            {...field}
-                            placeholder={watchDiscountType === 'Percentage' ? "20" : "20.00"}
-                            className="pl-7"
-                          />
-                        </FormControl>
-                      </div>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                 )}
               </div>
+
+              {watchDiscountType === 'Tiered Discount' && (
+                <Card className="bg-muted/50 p-4">
+                  <FormDescription className="mb-4">
+                    Apply a discount when the order total is above a certain amount.
+                    The final discount will be the higher of the two values (percentage or fixed amount).
+                  </FormDescription>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                     <FormField
+                      control={form.control}
+                      name="minimumSpend"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Minimum Spend ($)</FormLabel>
+                          <FormControl><Input type="number" {...field} placeholder="1000" /></FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="discount"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Discount (%)</FormLabel>
+                          <FormControl><Input type="number" {...field} placeholder="10" /></FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                     <FormField
+                      control={form.control}
+                      name="tieredDiscount"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Or Fixed Discount ($)</FormLabel>
+                          <FormControl><Input type="number" {...field} placeholder="100" /></FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </Card>
+              )}
+
+
               <FormField
                 control={form.control}
                 name="expiryDate"

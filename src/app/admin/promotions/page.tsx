@@ -11,6 +11,21 @@ import Link from 'next/link';
 import { promotions } from '@/data/promotions';
 
 export default function AdminPromotionsPage() {
+
+  const getDiscountDisplay = (promo: typeof promotions[0]) => {
+    switch (promo.discountType) {
+      case 'Percentage':
+        return `${promo.discount}%`;
+      case 'Fixed Amount':
+        return `$${promo.discount.toFixed(2)}`;
+      case 'Tiered Discount':
+        return `Above $${promo.minimumSpend}: ${promo.discount}% or $${promo.tieredDiscount}, whichever is higher`;
+      default:
+        return 'N/A';
+    }
+  };
+
+
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
@@ -44,7 +59,7 @@ export default function AdminPromotionsPage() {
                 <TableRow key={promo.code}>
                   <TableCell className="font-medium">{promo.code}</TableCell>
                   <TableCell>
-                    {promo.discountType === 'Percentage' ? `${promo.discount}%` : `$${promo.discount.toFixed(2)}`}
+                    {getDiscountDisplay(promo)}
                   </TableCell>
                   <TableCell>
                     <Badge variant={promo.status === 'Active' ? 'default' : 'secondary'}>
