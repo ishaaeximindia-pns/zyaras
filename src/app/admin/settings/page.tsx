@@ -20,7 +20,7 @@ const settingsSchema = z.object({
   
   shippingFlatRate: z.coerce.number().min(0).optional(),
   enableTaxes: z.boolean().default(false),
-  taxRate: z.coerce.number().min(0).max(100).optional(),
+  taxRate: z.string().optional(),
 
   currency: z.enum(['USD', 'EUR', 'GBP', 'JPY', 'INR']),
   language: z.enum(['en', 'es', 'fr']),
@@ -41,7 +41,7 @@ export default function AdminSettingsPage() {
       storeAddress: '123 Tech Lane, Innovation City, 12345',
       shippingFlatRate: 5.00,
       enableTaxes: false,
-      taxRate: 8,
+      taxRate: "18",
       currency: 'INR',
       language: 'en',
     },
@@ -56,6 +56,8 @@ export default function AdminSettingsPage() {
     });
     console.log(data);
   };
+
+  const gstRates = ["0", "5", "12", "18", "28", "40"];
 
   return (
     <div className="space-y-6">
@@ -163,8 +165,15 @@ export default function AdminSettingsPage() {
                     name="taxRate"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Default Tax Rate (%)</FormLabel>
-                        <FormControl><Input type="number" step="0.1" {...field} placeholder="8" /></FormControl>
+                        <FormLabel>Default GST Rate</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
+                          <SelectContent>
+                            {gstRates.map(rate => (
+                              <SelectItem key={rate} value={rate}>{rate}%</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                         <FormMessage />
                       </FormItem>
                     )}
