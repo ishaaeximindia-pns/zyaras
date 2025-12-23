@@ -190,17 +190,24 @@ export default function DashboardNav() {
             {isClient && <CategoryList />}
 
              <SidebarMenuItem>
-                <CartSheet>
-                  <SidebarMenuButton tooltip="Cart">
+                {isClient ? (
+                  <CartSheet>
+                    <SidebarMenuButton tooltip="Cart">
+                      <ShoppingCart />
+                      <span>Cart</span>
+                      {totalItems > 0 && (
+                        <span className="ml-auto inline-flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs">
+                          {totalItems}
+                        </span>
+                      )}
+                    </SidebarMenuButton>
+                  </CartSheet>
+                ) : (
+                  <SidebarMenuButton tooltip="Cart" disabled>
                     <ShoppingCart />
                     <span>Cart</span>
-                    {totalItems > 0 && (
-                       <span className="ml-auto inline-flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs">
-                        {totalItems}
-                      </span>
-                    )}
                   </SidebarMenuButton>
-                </CartSheet>
+                )}
             </SidebarMenuItem>
           </SidebarGroup>
           <SidebarGroup>
