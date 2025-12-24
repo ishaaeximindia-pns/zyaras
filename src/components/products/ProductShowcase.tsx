@@ -17,20 +17,30 @@ export default function ProductShowcase({ allProducts }: ProductShowcaseProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  
   const { searchTerm } = useSearch();
 
-  const model = (searchParams.get('model') as 'B2C' | 'B2B') || 'B2C';
+  const [isClient, setIsClient] = useState(false);
   const [category, setCategory] = useState('all');
   const [priceRange, setPriceRange] = useState('all');
   
+  const model = (searchParams.get('model') as 'B2C' | 'B2B') || 'B2C';
+
+  useEffect(() => {
+    setIsClient(true);
+    const paramsCategory = searchParams.get('category') || 'all';
+    setCategory(paramsCategory);
+  }, [searchParams]);
+
   const handleModelChange = (newModel: 'B2B' | 'B2C') => {
     const newSearchParams = new URLSearchParams(searchParams.toString());
     newSearchParams.set('model', newModel);
+    newSearchParams.delete('category');
+    newSearchParams.delete('subcategory');
     router.push(`${pathname}?${newSearchParams.toString()}`);
   }
 
-  const categories = ['all', ...Array.from(new Set(allProducts.map((p) => p.category)))];
+  const categories = useMemo(() => ['all', ...Array.from(new Set(allProducts.map((p) => p.category)))], [allProducts]);
+  
   const priceRanges = [
     { value: 'all', label: 'All Prices' },
     { value: '0-50', label: '< $50' },
@@ -55,6 +65,11 @@ export default function ProductShowcase({ allProducts }: ProductShowcaseProps) {
       return matchesSearch && matchesCategory && matchesPrice;
     });
   }, [searchTerm, category, priceRange, allProducts]);
+  
+  if (!isClient) {
+    // You can render a loading skeleton here if you want
+    return null;
+  }
 
   return (
     <div className="space-y-8">
