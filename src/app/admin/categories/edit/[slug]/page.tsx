@@ -10,7 +10,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { useToast } from '@/hooks/use-toast';
 import { ChevronLeft, PlusCircle, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -26,7 +25,6 @@ export default function CategoryEditPage() {
   const params = useParams();
   const { slug } = params;
   const isNewCategory = slug === 'new';
-  const { toast } = useToast();
 
   const categoryName = isNewCategory ? '' : decodeURIComponent(slug as string);
   const existingSubcategories = isNewCategory ? [] : Array.from(new Set(products.filter(p => p.category === categoryName).map(p => p.subcategory)));
@@ -45,10 +43,7 @@ export default function CategoryEditPage() {
   });
 
   const onSubmit = (data: CategoryFormValues) => {
-    toast({
-      title: `Category ${isNewCategory ? 'created' : 'updated'}`,
-      description: `${data.name} has been saved.`,
-    });
+    // Data would be saved to a database in a real application
     router.push('/admin/categories');
   };
 

@@ -13,7 +13,6 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
-import { useToast } from '@/hooks/use-toast';
 import { ChevronLeft, CalendarIcon } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
@@ -43,7 +42,6 @@ export default function PromotionEditPage() {
   const params = useParams();
   const { code } = params;
   const isNew = code === 'new';
-  const { toast } = useToast();
 
   const promotion = isNew ? null : promotions.find((p) => p.code === code);
 
@@ -65,10 +63,7 @@ export default function PromotionEditPage() {
   const watchDiscountType = form.watch('discountType');
 
   const onSubmit = (data: PromotionFormValues) => {
-    toast({
-      title: `Coupon ${isNew ? 'created' : 'updated'}`,
-      description: `Coupon code ${data.code} has been saved.`,
-    });
+    // Data would be saved to a database in a real application
     router.push('/admin/promotions');
   };
 

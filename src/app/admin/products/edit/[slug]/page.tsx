@@ -12,7 +12,6 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { useToast } from '@/hooks/use-toast';
 import { ChevronLeft, PlusCircle, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { Switch } from '@/components/ui/switch';
@@ -45,7 +44,6 @@ export default function ProductEditPage() {
   const { slug } = params;
   const isNewProduct = slug === 'new';
   const product = isNewProduct ? null : products.find((p) => p.slug === slug);
-  const { toast } = useToast();
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
@@ -79,10 +77,7 @@ export default function ProductEditPage() {
   }
 
   const onSubmit = (data: ProductFormValues) => {
-    toast({
-      title: `Product ${isNewProduct ? 'created' : 'updated'}`,
-      description: `${data.name} has been saved.`,
-    });
+    // Data would be saved to a database in a real application
     router.push('/admin/products');
   };
   

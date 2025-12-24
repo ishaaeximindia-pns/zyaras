@@ -10,7 +10,6 @@ import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
-import { useToast } from '@/hooks/use-toast';
 import { storeSettings } from '@/data/settings';
 
 const settingsSchema = z.object({
@@ -33,7 +32,6 @@ const settingsSchema = z.object({
 type SettingsFormValues = z.infer<typeof settingsSchema>;
 
 export default function AdminSettingsPage() {
-  const { toast } = useToast();
 
   const form = useForm<SettingsFormValues>({
     resolver: zodResolver(settingsSchema),
@@ -46,11 +44,8 @@ export default function AdminSettingsPage() {
   const watchEnableTaxes = form.watch('enableTaxes');
 
   const onSubmit = (data: SettingsFormValues) => {
-    toast({
-      title: 'Settings Saved',
-      description: 'Your general settings have been updated.',
-    });
-    console.log(data);
+    // Data would be saved to a database in a real application
+    console.log("Settings saved", data);
   };
 
   const gstRates = ["0", "5", "12", "18", "28", "40"];
