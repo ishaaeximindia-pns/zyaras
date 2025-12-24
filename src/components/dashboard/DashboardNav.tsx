@@ -16,6 +16,7 @@ import {
   SidebarGroupLabel,
   SidebarMenuSub,
   SidebarMenuSubButton,
+  SidebarInput,
 } from '@/components/ui/sidebar';
 import Logo from '@/components/shared/Logo';
 import {
@@ -31,6 +32,7 @@ import {
   Baby,
   Package,
   Shield,
+  Search,
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '../ui/button';
@@ -40,6 +42,7 @@ import { products } from '@/data';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
 import { useState, useMemo, useEffect } from 'react';
 import { cn } from '@/lib/utils';
+import { useSearch } from '@/context/SearchContext';
 
 interface CategoryWithSubcategories {
   name: string;
@@ -144,6 +147,8 @@ export default function DashboardNav() {
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   const model = searchParams.get('model') || 'B2C';
+  const { searchTerm, setSearchTerm } = useSearch();
+
 
   const [isClient, setIsClient] = useState(false);
   useEffect(() => {
@@ -157,6 +162,17 @@ export default function DashboardNav() {
       </SidebarHeader>
       <SidebarContent>
         <SidebarMenu>
+          <SidebarGroup>
+             <div className="relative mb-2 px-2">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <SidebarInput 
+                placeholder="Search products..." 
+                className="pl-8" 
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+          </SidebarGroup>
           <SidebarGroup>
             <SidebarGroupLabel>Main</SidebarGroupLabel>
             <SidebarMenuItem>

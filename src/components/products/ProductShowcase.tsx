@@ -1,13 +1,14 @@
 
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
-import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import ProductCard from './ProductCard';
 import type { Product } from '@/lib/types';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useSearch } from '@/context/SearchContext';
+import { Input } from '../ui/input';
 
 type ProductShowcaseProps = {
   allProducts: Product[];
@@ -18,10 +19,16 @@ export default function ProductShowcase({ allProducts }: ProductShowcaseProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   
+  const { searchTerm, setSearchTerm } = useSearch();
+  const [localSearch, setLocalSearch] = useState(searchTerm);
+
   const model = (searchParams.get('model') as 'B2C' | 'B2B') || 'B2C';
-  const [searchTerm, setSearchTerm] = useState('');
   const [category, setCategory] = useState('all');
   const [priceRange, setPriceRange] = useState('all');
+  
+  useEffect(() => {
+    setLocalSearch(searchTerm);
+  }, [searchTerm]);
 
   const handleModelChange = (newModel: 'B2B' | 'B2C') => {
     const newSearchParams = new URLSearchParams(searchParams.toString());
@@ -40,8 +47,8 @@ export default function ProductShowcase({ allProducts }: ProductShowcaseProps) {
 
   const filteredProducts = useMemo(() => {
     return allProducts.filter((product) => {
-      const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                            product.tagline.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesSearch = product.name.toLowerCase().includes(localSearch.toLowerCase()) ||
+                            product.tagline.toLowerCase().includes(localSearch.toLowerCase());
       const matchesCategory = category === 'all' || product.category === category;
       const price = product.discountPrice || product.price;
       const matchesPrice =
@@ -53,14 +60,14 @@ export default function ProductShowcase({ allProducts }: ProductShowcaseProps) {
 
       return matchesSearch && matchesCategory && matchesPrice;
     });
-  }, [searchTerm, category, priceRange, allProducts]);
+  }, [localSearch, category, priceRange, allProducts]);
 
   return (
     <div className="space-y-8">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-3xl font-headline font-bold capitalize">
-            {category !== 'all' ? category : 'Products'}
+            {category !== 'all' ? category : 'All Products'}
           </h1>
           <p className="text-muted-foreground">
             {category !== 'all' ? `Browse products in the ${category} category.` : 'Discover our curated collection of products.'}
@@ -76,9 +83,9 @@ export default function ProductShowcase({ allProducts }: ProductShowcaseProps) {
 
        <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
           <Input
-            placeholder="Search products..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Filter current view..."
+            value={localSearch}
+            onChange={(e) => setLocalSearch(e.target.value)}
             className="w-full"
           />
           <Select value={category} onValueChange={setCategory}>
@@ -117,7 +124,7 @@ export default function ProductShowcase({ allProducts }: ProductShowcaseProps) {
       ) : (
         <div className="text-center py-16">
           <h3 className="text-2xl font-semibold">No Products Found</h3>
-          <p className="text-muted-foreground mt-2">Try adjusting your filters to find what you're looking for.</p>
+          <p className="text-muted-foreground mt-2">Try adjusting your search or filters to find what you're looking for.</p>
         </div>
       )}
     </div>
