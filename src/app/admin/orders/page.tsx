@@ -67,8 +67,7 @@ export default function AdminOrdersPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {orders.map((order) => (
-                <TableRow key={order.id}>
+              {orders.map((order) => (<TableRow key={order.id}>
                   <TableCell className="font-medium">{order.id}</TableCell>
                   <TableCell>Mock Customer</TableCell> {/* Placeholder */}
                   <TableCell>{order.date}</TableCell>
@@ -142,8 +141,7 @@ export default function AdminOrdersPage() {
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
-                </TableRow>
-              ))}
+                </TableRow>))}
             </TableBody>
           </Table>
         </CardContent>
