@@ -120,7 +120,16 @@ export default function ProductPage() {
               </Button>
             </div>
             <div className="relative aspect-video rounded-xl shadow-2xl overflow-hidden">
-              {heroImage && (
+               {product.videoUrl ? (
+                <iframe
+                  src={product.videoUrl}
+                  title={product.name}
+                  className="w-full h-full"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                ></iframe>
+              ) : heroImage && (
                 <Image
                   src={heroImage.imageUrl}
                   alt={product.name}

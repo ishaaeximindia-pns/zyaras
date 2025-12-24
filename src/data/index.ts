@@ -502,6 +502,7 @@ export const products: Product[] = [
     status: 'Popular',
     isFeatured: true,
     heroImage: 'service-package',
+    videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
     features: [
       { title: 'All-Inclusive Services', description: 'Includes Visa Processing, Logistics, Market Analysis, and Travel Arrangements.', icon: 'Package' },
       { title: 'Dedicated Project Manager', description: 'A single point of contact to coordinate all aspects of your project.', icon: 'UserCog' },

@@ -47,6 +47,7 @@ export type Product = {
   status?: 'New' | 'Popular' | 'Sale';
   isFeatured?: boolean;
   heroImage: string;
+  videoUrl?: string;
   features: ProductFeature[];
   variants?: ProductVariant[];
   useCases: { title: string; description: string; image: string }[];
