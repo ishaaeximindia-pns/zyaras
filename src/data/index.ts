@@ -386,5 +386,131 @@ export const products: Product[] = [
     pricing: [
       { name: 'Standard', price: '22', priceSuffix: '', features: ['Free Shipping on orders over $50', 'Easy Returns'], cta: 'Add to Cart', isFeatured: true },
     ]
+  },
+  {
+    id: '10',
+    slug: 'visa-processing-compliance',
+    name: 'Visa Processing & Compliance',
+    category: 'Services',
+    subcategory: 'Global Trade',
+    model: 'B2B',
+    tagline: 'Navigate international travel regulations with ease.',
+    description: 'Our experts handle the entire visa application process, ensuring all documentation is accurate and compliant with the latest regulations for your destination country.',
+    keyBenefit: 'Hassle-Free Visas',
+    price: 800,
+    status: 'New',
+    isFeatured: false,
+    heroImage: 'service-visa',
+    features: [
+      { title: 'End-to-End Application Management', description: 'We manage everything from form submission to appointment scheduling.', icon: 'FileCheck' },
+      { title: 'Documentation Verification', description: 'Thorough review of all required documents to prevent delays or rejections.', icon: 'ClipboardCheck' },
+      { title: 'Regulatory Updates', description: 'Stay informed on changing visa policies and entry requirements.', icon: 'Globe' }
+    ],
+    useCases: [],
+    faqs: [],
+    pricing: [
+      { name: 'Per Traveler', price: '800', priceSuffix: '', features: ['Full application handling', 'Document checklist', 'Status updates'], cta: 'Get Started', isFeatured: true }
+    ]
+  },
+  {
+    id: '11',
+    slug: 'logistics-customs-clearance',
+    name: 'Logistics & Customs Clearance',
+    category: 'Services',
+    subcategory: 'Global Trade',
+    model: 'B2B',
+    tagline: 'Streamline your international shipping and importing.',
+    description: 'We provide comprehensive logistics support, from freight forwarding to customs brokerage, ensuring your goods cross borders smoothly and efficiently.',
+    keyBenefit: 'Efficient Importing',
+    price: 3200,
+    status: 'New',
+    isFeatured: false,
+    heroImage: 'service-logistics',
+    features: [
+      { title: 'Freight Forwarding', description: 'Reliable and cost-effective shipping solutions by air, sea, and land.', icon: 'Ship' },
+      { title: 'Customs Brokerage', description: 'Expert handling of all customs documentation and duties to ensure compliance.', icon: 'BookUser' },
+      { title: 'Warehouse & Distribution', description: 'Secure storage and efficient distribution of your imported goods.', icon: 'Warehouse' }
+    ],
+    useCases: [],
+    faqs: [],
+    pricing: [
+      { name: 'Per Shipment', price: '3200', priceSuffix: '', features: ['Customs filing', 'Freight coordination', 'Real-time tracking'], cta: 'Get a Quote', isFeatured: true }
+    ]
+  },
+  {
+    id: '12',
+    slug: 'market-analysis-entry',
+    name: 'Market Analysis & Entry Strategy',
+    category: 'Services',
+    subcategory: 'Global Trade',
+    model: 'B2B',
+    tagline: 'Enter new markets with data-driven confidence.',
+    description: 'Our team delivers in-depth market research, competitive analysis, and a tailored entry strategy to maximize your success in foreign markets.',
+    keyBenefit: 'Informed Decisions',
+    price: 5500,
+    status: 'Popular',
+    isFeatured: false,
+    heroImage: 'service-market-analysis',
+    features: [
+      { title: 'Competitive Landscape', description: 'Comprehensive analysis of key competitors, pricing, and market share.', icon: 'Target' },
+      { title: 'Consumer Behavior Insights', description: 'Understand local customer needs, preferences, and purchasing habits.', icon: 'Users' },
+      { title: 'Go-to-Market Roadmap', description: 'A step-by-step plan for product launch, marketing, and sales channel development.', icon: 'Map' }
+    ],
+    useCases: [],
+    faqs: [],
+    pricing: [
+      { name: 'Per Market', price: '5500', priceSuffix: '', features: ['Full market report', 'Competitor benchmark', 'Strategic recommendations'], cta: 'Learn More', isFeatured: true }
+    ]
+  },
+  {
+    id: '13',
+    slug: 'travel-accommodation-logistics',
+    name: 'Travel & Accommodation Logistics',
+    category: 'Services',
+    subcategory: 'Global Trade',
+    model: 'B2B',
+    tagline: 'Seamless travel arrangements for your business trip.',
+    description: 'We handle all aspects of your business travel, including flight bookings, ground transportation, and accommodations that meet your professional needs and budget.',
+    keyBenefit: 'Stress-Free Travel',
+    price: 1200,
+    status: 'New',
+    isFeatured: false,
+    heroImage: 'service-travel',
+    features: [
+      { title: 'Optimized Flight Itineraries', description: 'Booking the most efficient and cost-effective routes for your team.', icon: 'Plane' },
+      { title: 'Corporate Housing', description: 'Comfortable and convenient accommodations, from hotels to serviced apartments.', icon: 'Hotel' },
+      { title: 'Ground Transportation', description: 'Coordination of airport transfers, rental cars, and local transport.', icon: 'Car' }
+    ],
+    useCases: [],
+    faqs: [],
+    pricing: [
+      { name: 'Per Traveler', price: '1200', priceSuffix: '', features: ['Flight & hotel booking', '24/7 travel support', 'Itinerary management'], cta: 'Arrange Trip', isFeatured: true }
+    ]
+  },
+  {
+    id: '14',
+    slug: 'global-trade-accelerator-package',
+    name: 'Global Trade Accelerator Package',
+    category: 'Services',
+    subcategory: 'Global Trade',
+    model: 'B2B',
+    tagline: 'Your all-in-one solution for international expansion.',
+    description: 'This comprehensive package combines all our essential global trade services to provide a seamless, end-to-end solution for your foreign business ventures. From initial market research to final customs clearance, we\'ve got you covered.',
+    keyBenefit: 'Seamless Expansion',
+    price: 9500,
+    discountPrice: 8500,
+    status: 'Popular',
+    isFeatured: true,
+    heroImage: 'service-package',
+    features: [
+      { title: 'All-Inclusive Services', description: 'Includes Visa Processing, Logistics, Market Analysis, and Travel Arrangements.', icon: 'Package' },
+      { title: 'Dedicated Project Manager', description: 'A single point of contact to coordinate all aspects of your project.', icon: 'UserCog' },
+      { title: 'Cost Savings', description: 'Bundled pricing offers significant savings compared to individual service costs.', icon: 'BadgePercent' }
+    ],
+    useCases: [],
+    faqs: [],
+    pricing: [
+      { name: 'Complete Package', price: '8500', priceSuffix: '/ project', features: ['Visa & Travel for 1', '1 Market Analysis Report', '1 Shipment Logistics', 'Dedicated Manager'], cta: 'Launch Globally', isFeatured: true }
+    ]
   }
 ];
