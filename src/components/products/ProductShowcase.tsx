@@ -6,7 +6,6 @@ import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import ProductCard from './ProductCard';
 import type { Product } from '@/lib/types';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useSearch } from '@/context/SearchContext';
 
 type ProductShowcaseProps = {
@@ -23,16 +22,12 @@ export default function ProductShowcase({ allProducts }: ProductShowcaseProps) {
   const [category, setCategory] = useState('all');
   const [priceRange, setPriceRange] = useState('all');
   
-  const model = (searchParams.get('model') as 'B2C' | 'B2B') || 'B2C';
-
   useEffect(() => {
     setIsClient(true);
     const paramsCategory = searchParams.get('category') || 'all';
     const paramsSubCategory = searchParams.get('subcategory');
 
     if (paramsSubCategory) {
-        // If there's a subcategory, we can usually infer the main category.
-        // For this app, we'll just set the category filter if it exists.
         if (paramsCategory) {
             setCategory(paramsCategory);
         }
@@ -40,14 +35,6 @@ export default function ProductShowcase({ allProducts }: ProductShowcaseProps) {
         setCategory(paramsCategory);
     }
   }, [searchParams]);
-
-  const handleModelChange = (newModel: 'B2B' | 'B2C') => {
-    const newSearchParams = new URLSearchParams(searchParams.toString());
-    newSearchParams.set('model', newModel);
-    newSearchParams.delete('category');
-    newSearchParams.delete('subcategory');
-    router.push(`${pathname}?${newSearchParams.toString()}`);
-  }
 
   const categories = useMemo(() => ['all', ...Array.from(new Set(allProducts.map((p) => p.category)))], [allProducts]);
   
@@ -98,12 +85,6 @@ export default function ProductShowcase({ allProducts }: ProductShowcaseProps) {
             {category !== 'all' ? `Browse products in the ${category} category.` : 'Discover our curated collection of products.'}
           </p>
         </div>
-        <Tabs value={model} onValueChange={(value) => handleModelChange(value as 'B2B' | 'B2C')} className="w-full sm:w-auto">
-          <TabsList>
-            <TabsTrigger value="B2C">For Individuals (B2C)</TabsTrigger>
-            <TabsTrigger value="B2B">For Business (B2B)</TabsTrigger>
-          </TabsList>
-        </Tabs>
       </div>
 
        <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
