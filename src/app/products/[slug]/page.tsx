@@ -2,7 +2,7 @@
 'use client';
 
 import { products } from '@/data';
-import { notFound } from 'next/navigation';
+import { notFound, useParams } from 'next/navigation';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Button } from '@/components/ui/button';
@@ -14,11 +14,14 @@ import ProductCarousel from '@/components/products/ProductCarousel';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 
-export default function ProductPage({ params }: { params: { slug: string } }) {
+export default function ProductPage() {
+  const params = useParams();
+  const { slug } = params;
+
   const { addToCart } = useCart();
   const { toast } = useToast();
 
-  const product = products.find((p) => p.slug === params.slug);
+  const product = products.find((p) => p.slug === slug);
 
   if (!product) {
     notFound();
