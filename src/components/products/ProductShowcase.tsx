@@ -8,7 +8,6 @@ import ProductCard from './ProductCard';
 import type { Product } from '@/lib/types';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useSearch } from '@/context/SearchContext';
-import { Input } from '../ui/input';
 
 type ProductShowcaseProps = {
   allProducts: Product[];
@@ -19,17 +18,12 @@ export default function ProductShowcase({ allProducts }: ProductShowcaseProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   
-  const { searchTerm, setSearchTerm } = useSearch();
-  const [localSearch, setLocalSearch] = useState(searchTerm);
+  const { searchTerm } = useSearch();
 
   const model = (searchParams.get('model') as 'B2C' | 'B2B') || 'B2C';
   const [category, setCategory] = useState('all');
   const [priceRange, setPriceRange] = useState('all');
   
-  useEffect(() => {
-    setLocalSearch(searchTerm);
-  }, [searchTerm]);
-
   const handleModelChange = (newModel: 'B2B' | 'B2C') => {
     const newSearchParams = new URLSearchParams(searchParams.toString());
     newSearchParams.set('model', newModel);
@@ -47,8 +41,8 @@ export default function ProductShowcase({ allProducts }: ProductShowcaseProps) {
 
   const filteredProducts = useMemo(() => {
     return allProducts.filter((product) => {
-      const matchesSearch = product.name.toLowerCase().includes(localSearch.toLowerCase()) ||
-                            product.tagline.toLowerCase().includes(localSearch.toLowerCase());
+      const matchesSearch = searchTerm ? (product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                            product.tagline.toLowerCase().includes(searchTerm.toLowerCase())) : true;
       const matchesCategory = category === 'all' || product.category === category;
       const price = product.discountPrice || product.price;
       const matchesPrice =
@@ -60,7 +54,7 @@ export default function ProductShowcase({ allProducts }: ProductShowcaseProps) {
 
       return matchesSearch && matchesCategory && matchesPrice;
     });
-  }, [localSearch, category, priceRange, allProducts]);
+  }, [searchTerm, category, priceRange, allProducts]);
 
   return (
     <div className="space-y-8">
@@ -81,13 +75,7 @@ export default function ProductShowcase({ allProducts }: ProductShowcaseProps) {
         </Tabs>
       </div>
 
-       <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-          <Input
-            placeholder="Filter current view..."
-            value={localSearch}
-            onChange={(e) => setLocalSearch(e.target.value)}
-            className="w-full"
-          />
+       <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Select value={category} onValueChange={setCategory}>
             <SelectTrigger>
               <SelectValue placeholder="All Categories" />
