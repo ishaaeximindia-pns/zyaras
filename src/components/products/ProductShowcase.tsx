@@ -28,7 +28,17 @@ export default function ProductShowcase({ allProducts }: ProductShowcaseProps) {
   useEffect(() => {
     setIsClient(true);
     const paramsCategory = searchParams.get('category') || 'all';
-    setCategory(paramsCategory);
+    const paramsSubCategory = searchParams.get('subcategory');
+
+    if (paramsSubCategory) {
+        // If there's a subcategory, we can usually infer the main category.
+        // For this app, we'll just set the category filter if it exists.
+        if (paramsCategory) {
+            setCategory(paramsCategory);
+        }
+    } else {
+        setCategory(paramsCategory);
+    }
   }, [searchParams]);
 
   const handleModelChange = (newModel: 'B2B' | 'B2C') => {
@@ -51,8 +61,15 @@ export default function ProductShowcase({ allProducts }: ProductShowcaseProps) {
 
   const filteredProducts = useMemo(() => {
     return allProducts.filter((product) => {
-      const matchesSearch = searchTerm ? (product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                            product.tagline.toLowerCase().includes(searchTerm.toLowerCase())) : true;
+      const lowerCaseSearchTerm = searchTerm.toLowerCase();
+      const matchesSearch = searchTerm 
+        ? product.name.toLowerCase().includes(lowerCaseSearchTerm) ||
+          product.tagline.toLowerCase().includes(lowerCaseSearchTerm) ||
+          product.description.toLowerCase().includes(lowerCaseSearchTerm) ||
+          product.category.toLowerCase().includes(lowerCaseSearchTerm) ||
+          product.subcategory.toLowerCase().includes(lowerCaseSearchTerm)
+        : true;
+        
       const matchesCategory = category === 'all' || product.category === category;
       const price = product.discountPrice || product.price;
       const matchesPrice =
@@ -67,7 +84,6 @@ export default function ProductShowcase({ allProducts }: ProductShowcaseProps) {
   }, [searchTerm, category, priceRange, allProducts]);
   
   if (!isClient) {
-    // You can render a loading skeleton here if you want
     return null;
   }
 
