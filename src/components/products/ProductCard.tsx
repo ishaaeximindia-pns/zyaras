@@ -27,13 +27,28 @@ type ProductCardProps = {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const productImage = PlaceHolderImages.find((p) => p.id === product.heroImage);
-  const { cart, addToCart, updateQuantity, removeFromCart } = useCart();
+  const { cart, addToCart, updateQuantity, removeFromCart, getCartItemId } = useCart();
   const { toast } = useToast();
 
-  const cartItem = cart.find((item) => item.product.id === product.id);
+  // For products without variants, the cart item is simpler to find.
+  const cartItemId = getCartItemId(product);
+  const cartItem = cart.find(item => getCartItemId(item.product, item.selectedVariants) === cartItemId);
+
   const currencySymbol = storeSettings.currency === 'INR' ? '₹' : '$';
+  
+  const hasVariants = product.variants && product.variants.length > 0;
 
   const handleAddToCart = () => {
+    // For products with variants, users must select options on the product page.
+    if (hasVariants) {
+        toast({
+            title: "Please select options",
+            description: `Visit the product page to choose your preferences for ${product.name}.`,
+            variant: "default"
+        });
+        return;
+    }
+    
     addToCart(product);
     toast({
       title: "Added to cart",
@@ -43,16 +58,16 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   const handleIncreaseQuantity = () => {
     if (cartItem) {
-      updateQuantity(product.id, cartItem.quantity + 1);
+      updateQuantity(cartItemId, cartItem.quantity + 1);
     }
   };
 
   const handleDecreaseQuantity = () => {
     if (cartItem) {
       if (cartItem.quantity > 1) {
-        updateQuantity(product.id, cartItem.quantity - 1);
+        updateQuantity(cartItemId, cartItem.quantity - 1);
       } else {
-        removeFromCart(product.id);
+        removeFromCart(cartItemId);
       }
     }
   };
@@ -115,7 +130,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                <p className="text-lg font-semibold">{currencySymbol}{product.price.toFixed(2)}</p>
             )}
         </div>
-        {cartItem ? (
+        {cartItem && !hasVariants ? (
           <div className="flex items-center gap-2">
             <Button variant="outline" size="icon" className="h-8 w-8" onClick={handleDecreaseQuantity}>
               <Minus className="h-4 w-4" />
@@ -126,8 +141,16 @@ export default function ProductCard({ product }: ProductCardProps) {
             </Button>
           </div>
         ) : (
-          <Button onClick={handleAddToCart} size="sm">
-            <Plus className="mr-2 h-4 w-4" /> Add
+          <Button asChild={hasVariants} onClick={!hasVariants ? handleAddToCart : undefined} size="sm">
+            {hasVariants ? (
+                <Link href={`/products/${product.slug}`}>
+                    <Plus className="mr-2 h-4 w-4" /> Select Options
+                </Link>
+            ) : (
+                <>
+                    <Plus className="mr-2 h-4 w-4" /> Add
+                </>
+            )}
           </Button>
         )}
       </CardFooter>

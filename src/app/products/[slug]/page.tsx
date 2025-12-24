@@ -13,6 +13,8 @@ import { storeSettings } from '@/data/settings';
 import ProductCarousel from '@/components/products/ProductCarousel';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
+import { useState, useMemo } from 'react';
+import type { ProductVariant } from '@/lib/types';
 
 export default function ProductPage() {
   const params = useParams();
@@ -22,13 +24,29 @@ export default function ProductPage() {
   const { toast } = useToast();
 
   const product = products.find((p) => p.slug === slug);
+  
+  const [selectedVariants, setSelectedVariants] = useState<Record<string, string>>(() => {
+    const initialVariants: Record<string, string> = {};
+    if (product?.variants) {
+      product.variants.forEach(variant => {
+        if (variant.options.length > 0) {
+          initialVariants[variant.name] = variant.options[0].value;
+        }
+      });
+    }
+    return initialVariants;
+  });
 
   if (!product) {
     notFound();
   }
+
+  const handleVariantChange = (variantName: string, value: string) => {
+    setSelectedVariants(prev => ({ ...prev, [variantName]: value }));
+  };
   
   const handleAddToCart = () => {
-    addToCart(product);
+    addToCart(product, selectedVariants);
     toast({
       title: "Added to cart",
       description: `${product.name} has been added to your cart.`,
@@ -75,10 +93,14 @@ export default function ProductPage() {
                   {product.variants.map((variant) => (
                     <div key={variant.name}>
                       <Label className="text-lg font-semibold">{variant.name}</Label>
-                      <RadioGroup className="flex flex-wrap items-center gap-4 mt-2">
+                      <RadioGroup 
+                        value={selectedVariants[variant.name]}
+                        onValueChange={(value) => handleVariantChange(variant.name, value)}
+                        className="flex flex-wrap items-center gap-4 mt-2"
+                      >
                         {variant.options.map((option) => (
                           <div key={option.value}>
-                            <RadioGroupItem value={option.value} id={`${variant.name}-${option.value}`} className="sr-only" />
+                            <RadioGroupItem value={option.value} id={`${variant.name}-${option.value}`} className="sr-only peer" />
                             <Label
                               htmlFor={`${variant.name}-${option.value}`}
                               className="cursor-pointer rounded-md border-2 border-muted bg-popover px-4 py-2 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/10 peer-data-[state=checked]:text-primary"

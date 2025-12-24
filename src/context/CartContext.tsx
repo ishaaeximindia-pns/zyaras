@@ -1,32 +1,48 @@
 
 'use client';
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useCallback } from 'react';
 import type { Product, CartItem } from '@/lib/types';
+import { isEqual } from 'lodash';
+
 
 interface CartContextType {
   cart: CartItem[];
-  addToCart: (product: Product) => void;
+  addToCart: (product: Product, selectedVariants?: Record<string, string>) => void;
   addMultipleToCart: (items: CartItem[]) => void;
-  removeFromCart: (productId: string) => void;
-  updateQuantity: (productId: string, quantity: number) => void;
+  removeFromCart: (cartItemId: string) => void;
+  updateQuantity: (cartItemId: string, quantity: number) => void;
   clearCart: () => void;
+  getCartItemId: (product: Product, selectedVariants?: Record<string, string>) => string;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [cart, setCart] = useState<CartItem[]>([]);
+  
+  const getCartItemId = useCallback((product: Product, selectedVariants?: Record<string, string>): string => {
+    if (!selectedVariants || Object.keys(selectedVariants).length === 0) {
+      return product.id;
+    }
+    const variantString = Object.keys(selectedVariants).sort().map(key => `${key}:${selectedVariants[key]}`).join('-');
+    return `${product.id}-${variantString}`;
+  }, []);
 
-  const addToCart = (product: Product) => {
+
+  const addToCart = (product: Product, selectedVariants?: Record<string, string>) => {
     setCart((prevCart) => {
-      const existingItem = prevCart.find((item) => item.product.id === product.id);
+      const cartItemId = getCartItemId(product, selectedVariants);
+      const existingItem = prevCart.find((item) => getCartItemId(item.product, item.selectedVariants) === cartItemId);
+
       if (existingItem) {
         return prevCart.map((item) =>
-          item.product.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+          getCartItemId(item.product, item.selectedVariants) === cartItemId
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
         );
       }
-      return [...prevCart, { product, quantity: 1 }];
+      return [...prevCart, { product, quantity: 1, selectedVariants }];
     });
   };
   
@@ -34,8 +50,9 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     setCart(prevCart => {
       const newCart = [...prevCart];
       items.forEach(itemToAdd => {
+        const cartItemId = getCartItemId(itemToAdd.product, itemToAdd.selectedVariants);
         const existingItemIndex = newCart.findIndex(
-          item => item.product.id === itemToAdd.product.id
+          item => getCartItemId(item.product, item.selectedVariants) === cartItemId
         );
         if (existingItemIndex > -1) {
           newCart[existingItemIndex].quantity += itemToAdd.quantity;
@@ -47,17 +64,17 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
-  const removeFromCart = (productId: string) => {
-    setCart((prevCart) => prevCart.filter((item) => item.product.id !== productId));
+  const removeFromCart = (cartItemId: string) => {
+    setCart((prevCart) => prevCart.filter((item) => getCartItemId(item.product, item.selectedVariants) !== cartItemId));
   };
 
-  const updateQuantity = (productId: string, quantity: number) => {
+  const updateQuantity = (cartItemId: string, quantity: number) => {
     if (quantity <= 0) {
-      removeFromCart(productId);
+      removeFromCart(cartItemId);
     } else {
       setCart((prevCart) =>
         prevCart.map((item) =>
-          item.product.id === productId ? { ...item, quantity } : item
+          getCartItemId(item.product, item.selectedVariants) === cartItemId ? { ...item, quantity } : item
         )
       );
     }
@@ -68,7 +85,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, addMultipleToCart, removeFromCart, updateQuantity, clearCart }}>
+    <CartContext.Provider value={{ cart, addToCart, addMultipleToCart, removeFromCart, updateQuantity, clearCart, getCartItemId }}>
       {children}
     </CartContext.Provider>
   );

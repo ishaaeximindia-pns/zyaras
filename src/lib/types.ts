@@ -1,3 +1,4 @@
+
 import { type LucideIcon } from 'lucide-react';
 
 export type ProductFeature = {
@@ -56,6 +57,7 @@ export type Product = {
 export type CartItem = {
   product: Product;
   quantity: number;
+  selectedVariants?: Record<string, string>;
 };
 
 export type OrderItem = {

@@ -22,7 +22,7 @@ import { storeSettings } from '@/data/settings';
 const B2B_MINIMUM_CART_VALUE = 15000;
 
 export default function CartSheet({ children, model }: { children: React.ReactNode, model: 'B2C' | 'B2B' }) {
-  const { cart, updateQuantity, removeFromCart, clearCart } = useCart();
+  const { cart, updateQuantity, removeFromCart, clearCart, getCartItemId } = useCart();
   const subtotal = cart.reduce((acc, item) => acc + (item.product.discountPrice || item.product.price) * item.quantity, 0);
 
   const isB2B = model === 'B2B';
@@ -48,8 +48,9 @@ export default function CartSheet({ children, model }: { children: React.ReactNo
             <div className="space-y-4">
               {cart.map((item) => {
                 const productImage = PlaceHolderImages.find(p => p.id === item.product.heroImage)
+                const cartItemId = getCartItemId(item.product, item.selectedVariants);
                 return (
-                  <div key={item.product.id} className="flex items-center gap-4">
+                  <div key={cartItemId} className="flex items-start gap-4">
                      <div className="relative h-16 w-16 rounded-md overflow-hidden">
                         {productImage && (
                           <Image
@@ -62,6 +63,13 @@ export default function CartSheet({ children, model }: { children: React.ReactNo
                      </div>
                     <div className="flex-1">
                       <p className="font-semibold">{item.product.name}</p>
+                      {item.selectedVariants && (
+                        <div className="text-xs text-muted-foreground">
+                          {Object.entries(item.selectedVariants).map(([name, value]) => (
+                            <span key={name} className="mr-2">{name}: {value}</span>
+                          ))}
+                        </div>
+                      )}
                        <div className="flex items-center gap-2">
                         {item.product.discountPrice ? (
                             <>
@@ -78,10 +86,10 @@ export default function CartSheet({ children, model }: { children: React.ReactNo
                         type="number"
                         min="1"
                         value={item.quantity}
-                        onChange={(e) => updateQuantity(item.product.id, parseInt(e.target.value))}
+                        onChange={(e) => updateQuantity(cartItemId, parseInt(e.target.value))}
                         className="h-8 w-16"
                       />
-                      <Button variant="ghost" size="icon" onClick={() => removeFromCart(item.product.id)}>
+                      <Button variant="ghost" size="icon" onClick={() => removeFromCart(cartItemId)}>
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
