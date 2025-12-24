@@ -23,31 +23,33 @@ export default function DashboardPage() {
   const saleProducts = productsForModel.filter(p => p.status === 'Sale');
 
   return (
-    <div className="space-y-12">
-      <div className="space-y-2">
-        <h1 className="text-3xl font-headline font-bold">Welcome, User Name!</h1>
-        <p className="text-muted-foreground">
-          Here's your personal dashboard. Explore products, manage orders, and more.
-        </p>
-      </div>
-      
-      {isClient && (
-        <>
-          {featuredProducts.length > 0 && (
-            <ProductCarousel title="Featured Products" products={featuredProducts} />
-          )}
-          
-          {newProducts.length > 0 && (
-            <ProductCarousel title="New Arrivals" products={newProducts} />
-          )}
+    <div className="p-4 sm:p-6 lg:p-8">
+        <div className="space-y-12">
+            <div className="space-y-2">
+                <h1 className="text-3xl font-headline font-bold">Welcome, User Name!</h1>
+                <p className="text-muted-foreground">
+                Here's your personal dashboard. Explore products, manage orders, and more.
+                </p>
+            </div>
+            
+            {isClient && (
+                <>
+                {featuredProducts.length > 0 && (
+                    <ProductCarousel title="Featured Products" products={featuredProducts} />
+                )}
+                
+                {newProducts.length > 0 && (
+                    <ProductCarousel title="New Arrivals" products={newProducts} />
+                )}
 
-          {saleProducts.length > 0 && (
-            <ProductCarousel title="On Sale Now" products={saleProducts} />
-          )}
+                {saleProducts.length > 0 && (
+                    <ProductCarousel title="On Sale Now" products={saleProducts} />
+                )}
 
-          <ProductShowcase allProducts={productsForModel} />
-        </>
-      )}
+                <ProductShowcase allProducts={productsForModel} />
+                </>
+            )}
+        </div>
     </div>
   );
 }
