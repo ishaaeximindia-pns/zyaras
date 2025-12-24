@@ -2,37 +2,23 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useSearchParams, useRouter, usePathname } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { products } from '@/data';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ProductCard from '@/components/products/ProductCard';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import { useRouter, usePathname } from 'next/navigation';
 
 export default function DashboardPage() {
+  const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
   
-  const [model, setModel] = useState<'B2C' | 'B2B'>('B2C');
-  const [isClient, setIsClient] = useState(false);
-  
+  const model = (searchParams.get('model') as 'B2C' | 'B2B') || 'B2C';
   const category = searchParams.get('category');
   const subcategory = searchParams.get('subcategory');
 
-  useEffect(() => {
-    setIsClient(true);
-    const currentModel = searchParams.get('model') as 'B2C' | 'B2B';
-    if (currentModel && ['B2C', 'B2B'].includes(currentModel)) {
-      setModel(currentModel);
-    } else {
-       const newSearchParams = new URLSearchParams(searchParams.toString());
-       newSearchParams.set('model', 'B2C');
-       router.push(`${pathname}?${newSearchParams.toString()}`);
-    }
-  }, [searchParams, pathname, router]);
-
   const handleModelChange = (newModel: 'B2B' | 'B2C') => {
-    setModel(newModel);
     const newSearchParams = new URLSearchParams(searchParams.toString());
     newSearchParams.set('model', newModel);
     newSearchParams.delete('category');
@@ -52,10 +38,6 @@ export default function DashboardPage() {
   const saleProducts = products.filter(p => p.status === 'Sale' && p.model === model);
 
   const showFilterResults = category || subcategory;
-
-  if (!isClient) {
-    return null; // Or a loading spinner
-  }
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 space-y-8">

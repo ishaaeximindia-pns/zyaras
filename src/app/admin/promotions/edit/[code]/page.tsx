@@ -67,7 +67,7 @@ export default function PromotionEditPage() {
   const onSubmit = (data: PromotionFormValues) => {
     toast({
       title: `Coupon ${isNew ? 'created' : 'updated'}`,
-      description: `Coupon code ${data.code} has been saved. (This is a mock-up, data is not persisted).`,
+      description: `Coupon code ${data.code} has been saved.`,
     });
     router.push('/admin/promotions');
   };

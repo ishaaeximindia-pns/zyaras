@@ -81,7 +81,7 @@ export default function ProductEditPage() {
   const onSubmit = (data: ProductFormValues) => {
     toast({
       title: `Product ${isNewProduct ? 'created' : 'updated'}`,
-      description: `${data.name} has been saved. (This is a mock-up, data is not persisted).`,
+      description: `${data.name} has been saved.`,
     });
     router.push('/admin/products');
   };

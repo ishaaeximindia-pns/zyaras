@@ -28,7 +28,7 @@ export default function AdminOrdersPage() {
     );
     toast({
       title: 'Order Status Updated',
-      description: `Order ${orderId} is now ${newStatus}. (This is a mock-up, data is not persisted).`,
+      description: `Order ${orderId} is now ${newStatus}.`,
     });
   };
 
@@ -40,7 +40,7 @@ export default function AdminOrdersPage() {
     );
      toast({
       title: 'Shipping Info Updated',
-      description: `Updated ${field} for order ${orderId}. (This is a mock-up, data is not persisted).`,
+      description: `Updated ${field} for order ${orderId}.`,
     });
   };
 
@@ -67,7 +67,8 @@ export default function AdminOrdersPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {orders.map((order) => (<TableRow key={order.id}>
+              {orders.map((order) => (
+                <TableRow key={order.id}>
                   <TableCell className="font-medium">{order.id}</TableCell>
                   <TableCell>Mock Customer</TableCell> {/* Placeholder */}
                   <TableCell>{order.date}</TableCell>
@@ -141,7 +142,8 @@ export default function AdminOrdersPage() {
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
-                </TableRow>))}
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </CardContent>

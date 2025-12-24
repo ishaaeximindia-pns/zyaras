@@ -48,7 +48,7 @@ export default function AdminSettingsPage() {
   const onSubmit = (data: SettingsFormValues) => {
     toast({
       title: 'Settings Saved',
-      description: 'Your general settings have been updated. (This is a mock-up, data is not persisted).',
+      description: 'Your general settings have been updated.',
     });
     console.log(data);
   };

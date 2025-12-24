@@ -47,7 +47,7 @@ export default function CategoryEditPage() {
   const onSubmit = (data: CategoryFormValues) => {
     toast({
       title: `Category ${isNewCategory ? 'created' : 'updated'}`,
-      description: `${data.name} with subcategories: ${data.subcategories.map(s => s.name).join(', ')}. (This is a mock-up, data is not persisted).`,
+      description: `${data.name} has been saved.`,
     });
     router.push('/admin/categories');
   };
