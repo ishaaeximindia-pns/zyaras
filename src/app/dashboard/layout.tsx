@@ -13,7 +13,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <>
         <DashboardNav />
         <SidebarInset>
-          {isDashboardRoot ? <DashboardPage /> : children}
+          <div className="p-4 sm:p-6 lg:p-8">
+            {isDashboardRoot ? <DashboardPage /> : children}
+          </div>
         </SidebarInset>
       </>
   )
