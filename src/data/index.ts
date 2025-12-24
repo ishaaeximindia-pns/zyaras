@@ -16,6 +16,16 @@ export const products: Product[] = [
     status: 'Popular',
     isFeatured: true,
     heroImage: 'product-nexus-flow',
+    variants: [
+      {
+        name: 'Size',
+        options: [{ value: '28' }, { value: '30' }, { value: '32' }, { value: '34' }],
+      },
+      {
+        name: 'Color',
+        options: [{ value: 'Light Wash' }, { value: 'Dark Wash' }],
+      },
+    ],
     features: [
       {
         title: 'Premium Denim',

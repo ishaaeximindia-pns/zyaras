@@ -11,6 +11,8 @@ import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
 import { storeSettings } from '@/data/settings';
 import ProductCarousel from '@/components/products/ProductCarousel';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Label } from '@/components/ui/label';
 
 export default function ProductPage({ params }: { params: { slug: string } }) {
   const { addToCart } = useCart();
@@ -64,6 +66,30 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
                 )}
               </div>
               <p className="text-base text-muted-foreground">{product.description}</p>
+              
+              {product.variants && product.variants.length > 0 && (
+                <div className="space-y-6 pt-4">
+                  {product.variants.map((variant) => (
+                    <div key={variant.name}>
+                      <Label className="text-lg font-semibold">{variant.name}</Label>
+                      <RadioGroup className="flex flex-wrap items-center gap-4 mt-2">
+                        {variant.options.map((option) => (
+                          <div key={option.value}>
+                            <RadioGroupItem value={option.value} id={`${variant.name}-${option.value}`} className="sr-only" />
+                            <Label
+                              htmlFor={`${variant.name}-${option.value}`}
+                              className="cursor-pointer rounded-md border-2 border-muted bg-popover px-4 py-2 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/10 peer-data-[state=checked]:text-primary"
+                            >
+                              {option.value}
+                            </Label>
+                          </div>
+                        ))}
+                      </RadioGroup>
+                    </div>
+                  ))}
+                </div>
+              )}
+
               <Button onClick={handleAddToCart} size="lg">
                 Add to Cart
               </Button>

@@ -20,6 +20,16 @@ export type PricingTier = {
   isFeatured?: boolean;
 };
 
+export type ProductVariantOption = {
+  value: string;
+};
+
+export type ProductVariant = {
+  name: string; // e.g., 'Color', 'Size'
+  options: ProductVariantOption[];
+};
+
+
 export type Product = {
   id: string;
   slug: string;
@@ -37,6 +47,7 @@ export type Product = {
   isFeatured?: boolean;
   heroImage: string;
   features: ProductFeature[];
+  variants?: ProductVariant[];
   useCases: { title: string; description: string; image: string }[];
   faqs: ProductFAQ[];
   pricing?: PricingTier[]; // Optional pricing tiers

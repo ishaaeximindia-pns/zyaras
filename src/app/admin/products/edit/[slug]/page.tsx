@@ -16,6 +16,15 @@ import { ChevronLeft, PlusCircle, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { Switch } from '@/components/ui/switch';
 
+const variantOptionSchema = z.object({
+  value: z.string().min(1, 'Option value cannot be empty'),
+});
+
+const variantSchema = z.object({
+  name: z.string().min(1, 'Variant name cannot be empty'),
+  options: z.array(variantOptionSchema).min(1, 'At least one option is required'),
+});
+
 const productSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   slug: z.string().min(1, 'Slug is required'),
@@ -34,6 +43,7 @@ const productSchema = z.object({
     description: z.string().min(1),
     icon: z.string().min(1),
   })).optional(),
+  variants: z.array(variantSchema).optional(),
 });
 
 type ProductFormValues = z.infer<typeof productSchema>;
@@ -50,6 +60,7 @@ export default function ProductEditPage() {
     defaultValues: product ? {
       ...product,
       features: product.features || [],
+      variants: product.variants || [],
     } : {
       name: '',
       slug: '',
@@ -64,12 +75,18 @@ export default function ProductEditPage() {
       status: 'New',
       isFeatured: false,
       features: [],
+      variants: [],
     },
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields: featureFields, append: appendFeature, remove: removeFeature } = useFieldArray({
     control: form.control,
     name: "features",
+  });
+  
+  const { fields: variantFields, append: appendVariant, remove: removeVariant } = useFieldArray({
+    control: form.control,
+    name: "variants",
   });
 
   if (!isNewProduct && !product) {
@@ -151,11 +168,51 @@ export default function ProductEditPage() {
 
             <Card>
               <CardHeader>
+                <CardTitle>Variants</CardTitle>
+                <CardDescription>Add product variants like size or color.</CardDescription>
+              </CardHeader>
+              <CardContent className="grid gap-6">
+                {variantFields.map((variantField, variantIndex) => (
+                  <div key={variantField.id} className="grid gap-4 border p-4 rounded-md relative">
+                    <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="absolute top-2 right-2 h-6 w-6"
+                        onClick={() => removeVariant(variantIndex)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                    </Button>
+                    <FormField
+                      control={form.control}
+                      name={`variants.${variantIndex}.name`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Variant Name</FormLabel>
+                          <FormControl><Input {...field} placeholder="e.g. Size" /></FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <div>
+                      <FormLabel>Options</FormLabel>
+                      <VariantOptionsArray variantIndex={variantIndex} />
+                    </div>
+                  </div>
+                ))}
+                 <Button type="button" variant="outline" onClick={() => appendVariant({ name: '', options: [{ value: '' }] })}>
+                  <PlusCircle className="mr-2 h-4 w-4" /> Add Variant
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
                 <CardTitle>Features</CardTitle>
                 <CardDescription>Define the key features of the product.</CardDescription>
               </CardHeader>
               <CardContent className="grid gap-4">
-                {fields.map((field, index) => (
+                {featureFields.map((field, index) => (
                   <div key={field.id} className="grid grid-cols-1 md:grid-cols-3 gap-4 border p-4 rounded-md relative">
                      <FormField
                         control={form.control}
@@ -192,13 +249,13 @@ export default function ProductEditPage() {
                       variant="ghost"
                       size="icon"
                       className="absolute top-2 right-2 h-6 w-6"
-                      onClick={() => remove(index)}
+                      onClick={() => removeFeature(index)}
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
                 ))}
-                <Button type="button" variant="outline" onClick={() => append({ title: '', description: '', icon: '' })}>
+                <Button type="button" variant="outline" onClick={() => appendFeature({ title: '', description: '', icon: '' })}>
                   <PlusCircle className="mr-2 h-4 w-4" /> Add Feature
                 </Button>
               </CardContent>
@@ -360,3 +417,42 @@ export default function ProductEditPage() {
     </div>
   );
 }
+
+function VariantOptionsArray({ variantIndex }: { variantIndex: number }) {
+    const { control } = useFormContext();
+    const { fields, append, remove } = useFieldArray({
+      control: control,
+      name: `variants.${variantIndex}.options`
+    });
+  
+    return (
+      <div className="grid gap-4 mt-2">
+        {fields.map((field, index) => (
+          <div key={field.id} className="flex items-center gap-2">
+            <FormField
+              control={control}
+              name={`variants.${variantIndex}.options.${index}.value`}
+              render={({ field }) => (
+                <FormItem className="flex-1">
+                  <FormControl><Input {...field} placeholder="Option Value (e.g. 'Red' or 'M')" /></FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button
+              type="button"
+              variant="destructive"
+              size="icon"
+              onClick={() => remove(index)}
+              disabled={fields.length <= 1}
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          </div>
+        ))}
+        <Button type="button" variant="outline" size="sm" onClick={() => append({ value: '' })}>
+          <PlusCircle className="mr-2 h-4 w-4" /> Add Option
+        </Button>
+      </div>
+    );
+  }
