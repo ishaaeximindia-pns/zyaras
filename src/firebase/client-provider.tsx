@@ -15,11 +15,17 @@ export function FirebaseClientProvider({ children }: FirebaseClientProviderProps
   const firebaseServices = useMemo(() => {
     // Initialize Firebase on the client side, once per component mount.
     if (!firebaseApp) {
+      console.warn('Firebase is not initialized. Please set all NEXT_PUBLIC_FIREBASE_* environment variables.');
       return { firebaseApp: null, auth: null, firestore: null };
     }
-    const auth = getAuth(firebaseApp);
-    const firestore = getFirestore(firebaseApp);
-    return { firebaseApp, auth, firestore };
+    try {
+      const auth = getAuth(firebaseApp);
+      const firestore = getFirestore(firebaseApp);
+      return { firebaseApp, auth, firestore };
+    } catch (error) {
+      console.error('Error initializing Firebase services:', error);
+      return { firebaseApp: null, auth: null, firestore: null };
+    }
   }, []);
 
   return (

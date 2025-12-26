@@ -122,22 +122,18 @@ export const useFirebase = (): FirebaseServicesAndUser => {
     throw new Error('useFirebase must be used within a FirebaseProvider.');
   }
 
-  // During build/prerender, if services aren't available, return null values instead of throwing
-  // This allows pages marked as dynamic to build successfully
+  // If services aren't available, return null values instead of throwing
+  // This allows the app to handle missing Firebase gracefully
   if (!context.areServicesAvailable || !context.firebaseApp || !context.firestore || !context.auth) {
-    // Check if we're in a build/prerender context
-    if (typeof window === 'undefined') {
-      // Return a mock object during SSR/build to prevent build failures
-      return {
-        firebaseApp: null as any,
-        firestore: null as any,
-        auth: null as any,
-        user: null,
-        isUserLoading: false,
-        userError: new Error('Firebase services not available during build'),
-      };
-    }
-    throw new Error('Firebase core services not available. Check FirebaseProvider props.');
+    // Return a mock object to prevent crashes - components should check for null services
+    return {
+      firebaseApp: null as any,
+      firestore: null as any,
+      auth: null as any,
+      user: null,
+      isUserLoading: false,
+      userError: new Error('Firebase services not available. Please configure Firebase environment variables.'),
+    };
   }
 
   return {
@@ -151,13 +147,13 @@ export const useFirebase = (): FirebaseServicesAndUser => {
 };
 
 /** Hook to access Firebase Auth instance. */
-export const useAuth = (): Auth => {
+export const useAuth = (): Auth | null => {
   const { auth } = useFirebase();
   return auth;
 };
 
 /** Hook to access Firestore instance. */
-export const useFirestore = (): Firestore => {
+export const useFirestore = (): Firestore | null => {
   const { firestore } = useFirebase();
   return firestore;
 };

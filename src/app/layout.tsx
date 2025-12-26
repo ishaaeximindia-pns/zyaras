@@ -7,6 +7,7 @@ import { CartProvider } from '@/context/CartContext';
 import { SearchProvider } from '@/context/SearchContext';
 import { FirebaseClientProvider } from '@/firebase';
 import { ThemeProvider } from '@/components/theme-provider';
+import { FirebaseConfigError } from '@/components/FirebaseConfigError';
 
 
 export const metadata: Metadata = {
@@ -37,6 +38,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <FirebaseClientProvider>
+            <FirebaseConfigError />
             <SearchProvider>
               <CartProvider>
                 <SidebarProvider>
