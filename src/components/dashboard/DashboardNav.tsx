@@ -2,6 +2,7 @@
 
 'use client';
 
+import { Suspense } from 'react';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import {
@@ -54,7 +55,7 @@ interface CategoryWithSubcategories {
   icon: React.ElementType;
 }
 
-function CategoryList() {
+function CategoryListContent() {
   const searchParams = useSearchParams();
   const model = searchParams.get('model') || 'B2C';
   const activeSubcategory = searchParams.get('subcategory');
@@ -150,8 +151,15 @@ function CategoryList() {
   );
 }
 
+function CategoryList() {
+  return (
+    <Suspense fallback={null}>
+      <CategoryListContent />
+    </Suspense>
+  );
+}
 
-export default function DashboardNav() {
+function DashboardNavContent() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const isActive = (path: string) => pathname === path || pathname.startsWith(`${path}/`);
@@ -297,5 +305,26 @@ export default function DashboardNav() {
       <SidebarFooter>
       </SidebarFooter>
     </Sidebar>
+  );
+}
+
+export default function DashboardNav() {
+  return (
+    <Suspense fallback={
+      <Sidebar>
+        <SidebarHeader>
+          <Logo />
+        </SidebarHeader>
+        <SidebarContent>
+          <SidebarMenu>
+            <SidebarGroup>
+              <SidebarGroupLabel>Loading...</SidebarGroupLabel>
+            </SidebarGroup>
+          </SidebarMenu>
+        </SidebarContent>
+      </Sidebar>
+    }>
+      <DashboardNavContent />
+    </Suspense>
   );
 }

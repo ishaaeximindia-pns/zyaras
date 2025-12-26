@@ -1,6 +1,9 @@
 
 'use client';
 
+// Force dynamic rendering (uses Firebase)
+export const dynamic = 'force-dynamic';
+
 import { useParams, useRouter } from 'next/navigation';
 import { useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { doc } from 'firebase/firestore';

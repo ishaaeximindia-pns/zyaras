@@ -18,6 +18,9 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
+// Force dynamic rendering for admin pages (they require Firebase and authentication)
+export const dynamic = 'force-dynamic';
+
 const SUPER_ADMIN_UID = '0Nmw3GyfeCUL0gpr5EWO29kODZA2';
 
 const adminNavItems = [

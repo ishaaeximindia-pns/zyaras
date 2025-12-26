@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import ProductCard from './ProductCard';
@@ -13,7 +13,7 @@ type ProductShowcaseProps = {
   allProducts: ProductDocument[];
 };
 
-export default function ProductShowcase({ allProducts }: ProductShowcaseProps) {
+function ProductShowcaseContent({ allProducts }: ProductShowcaseProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -147,5 +147,25 @@ export default function ProductShowcase({ allProducts }: ProductShowcaseProps) {
         </div>
       )}
     </div>
+  );
+}
+
+export default function ProductShowcase({ allProducts }: ProductShowcaseProps) {
+  return (
+    <Suspense fallback={
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {Array.from({ length: 8 }).map((_, index) => (
+          <div key={index} className="space-y-4">
+            <Skeleton className="h-48 w-full" />
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-2/3" />
+              <Skeleton className="h-4 w-1/2" />
+            </div>
+          </div>
+        ))}
+      </div>
+    }>
+      <ProductShowcaseContent allProducts={allProducts} />
+    </Suspense>
   );
 }

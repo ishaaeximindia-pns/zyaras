@@ -122,7 +122,21 @@ export const useFirebase = (): FirebaseServicesAndUser => {
     throw new Error('useFirebase must be used within a FirebaseProvider.');
   }
 
+  // During build/prerender, if services aren't available, return null values instead of throwing
+  // This allows pages marked as dynamic to build successfully
   if (!context.areServicesAvailable || !context.firebaseApp || !context.firestore || !context.auth) {
+    // Check if we're in a build/prerender context
+    if (typeof window === 'undefined') {
+      // Return a mock object during SSR/build to prevent build failures
+      return {
+        firebaseApp: null as any,
+        firestore: null as any,
+        auth: null as any,
+        user: null,
+        isUserLoading: false,
+        userError: new Error('Firebase services not available during build'),
+      };
+    }
     throw new Error('Firebase core services not available. Check FirebaseProvider props.');
   }
 

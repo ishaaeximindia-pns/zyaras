@@ -2,6 +2,10 @@
 
 'use client';
 
+// Force dynamic rendering (uses Firebase)
+export const dynamic = 'force-dynamic';
+
+import { Suspense } from 'react';
 import { notFound, useParams, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
@@ -22,6 +26,7 @@ import { Separator } from '@/components/ui/separator';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Star, User } from 'lucide-react';
 import { ReviewForm } from '@/components/products/ReviewForm';
+import Loading from '@/components/shared/Loading';
 
 function StarRating({ rating, totalReviews }: { rating: number; totalReviews?: number }) {
     const fullStars = Math.floor(rating);
@@ -46,7 +51,7 @@ function StarRating({ rating, totalReviews }: { rating: number; totalReviews?: n
     );
 }
 
-export default function ProductPage() {
+function ProductPageContent() {
   const params = useParams();
   const searchParams = useSearchParams();
   const { slug } = params;
@@ -308,5 +313,13 @@ export default function ProductPage() {
         </section>
       )}
     </div>
+  );
+}
+
+export default function ProductPage() {
+  return (
+    <Suspense fallback={<Loading />}>
+      <ProductPageContent />
+    </Suspense>
   );
 }

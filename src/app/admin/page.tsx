@@ -1,6 +1,9 @@
 
 'use client';
 
+// Force dynamic rendering (uses Firebase)
+export const dynamic = 'force-dynamic';
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { DollarSign, Package, Users, ShoppingBag, Database, ArrowUp, Activity, BarChart3, Users2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';

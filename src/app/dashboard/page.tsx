@@ -2,6 +2,7 @@
 
 'use client';
 
+import { Suspense, useMemo } from 'react';
 import ProductShowcase from '@/components/products/ProductShowcase';
 import ProductCarousel from '@/components/products/ProductCarousel';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
@@ -10,9 +11,9 @@ import { useCollection, useFirestore, useMemoFirebase, useUser, useDoc } from '@
 import { collection, query, where, doc } from 'firebase/firestore';
 import type { ProductDocument } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useMemo } from 'react';
+import Loading from '@/components/shared/Loading';
 
-export default function DashboardPage() {
+function DashboardPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -98,5 +99,13 @@ export default function DashboardPage() {
         </>
       )}
   </div>
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={<Loading />}>
+      <DashboardPageContent />
+    </Suspense>
   );
 }

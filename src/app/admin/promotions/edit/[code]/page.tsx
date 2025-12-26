@@ -1,6 +1,9 @@
 
 'use client';
 
+// Force dynamic rendering (uses Firebase)
+export const dynamic = 'force-dynamic';
+
 import { promotions } from '@/data/promotions';
 import { customers } from '@/data/customers';
 import { useParams, useRouter } from 'next/navigation';
