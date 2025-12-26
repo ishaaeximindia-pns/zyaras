@@ -9,8 +9,6 @@ import { getFirestore } from 'firebase/firestore';
 
 // IMPORTANT: DO NOT MODIFY THIS FUNCTION
 export function initializeFirebase() {
-  const isConfigValid = firebaseConfig && firebaseConfig.apiKey;
-  
   // Check if running in a Firebase App Hosting environment
   // @ts-ignore
   if (typeof __FIREBASE_DEFAULTS__ !== 'undefined') {
@@ -19,15 +17,7 @@ export function initializeFirebase() {
   }
 
   // Fallback for local development or other environments
-  if (!isConfigValid) {
-     console.error('Firebase config is not valid. Please check your environment variables.');
-     // In a real app, you might want to throw an error or handle this more gracefully.
-     // For now, we return a mock or empty SDK object to prevent further crashes.
-     // This part should ideally not be reached if .env.local is set up correctly.
-      return { firebaseApp: null, auth: null, firestore: null };
-  }
-
-  const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+  const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
   return getSdks(app);
 }
 
