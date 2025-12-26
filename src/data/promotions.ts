@@ -9,6 +9,7 @@ export type Promotion = {
   usageLimit: number;
   minimumSpend?: number;
   tieredDiscount?: number;
+  customerIds?: string[];
 };
 
 export const promotions: Promotion[] = [
@@ -59,4 +60,15 @@ export const promotions: Promotion[] = [
     usageCount: 10,
     usageLimit: 50,
   },
+  {
+    code: 'EMMAONLY',
+    discountType: 'Percentage',
+    discount: 50,
+    status: 'Active',
+    expiryDate: '2024-09-30',
+    usageCount: 0,
+    usageLimit: 1,
+    customerIds: ['CUST-004']
+  }
 ];
+

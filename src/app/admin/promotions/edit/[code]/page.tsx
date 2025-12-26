@@ -2,6 +2,7 @@
 'use client';
 
 import { promotions } from '@/data/promotions';
+import { customers } from '@/data/customers';
 import { useParams, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -17,6 +18,8 @@ import { ChevronLeft, CalendarIcon } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { MultiSelect } from '@/components/ui/multi-select';
 
 const promotionSchema = z.object({
   code: z.string().min(1, 'Coupon code is required'),
@@ -29,9 +32,19 @@ const promotionSchema = z.object({
   usageLimit: z.coerce.number().min(0, 'Usage limit must be a positive number'),
   minimumSpend: z.coerce.number().optional(),
   tieredDiscount: z.coerce.number().optional(),
+  appliesTo: z.enum(['All Customers', 'Specific Customers']),
+  customerIds: z.array(z.string()).optional(),
 }).refine(data => !(data.discountType === 'Percentage' && data.discount > 100), {
   message: "Percentage discount cannot exceed 100%",
   path: ["discount"],
+}).refine(data => {
+    if (data.appliesTo === 'Specific Customers') {
+        return Array.isArray(data.customerIds) && data.customerIds.length > 0;
+    }
+    return true;
+}, {
+    message: "Please select at least one customer.",
+    path: ["customerIds"],
 });
 
 
@@ -50,6 +63,7 @@ export default function PromotionEditPage() {
     defaultValues: promotion ? {
         ...promotion,
         expiryDate: new Date(promotion.expiryDate),
+        appliesTo: promotion.customerIds && promotion.customerIds.length > 0 ? 'Specific Customers' : 'All Customers',
     } : {
       code: '',
       discountType: 'Percentage',
@@ -57,15 +71,20 @@ export default function PromotionEditPage() {
       expiryDate: new Date(),
       status: 'Active',
       usageLimit: 100,
+      appliesTo: 'All Customers',
+      customerIds: [],
     },
   });
 
   const watchDiscountType = form.watch('discountType');
+  const watchAppliesTo = form.watch('appliesTo');
 
   const onSubmit = (data: PromotionFormValues) => {
     // Data would be saved to a database in a real application
     router.push('/admin/promotions');
   };
+
+  const customerOptions = customers.map(c => ({ value: c.id, label: c.name }));
 
   return (
     <div className="space-y-6 max-w-2xl mx-auto">
@@ -194,6 +213,62 @@ export default function PromotionEditPage() {
 
               <FormField
                 control={form.control}
+                name="appliesTo"
+                render={({ field }) => (
+                  <FormItem className="space-y-3">
+                    <FormLabel>Applies To</FormLabel>
+                    <FormControl>
+                      <RadioGroup
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        className="flex flex-col space-y-1"
+                      >
+                        <FormItem className="flex items-center space-x-3 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value="All Customers" />
+                          </FormControl>
+                          <FormLabel className="font-normal">
+                            All Customers
+                          </FormLabel>
+                        </FormItem>
+                        <FormItem className="flex items-center space-x-3 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value="Specific Customers" />
+                          </FormControl>
+                          <FormLabel className="font-normal">
+                            Specific Customers
+                          </FormLabel>
+                        </FormItem>
+                      </RadioGroup>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+            {watchAppliesTo === 'Specific Customers' && (
+                 <FormField
+                  control={form.control}
+                  name="customerIds"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Customers</FormLabel>
+                      <FormControl>
+                        <MultiSelect
+                          options={customerOptions}
+                          selected={field.value || []}
+                          onChange={field.onChange}
+                          placeholder="Select customers..."
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+            )}
+
+              <FormField
+                control={form.control}
                 name="expiryDate"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
@@ -271,3 +346,4 @@ export default function PromotionEditPage() {
     </div>
   );
 }
+

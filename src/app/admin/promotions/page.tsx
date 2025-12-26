@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
 import { promotions } from '@/data/promotions';
+import { customers } from '@/data/customers';
 
 export default function AdminPromotionsPage() {
 
@@ -23,6 +24,16 @@ export default function AdminPromotionsPage() {
       default:
         return 'N/A';
     }
+  };
+
+  const getCustomerDisplay = (promo: typeof promotions[0]) => {
+    if (!promo.customerIds || promo.customerIds.length === 0) {
+      return 'All Customers';
+    }
+    if (promo.customerIds.length > 2) {
+      return `${promo.customerIds.length} customers`;
+    }
+    return promo.customerIds.map(id => customers.find(c => c.id === id)?.name || 'Unknown').join(', ');
   };
 
 
@@ -46,6 +57,7 @@ export default function AdminPromotionsPage() {
               <TableRow>
                 <TableHead>Code</TableHead>
                 <TableHead>Discount</TableHead>
+                <TableHead>Applies To</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Expires</TableHead>
                 <TableHead>Usage</TableHead>
@@ -60,6 +72,9 @@ export default function AdminPromotionsPage() {
                   <TableCell className="font-medium">{promo.code}</TableCell>
                   <TableCell>
                     {getDiscountDisplay(promo)}
+                  </TableCell>
+                   <TableCell>
+                    <Badge variant="outline">{getCustomerDisplay(promo)}</Badge>
                   </TableCell>
                   <TableCell>
                     <Badge variant={promo.status === 'Active' ? 'default' : 'secondary'}>
@@ -94,3 +109,4 @@ export default function AdminPromotionsPage() {
     </div>
   );
 }
+
