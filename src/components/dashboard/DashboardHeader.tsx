@@ -2,6 +2,7 @@
 'use client';
 
 import { useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { signOut } from 'firebase/auth';
 import { useAuth, useUser, useDoc, useFirestore, useMemoFirebase } from '@/firebase';
@@ -21,11 +22,14 @@ import { LogOut, Settings } from 'lucide-react';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { ModeToggle } from '@/components/shared/ModeToggle';
 import { Themes } from '@/components/themes';
+import { useToast } from '@/hooks/use-toast';
 
 export function DashboardHeader() {
   const auth = useAuth();
   const { user, isUserLoading } = useUser();
   const firestore = useFirestore();
+  const router = useRouter();
+  const { toast } = useToast();
 
   const userDocRef = useMemoFirebase(() => {
     if (!firestore || !user) return null;
@@ -34,8 +38,34 @@ export function DashboardHeader() {
 
   const { data: userProfile, isLoading: isProfileLoading } = useDoc(userDocRef);
 
-  const handleLogout = () => {
-    signOut(auth);
+  const handleLogout = async () => {
+    if (!auth) {
+      toast({
+        title: 'Error',
+        description: 'Authentication service is not available.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    try {
+      await signOut(auth);
+      toast({
+        title: 'Logged out',
+        description: 'You have been successfully logged out.',
+      });
+      // Redirect to login page
+      router.push('/login');
+      // Force a page reload to clear any cached state
+      router.refresh();
+    } catch (error: any) {
+      console.error('Logout error:', error);
+      toast({
+        title: 'Logout failed',
+        description: error.message || 'An error occurred while logging out.',
+        variant: 'destructive',
+      });
+    }
   };
 
   const userInitial = useMemo(() => {
