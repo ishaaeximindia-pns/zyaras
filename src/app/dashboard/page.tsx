@@ -1,14 +1,16 @@
 
+
 'use client';
 
 import ProductShowcase from '@/components/products/ProductShowcase';
 import ProductCarousel from '@/components/products/ProductCarousel';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
-import { collection, query, where } from 'firebase/firestore';
+import { useCollection, useFirestore, useMemoFirebase, useUser, useDoc } from '@/firebase';
+import { collection, query, where, doc } from 'firebase/firestore';
 import type { ProductDocument } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useMemo } from 'react';
 
 export default function DashboardPage() {
   const searchParams = useSearchParams();
@@ -17,6 +19,14 @@ export default function DashboardPage() {
   const model = (searchParams.get('model') as 'B2C' | 'B2B') || 'B2C';
   
   const firestore = useFirestore();
+  const { user } = useUser();
+
+  const userDocRef = useMemoFirebase(() => {
+    if (!firestore || !user) return null;
+    return doc(firestore, 'users', user.uid);
+  }, [firestore, user]);
+
+  const { data: userProfile } = useDoc(userDocRef);
 
   const productsQuery = useMemoFirebase(() => {
     if (!firestore) return null;
@@ -36,13 +46,23 @@ export default function DashboardPage() {
     newSearchParams.delete('subcategory');
     router.push(`${pathname}?${newSearchParams.toString()}`);
   }
+  
+  const welcomeMessage = useMemo(() => {
+    if (userProfile) {
+        return `Welcome, ${userProfile.firstName}!`;
+    }
+    if (user) {
+        return `Welcome!`;
+    }
+    return 'Welcome!';
+  }, [userProfile, user]);
 
   return (
     <div className="p-4 sm:p-6 lg:p-8">
        <div className="space-y-12">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div className="space-y-2">
-                    <h1 className="text-3xl font-headline font-bold">Welcome, User Name!</h1>
+                    <h1 className="text-3xl font-headline font-bold">{welcomeMessage}</h1>
                     <p className="text-muted-foreground">
                     Here's your personal dashboard. Explore products, manage orders, and more.
                     </p>

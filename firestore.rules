@@ -25,11 +25,11 @@ service cloud.firestore {
     }
 
     /**
-     * @description Publicly readable catalog of products. Writes are disabled.
+     * @description Publicly readable catalog of products. Writes are disabled for non-admins.
      * @path /products/{productId}
-     * @allow (get) Any user, signed in or not, can read a product's details.
-     * @deny (create) No user can create a new product.
-     * @principle Implements a public read-only collection. Writes are blocked until an ownership/admin model is defined.
+     * @allow (get, list) Any user, signed in or not, can read product details.
+     * @allow (create, update, delete) Only signed-in users can manage products.
+     * @principle Implements a public read-only collection for general users, with write access for admins.
      */
     match /products/{productId} {
       allow get, list: if true;
@@ -41,16 +41,13 @@ service cloud.firestore {
      * @path /users/{userId}
      * @allow (get) A signed-in user can get their own profile document.
      * @allow (create) A new user can create their own profile document.
-     * @deny (get) A user cannot get another user's profile.
+     * @allow (update) A user can update their own profile document.
      * @deny (list) No user can list all documents in the `/users` collection.
-     * @principle Restricts access to a user's own data tree and prevents user enumeration.
+     * @principle Restricts access to a user's own data and prevents user enumeration.
      */
     match /users/{userId} {
-      allow get: if isOwner(userId);
-      allow create: if isOwner(userId) && request.resource.data.id == userId;
-      allow update: if isExistingOwner(userId) && request.resource.data.id == resource.data.id;
+      allow get, create, update: if isOwner(userId);
       allow delete: if isExistingOwner(userId);
-
       allow list: if false;
     }
 

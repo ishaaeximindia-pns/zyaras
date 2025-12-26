@@ -1,3 +1,4 @@
+
 {
   "entities": {
     "Product": {
@@ -54,14 +55,14 @@
         "imageUrl"
       ]
     },
-    "User": {
-      "title": "User",
+    "UserProfile": {
+      "title": "User Profile",
       "type": "object",
-      "description": "Represents a user of the e-commerce platform.",
+      "description": "Represents a user's public and private profile information.",
       "properties": {
         "id": {
           "type": "string",
-          "description": "Unique identifier for the user."
+          "description": "Unique identifier for the user, matching Firebase Auth UID."
         },
         "email": {
           "type": "string",
@@ -147,9 +148,9 @@
       {
         "path": "/users/{userId}",
         "definition": {
-          "entityName": "User",
+          "entityName": "UserProfile",
           "schema": {
-            "$ref": "#/backend/entities/User"
+            "$ref": "#/backend/entities/UserProfile"
           },
           "description": "Stores user profile information. Only accessible by the user themselves."
         }

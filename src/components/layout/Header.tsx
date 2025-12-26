@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from 'next/link';
@@ -14,10 +15,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { ChevronDown } from 'lucide-react';
+import { useUser } from '@/firebase';
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
-  const isLoggedIn = false; // Mock login state
+  const { user, isUserLoading } = useUser();
+  const isLoggedIn = !isUserLoading && !!user;
 
   const navLinks = [
     { href: '/', label: 'Home' },
@@ -103,7 +106,9 @@ export default function Header() {
             </DropdownMenu>
           </nav>
           <div className="flex items-center gap-2">
-            {isLoggedIn ? (
+            {isUserLoading ? (
+              <div className="h-8 w-20 animate-pulse rounded-md bg-muted" />
+            ) : isLoggedIn ? (
               <Button asChild>
                 <Link href="/dashboard">Dashboard</Link>
               </Button>

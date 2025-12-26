@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import Link from 'next/link';
@@ -41,9 +42,10 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/colla
 import { useState, useMemo, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { useSearch } from '@/context/SearchContext';
-import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
-import { collection, query, where } from 'firebase/firestore';
+import { useCollection, useFirestore, useMemoFirebase, useUser, useAuth, useDoc } from '@/firebase';
+import { collection, query, where, doc } from 'firebase/firestore';
 import type { ProductDocument } from '@/lib/types';
+import { signOut } from 'firebase/auth';
 
 
 interface CategoryWithSubcategories {
@@ -159,11 +161,30 @@ export default function DashboardNav() {
   const model = searchParams.get('model') || 'B2C';
   const { searchTerm, setSearchTerm } = useSearch();
 
+  const auth = useAuth();
+  const { user } = useUser();
+  const firestore = useFirestore();
+
+  const userDocRef = useMemoFirebase(() => {
+    if (!firestore || !user) return null;
+    return doc(firestore, 'users', user.uid);
+  }, [firestore, user]);
+
+  const { data: userProfile } = useDoc(userDocRef);
+
 
   const [isClient, setIsClient] = useState(false);
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  const handleLogout = () => {
+    signOut(auth);
+  };
+
+  const userName = userProfile ? `${userProfile.firstName} ${userProfile.lastName}` : user?.email;
+  const userEmail = userProfile?.email || user?.email;
+
 
   return (
     <Sidebar>
@@ -258,7 +279,7 @@ export default function DashboardNav() {
                 isActive={isActive('/dashboard/settings')}
                 tooltip="Settings"
               >
-                <Link href="#">
+                <Link href="/dashboard/settings">
                   <Settings />
                   <span>Settings</span>
                 </Link>
@@ -296,17 +317,15 @@ export default function DashboardNav() {
       <SidebarFooter>
         <div className="flex items-center gap-2 p-2 rounded-md bg-sidebar-accent">
           <Avatar className="h-9 w-9">
-            <AvatarImage src="https://picsum.photos/seed/avatar/100/100" />
-            <AvatarFallback>U</AvatarFallback>
+            <AvatarImage src={user?.photoURL || `https://picsum.photos/seed/${user?.uid}/100/100`} />
+            <AvatarFallback>{userName?.charAt(0).toUpperCase()}</AvatarFallback>
           </Avatar>
           <div className="flex flex-col text-sm">
-            <span className="font-semibold text-sidebar-accent-foreground">User Name</span>
-            <span className="text-xs text-muted-foreground">user@example.com</span>
+            <span className="font-semibold text-sidebar-accent-foreground">{userName}</span>
+            <span className="text-xs text-muted-foreground">{userEmail}</span>
           </div>
-          <Button variant="ghost" size="icon" className="ml-auto text-sidebar-accent-foreground" asChild>
-            <Link href="/">
+          <Button variant="ghost" size="icon" className="ml-auto text-sidebar-accent-foreground" onClick={handleLogout}>
               <LogOut />
-            </Link>
           </Button>
         </div>
       </SidebarFooter>
