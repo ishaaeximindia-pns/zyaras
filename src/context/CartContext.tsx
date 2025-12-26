@@ -2,18 +2,18 @@
 'use client';
 
 import React, { createContext, useContext, useState, ReactNode, useCallback } from 'react';
-import type { Product, CartItem } from '@/lib/types';
+import type { Product, CartItem, ProductDocument } from '@/lib/types';
 import { isEqual } from 'lodash';
 
 
 interface CartContextType {
   cart: CartItem[];
-  addToCart: (product: Product, selectedVariants?: Record<string, string>) => void;
+  addToCart: (product: ProductDocument, selectedVariants?: Record<string, string>) => void;
   addMultipleToCart: (items: CartItem[]) => void;
   removeFromCart: (cartItemId: string) => void;
   updateQuantity: (cartItemId: string, quantity: number) => void;
   clearCart: () => void;
-  getCartItemId: (product: Product, selectedVariants?: Record<string, string>) => string;
+  getCartItemId: (product: ProductDocument, selectedVariants?: Record<string, string>) => string;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -21,7 +21,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [cart, setCart] = useState<CartItem[]>([]);
   
-  const getCartItemId = useCallback((product: Product, selectedVariants?: Record<string, string>): string => {
+  const getCartItemId = useCallback((product: ProductDocument, selectedVariants?: Record<string, string>): string => {
     if (!selectedVariants || Object.keys(selectedVariants).length === 0) {
       return product.id;
     }
@@ -30,7 +30,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
 
-  const addToCart = (product: Product, selectedVariants?: Record<string, string>) => {
+  const addToCart = (product: ProductDocument, selectedVariants?: Record<string, string>) => {
     setCart((prevCart) => {
       const cartItemId = getCartItemId(product, selectedVariants);
       const existingItem = prevCart.find((item) => getCartItemId(item.product, item.selectedVariants) === cartItemId);

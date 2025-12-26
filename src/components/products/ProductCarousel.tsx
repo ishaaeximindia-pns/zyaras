@@ -3,11 +3,11 @@
 
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import ProductCard from './ProductCard';
-import type { Product } from '@/lib/types';
+import type { ProductDocument } from '@/lib/types';
 
 interface ProductCarouselProps {
   title: string;
-  products: Product[];
+  products: ProductDocument[];
 }
 
 export default function ProductCarousel({ title, products }: ProductCarouselProps) {

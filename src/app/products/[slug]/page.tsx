@@ -1,7 +1,6 @@
 
 'use client';
 
-import { products } from '@/data';
 import { notFound, useParams } from 'next/navigation';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
@@ -14,18 +13,33 @@ import ProductCarousel from '@/components/products/ProductCarousel';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { useState, useMemo } from 'react';
-import type { ProductVariant } from '@/lib/types';
+import type { ProductDocument } from '@/lib/types';
+import { useCollection, useDoc, useFirestore, useMemoFirebase } from '@/firebase';
+import { collection, doc } from 'firebase/firestore';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function ProductPage() {
   const params = useParams();
   const { slug } = params;
-
-  const { addToCart } = useCart();
   const { toast } = useToast();
+  const { addToCart } = useCart();
+  const firestore = useFirestore();
 
-  const product = products.find((p) => p.slug === slug);
+  const productsQuery = useMemoFirebase(() => {
+    if (!firestore) return null;
+    return collection(firestore, 'products');
+  }, [firestore]);
   
-  const [selectedVariants, setSelectedVariants] = useState<Record<string, string>>(() => {
+  const { data: productsData, isLoading: areProductsLoading } = useCollection<ProductDocument>(productsQuery);
+
+  const product = useMemo(() => {
+    if (!productsData) return null;
+    return productsData.find(p => p.slug === slug);
+  }, [productsData, slug]);
+
+  const [selectedVariants, setSelectedVariants] = useState<Record<string, string>>({});
+
+  useMemo(() => {
     const initialVariants: Record<string, string> = {};
     if (product?.variants) {
       product.variants.forEach(variant => {
@@ -34,18 +48,15 @@ export default function ProductPage() {
         }
       });
     }
-    return initialVariants;
-  });
-
-  if (!product) {
-    notFound();
-  }
+    setSelectedVariants(initialVariants);
+  }, [product]);
 
   const handleVariantChange = (variantName: string, value: string) => {
     setSelectedVariants(prev => ({ ...prev, [variantName]: value }));
   };
   
   const handleAddToCart = () => {
+    if (!product) return;
     addToCart(product, selectedVariants);
     toast({
       title: "Added to cart",
@@ -53,18 +64,49 @@ export default function ProductPage() {
     });
   };
 
-  const heroImage = PlaceHolderImages.find((p) => p.id === product.heroImage);
+  const heroImage = useMemo(() => {
+    if (!product) return null;
+    return PlaceHolderImages.find((p) => p.id === product.heroImage);
+  }, [product]);
+  
   const currencySymbol = storeSettings.currency === 'INR' ? '₹' : '$';
 
   const recommendedProducts = useMemo(() => {
-    if (product?.recommendedProductIds) {
-      return products.filter(p => product.recommendedProductIds!.includes(p.id));
+    if (!product || !productsData) return [];
+    if (product.recommendedProductIds) {
+      return productsData.filter(p => product.recommendedProductIds!.includes(p.id));
     }
     // Fallback to category-based recommendations if none are specified
-    return products.filter(
+    return productsData.filter(
       (p) => p.category === product.category && p.id !== product.id
     );
-  }, [product]);
+  }, [product, productsData]);
+  
+  if (areProductsLoading) {
+    return (
+        <div className="bg-background">
+        <section className="relative overflow-hidden bg-card pt-24 md:pt-32 pb-12">
+            <div className="container mx-auto px-4 md:px-6">
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+                <div className="space-y-6">
+                    <Skeleton className="h-8 w-24" />
+                    <Skeleton className="h-12 w-3/4" />
+                    <Skeleton className="h-8 w-1/2" />
+                    <Skeleton className="h-10 w-48" />
+                    <Skeleton className="h-24 w-full" />
+                    <Skeleton className="h-12 w-36" />
+                </div>
+                <Skeleton className="relative aspect-video rounded-xl shadow-2xl overflow-hidden" />
+            </div>
+            </div>
+        </section>
+        </div>
+    )
+  }
+
+  if (!product) {
+    notFound();
+  }
 
   return (
     <div className="bg-background">

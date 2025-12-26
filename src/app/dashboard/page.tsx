@@ -1,12 +1,14 @@
 
 'use client';
 
-import { products } from '@/data';
 import ProductShowcase from '@/components/products/ProductShowcase';
 import ProductCarousel from '@/components/products/ProductCarousel';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
+import { collection, query, where } from 'firebase/firestore';
+import type { ProductDocument } from '@/lib/types';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function DashboardPage() {
   const searchParams = useSearchParams();
@@ -14,11 +16,18 @@ export default function DashboardPage() {
   const pathname = usePathname();
   const model = (searchParams.get('model') as 'B2C' | 'B2B') || 'B2C';
   
-  const productsForModel = products.filter(p => p.model === model);
+  const firestore = useFirestore();
 
-  const featuredProducts = productsForModel.filter(p => p.isFeatured);
-  const newProducts = productsForModel.filter(p => p.status === 'New');
-  const saleProducts = productsForModel.filter(p => p.status === 'Sale');
+  const productsQuery = useMemoFirebase(() => {
+    if (!firestore) return null;
+    return query(collection(firestore, 'products'), where('model', '==', model));
+  }, [firestore, model]);
+
+  const { data: productsForModel, isLoading } = useCollection<ProductDocument>(productsQuery);
+
+  const featuredProducts = productsForModel?.filter(p => p.isFeatured) || [];
+  const newProducts = productsForModel?.filter(p => p.status === 'New') || [];
+  const saleProducts = productsForModel?.filter(p => p.status === 'Sale') || [];
 
   const handleModelChange = (newModel: 'B2B' | 'B2C') => {
     const newSearchParams = new URLSearchParams(searchParams.toString());
@@ -46,21 +55,29 @@ export default function DashboardPage() {
                 </Tabs>
             </div>
             
-            <>
-              {featuredProducts.length > 0 && (
-                  <ProductCarousel title="Featured Products" products={featuredProducts} />
-              )}
-              
-              {newProducts.length > 0 && (
-                  <ProductCarousel title="New Arrivals" products={newProducts} />
-              )}
+            {isLoading ? (
+              <div className="space-y-12">
+                <Skeleton className="h-48 w-full" />
+                <Skeleton className="h-48 w-full" />
+                <Skeleton className="h-48 w-full" />
+              </div>
+            ) : (
+              <>
+                {featuredProducts.length > 0 && (
+                    <ProductCarousel title="Featured Products" products={featuredProducts} />
+                )}
+                
+                {newProducts.length > 0 && (
+                    <ProductCarousel title="New Arrivals" products={newProducts} />
+                )}
 
-              {saleProducts.length > 0 && (
-                  <ProductCarousel title="On Sale Now" products={saleProducts} />
-              )}
+                {saleProducts.length > 0 && (
+                    <ProductCarousel title="On Sale Now" products={saleProducts} />
+                )}
 
-              <ProductShowcase allProducts={productsForModel} />
-            </>
+                <ProductShowcase allProducts={productsForModel || []} />
+              </>
+            )}
         </div>
     </div>
   );

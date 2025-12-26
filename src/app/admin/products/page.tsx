@@ -1,9 +1,8 @@
-
+'use client';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { PlusCircle, MoreHorizontal } from 'lucide-react';
-import { products } from '@/data';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -11,9 +10,22 @@ import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import Link from 'next/link';
 import { storeSettings } from '@/data/settings';
+import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
+import { collection } from 'firebase/firestore';
+import type { ProductDocument } from '@/lib/types';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function AdminProductsPage() {
   const currencySymbol = storeSettings.currency === 'INR' ? '₹' : '$';
+  const firestore = useFirestore();
+
+  const productsQuery = useMemoFirebase(() => {
+    if (!firestore) return null;
+    return collection(firestore, 'products');
+  }, [firestore]);
+
+  const { data: products, isLoading } = useCollection<ProductDocument>(productsQuery);
+
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
@@ -45,7 +57,19 @@ export default function AdminProductsPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {products.map((product) => {
+              {isLoading && Array.from({ length: 5 }).map((_, i) => (
+                <TableRow key={i}>
+                  <TableCell className="hidden sm:table-cell">
+                    <Skeleton className="h-16 w-16 rounded-md" />
+                  </TableCell>
+                  <TableCell><Skeleton className="h-4 w-48" /></TableCell>
+                  <TableCell><Skeleton className="h-4 w-24" /></TableCell>
+                  <TableCell><Skeleton className="h-4 w-16" /></TableCell>
+                  <TableCell><Skeleton className="h-4 w-32" /></TableCell>
+                  <TableCell><Skeleton className="h-8 w-8 rounded-full" /></TableCell>
+                </TableRow>
+              ))}
+              {products && products.map((product) => {
                  const productImage = PlaceHolderImages.find(p => p.id === product.heroImage);
                  return (
                     <TableRow key={product.id}>

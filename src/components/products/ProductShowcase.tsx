@@ -5,12 +5,12 @@ import { useState, useMemo, useEffect } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import ProductCard from './ProductCard';
-import type { Product } from '@/lib/types';
+import type { ProductDocument } from '@/lib/types';
 import { useSearch } from '@/context/SearchContext';
 import { Skeleton } from '../ui/skeleton';
 
 type ProductShowcaseProps = {
-  allProducts: Product[];
+  allProducts: ProductDocument[];
 };
 
 export default function ProductShowcase({ allProducts }: ProductShowcaseProps) {

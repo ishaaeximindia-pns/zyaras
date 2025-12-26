@@ -1,8 +1,31 @@
 
+'use client';
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { DollarSign, Package, Users, ShoppingBag } from 'lucide-react';
+import { DollarSign, Package, Users, ShoppingBag, Database } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { seedDatabase } from '@/lib/seed-db';
+import { useToast } from '@/hooks/use-toast';
 
 export default function AdminDashboardPage() {
+  const { toast } = useToast();
+
+  const handleSeedDatabase = async () => {
+    const result = await seedDatabase();
+    if (result.success) {
+      toast({
+        title: 'Database Seeded',
+        description: result.message,
+      });
+    } else {
+      toast({
+        title: 'Seeding Failed',
+        description: result.message,
+        variant: 'destructive',
+      });
+    }
+  };
+
   return (
     <div>
       <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
@@ -48,13 +71,29 @@ export default function AdminDashboardPage() {
           </CardContent>
         </Card>
       </div>
-       <div className="mt-8">
+
+       <div className="mt-8 grid gap-4 md:grid-cols-2">
         <Card>
           <CardHeader>
             <CardTitle>Recent Orders</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-muted-foreground">Order management will be implemented here.</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Database className="h-5 w-5" /> Database Management
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-muted-foreground mb-4">
+              Use this to populate your Firestore database with the initial set of products from your local data files. This is a one-time operation.
+            </p>
+            <Button onClick={handleSeedDatabase}>
+              Seed Product Database
+            </Button>
           </CardContent>
         </Card>
       </div>

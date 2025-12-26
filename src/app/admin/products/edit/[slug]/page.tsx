@@ -1,7 +1,6 @@
 
 'use client';
 
-import { products } from '@/data';
 import { notFound, useParams, useRouter } from 'next/navigation';
 import { useForm, useFieldArray, useFormContext } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -16,6 +15,12 @@ import { ChevronLeft, PlusCircle, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { Switch } from '@/components/ui/switch';
 import { MultiSelect } from '@/components/ui/multi-select';
+import { useCollection, useDoc, useFirestore, useMemoFirebase } from '@/firebase';
+import { collection, doc } from 'firebase/firestore';
+import { useEffect } from 'react';
+import { setDocumentNonBlocking } from '@/firebase';
+import type { ProductDocument } from '@/lib/types';
+import { useToast } from '@/hooks/use-toast';
 
 const variantOptionSchema = z.object({
   value: z.string().min(1, 'Option value cannot be empty'),
@@ -46,6 +51,8 @@ const productSchema = z.object({
   })).optional(),
   variants: z.array(variantSchema).optional(),
   recommendedProductIds: z.array(z.string()).max(5, 'You can select up to 5 recommended products.').optional(),
+  keyBenefit: z.string().optional(),
+  heroImage: z.string().optional(),
 });
 
 type ProductFormValues = z.infer<typeof productSchema>;
@@ -53,22 +60,36 @@ type ProductFormValues = z.infer<typeof productSchema>;
 export default function ProductEditPage() {
   const router = useRouter();
   const params = useParams();
+  const { toast } = useToast();
   const { slug } = params;
   const isNewProduct = slug === 'new';
-  const product = isNewProduct ? null : products.find((p) => p.slug === slug);
 
-  const productOptions = products
+  const firestore = useFirestore();
+
+  const productsQuery = useMemoFirebase(() => {
+    if (!firestore) return null;
+    return collection(firestore, 'products');
+  }, [firestore]);
+
+  const { data: productsData } = useCollection<ProductDocument>(productsQuery);
+
+  const productDocRef = useMemoFirebase(() => {
+    if (!firestore || isNewProduct) return null;
+    // We need to find the product ID from the slug.
+    const productId = productsData?.find(p => p.slug === slug)?.id;
+    if (!productId) return null;
+    return doc(firestore, 'products', productId);
+  }, [firestore, isNewProduct, slug, productsData]);
+  
+  const { data: product, isLoading: isProductLoading } = useDoc<ProductDocument>(productDocRef);
+
+  const productOptions = (productsData || [])
     .filter(p => p.slug !== slug)
     .map(p => ({ value: p.id, label: p.name }));
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
-    defaultValues: product ? {
-      ...product,
-      features: product.features || [],
-      variants: product.variants || [],
-      recommendedProductIds: product.recommendedProductIds || [],
-    } : {
+    defaultValues: {
       name: '',
       slug: '',
       category: 'Women',
@@ -77,15 +98,18 @@ export default function ProductEditPage() {
       tagline: '',
       description: '',
       price: 0,
-      discountPrice: undefined,
-      offer: undefined,
-      status: 'New',
       isFeatured: false,
       features: [],
       variants: [],
       recommendedProductIds: [],
     },
   });
+
+  useEffect(() => {
+    if (product) {
+      form.reset(product as ProductFormValues);
+    }
+  }, [product, form]);
 
   const { fields: featureFields, append: appendFeature, remove: removeFeature } = useFieldArray({
     control: form.control,
@@ -97,16 +121,36 @@ export default function ProductEditPage() {
     name: "variants",
   });
 
-  if (!isNewProduct && !product) {
+  if (!isNewProduct && !isProductLoading && !product) {
     notFound();
   }
 
   const onSubmit = (data: ProductFormValues) => {
-    // Data would be saved to a database in a real application
+    if (!firestore) return;
+    const docId = isNewProduct ? doc(collection(firestore, 'products')).id : product!.id;
+    const docRef = doc(firestore, 'products', docId);
+
+    const dataToSave = {
+        ...data,
+        id: docId,
+        // Ensure fields that are not in the form but required by type are here
+        keyBenefit: data.keyBenefit || '',
+        heroImage: data.heroImage || 'product-nexus-flow',
+        useCases: (product as any)?.useCases || [],
+        faqs: (product as any)?.faqs || [],
+        pricing: (product as any)?.pricing || [],
+    };
+    
+    setDocumentNonBlocking(docRef, dataToSave, { merge: true });
+
+    toast({
+        title: isNewProduct ? 'Product Created' : 'Product Updated',
+        description: `${data.name} has been saved.`,
+      });
+
     router.push('/admin/products');
   };
   
-
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">

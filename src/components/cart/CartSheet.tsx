@@ -18,12 +18,13 @@ import { Input } from '../ui/input';
 import { Trash2 } from 'lucide-react';
 import { Alert, AlertDescription } from '../ui/alert';
 import { storeSettings } from '@/data/settings';
+import type { ProductDocument } from '@/lib/types';
 
 const B2B_MINIMUM_CART_VALUE = 15000;
 
 export default function CartSheet({ children, model }: { children: React.ReactNode, model: 'B2C' | 'B2B' }) {
   const { cart, updateQuantity, removeFromCart, clearCart, getCartItemId } = useCart();
-  const subtotal = cart.reduce((acc, item) => acc + (item.product.discountPrice || item.product.price) * item.quantity, 0);
+  const subtotal = cart.reduce((acc, item) => acc + ((item.product as ProductDocument).discountPrice || (item.product as ProductDocument).price) * item.quantity, 0);
 
   const isB2B = model === 'B2B';
   const isBelowB2BMinimum = isB2B && subtotal < B2B_MINIMUM_CART_VALUE;
@@ -47,22 +48,23 @@ export default function CartSheet({ children, model }: { children: React.ReactNo
           {cart.length > 0 ? (
             <div className="space-y-4">
               {cart.map((item) => {
-                const productImage = PlaceHolderImages.find(p => p.id === item.product.heroImage)
-                const cartItemId = getCartItemId(item.product, item.selectedVariants);
+                const product = item.product as ProductDocument;
+                const productImage = PlaceHolderImages.find(p => p.id === product.heroImage)
+                const cartItemId = getCartItemId(product, item.selectedVariants);
                 return (
                   <div key={cartItemId} className="flex items-start gap-4">
                      <div className="relative h-16 w-16 rounded-md overflow-hidden">
                         {productImage && (
                           <Image
                             src={productImage.imageUrl}
-                            alt={item.product.name}
+                            alt={product.name}
                             fill
                             className="object-cover"
                           />
                         )}
                      </div>
                     <div className="flex-1">
-                      <p className="font-semibold">{item.product.name}</p>
+                      <p className="font-semibold">{product.name}</p>
                       {item.selectedVariants && (
                         <div className="text-xs text-muted-foreground">
                           {Object.entries(item.selectedVariants).map(([name, value]) => (
@@ -71,13 +73,13 @@ export default function CartSheet({ children, model }: { children: React.ReactNo
                         </div>
                       )}
                        <div className="flex items-center gap-2">
-                        {item.product.discountPrice ? (
+                        {product.discountPrice ? (
                             <>
-                                <p className="text-sm text-primary font-semibold">{currencySymbol}{item.product.discountPrice.toFixed(2)}</p>
-                                <p className="text-sm text-muted-foreground line-through">{currencySymbol}{item.product.price.toFixed(2)}</p>
+                                <p className="text-sm text-primary font-semibold">{currencySymbol}{product.discountPrice.toFixed(2)}</p>
+                                <p className="text-sm text-muted-foreground line-through">{currencySymbol}{product.price.toFixed(2)}</p>
                             </>
                         ) : (
-                            <p className="text-sm text-muted-foreground">{currencySymbol}{item.product.price.toFixed(2)}</p>
+                            <p className="text-sm text-muted-foreground">{currencySymbol}{product.price.toFixed(2)}</p>
                         )}
                       </div>
                     </div>

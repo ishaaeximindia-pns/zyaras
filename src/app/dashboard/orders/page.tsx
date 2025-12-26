@@ -5,28 +5,48 @@ import { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { orders, transactions } from "@/data/account";
+import { orders as staticOrders, transactions } from "@/data/account";
 import { cn } from "@/lib/utils";
 import { ChevronDown, ChevronRight, CreditCard, ShoppingBag, Repeat, Download } from 'lucide-react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Separator } from '@/components/ui/separator';
 import { useCart } from '@/context/CartContext';
-import { products } from '@/data';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
-import type { CartItem, OrderItem } from '@/lib/types';
+import type { CartItem, OrderItem, ProductDocument } from '@/lib/types';
+import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
+import { collection } from 'firebase/firestore';
 
 
 export default function OrdersPage() {
   const [openOrderId, setOpenOrderId] = useState<string | null>(null);
   const { addMultipleToCart } = useCart();
   const { toast } = useToast();
+  const firestore = useFirestore();
+
+  // For now, we will continue to use static orders until we implement order creation
+  const orders = staticOrders;
+  
+  const productsQuery = useMemoFirebase(() => {
+    if (!firestore) return null;
+    return collection(firestore, 'products');
+  }, [firestore]);
+
+  const { data: products } = useCollection<ProductDocument>(productsQuery);
 
   const toggleOrder = (orderId: string) => {
     setOpenOrderId(prevId => (prevId === orderId ? null : orderId));
   };
   
   const handleRepeatOrder = (orderItems: OrderItem[]) => {
+    if (!products) {
+       toast({
+        title: 'Error',
+        description: 'Products are not loaded yet. Please try again in a moment.',
+        variant: 'destructive',
+      });
+      return;
+    }
     const itemsToAdd: CartItem[] = [];
     orderItems.forEach(orderItem => {
       const product = products.find(p => p.name === orderItem.name);

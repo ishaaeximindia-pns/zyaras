@@ -1,5 +1,5 @@
-
 import { type LucideIcon } from 'lucide-react';
+import { type DocumentData, type Timestamp } from 'firebase/firestore';
 
 export type ProductFeature = {
   title: string;
@@ -56,8 +56,11 @@ export type Product = {
   recommendedProductIds?: string[];
 };
 
+export type ProductDocument = Product | DocumentData;
+
+
 export type CartItem = {
-  product: Product;
+  product: ProductDocument;
   quantity: number;
   selectedVariants?: Record<string, string>;
 };

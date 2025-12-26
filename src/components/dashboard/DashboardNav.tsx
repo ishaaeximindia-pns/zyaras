@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import Link from 'next/link';
@@ -38,11 +37,14 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '../ui/button';
 import CartSheet from '../cart/CartSheet';
 import { useCart } from '@/context/CartContext';
-import { products } from '@/data';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
 import { useState, useMemo, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { useSearch } from '@/context/SearchContext';
+import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
+import { collection, query, where } from 'firebase/firestore';
+import type { ProductDocument } from '@/lib/types';
+
 
 interface CategoryWithSubcategories {
   name: string;
@@ -56,10 +58,18 @@ function CategoryList() {
   const activeSubcategory = searchParams.get('subcategory');
 
   const [openCategories, setOpenCategories] = useState<string[]>(['Women', 'Men', 'Kids', 'Services']);
+  
+  const firestore = useFirestore();
+
+  const productsQuery = useMemoFirebase(() => {
+    if (!firestore) return null;
+    return query(collection(firestore, 'products'), where('model', '==', model));
+  }, [firestore, model]);
+
+  const { data: filteredProducts } = useCollection<ProductDocument>(productsQuery);
 
   const categories = useMemo(() => {
-    const productModel = model as 'B2C' | 'B2B';
-    const filteredProducts = products.filter(p => p.model === productModel);
+    if (!filteredProducts) return [];
 
     const categoryMap: Record<string, { icon: React.ElementType, subcategories: Set<string> }> = {
       'Women': { icon: User, subcategories: new Set() },
@@ -87,7 +97,7 @@ function CategoryList() {
         subcategories: Array.from(categoryMap[catName].subcategories).sort(),
       }));
 
-  }, [model]);
+  }, [filteredProducts]);
 
   const toggleCategory = (categoryName: string) => {
     setOpenCategories(prev =>

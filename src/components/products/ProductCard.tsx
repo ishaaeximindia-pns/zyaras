@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import type { Product } from '@/lib/types';
+import type { ProductDocument } from '@/lib/types';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { ArrowRight, Plus, Minus } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
@@ -22,7 +22,7 @@ import { cn } from '@/lib/utils';
 import { storeSettings } from '@/data/settings';
 
 type ProductCardProps = {
-  product: Product;
+  product: ProductDocument;
 };
 
 export default function ProductCard({ product }: ProductCardProps) {
@@ -30,7 +30,6 @@ export default function ProductCard({ product }: ProductCardProps) {
   const { cart, addToCart, updateQuantity, removeFromCart, getCartItemId } = useCart();
   const { toast } = useToast();
 
-  // For products without variants, the cart item is simpler to find.
   const cartItemId = getCartItemId(product);
   const cartItem = cart.find(item => getCartItemId(item.product, item.selectedVariants) === cartItemId);
 
@@ -39,7 +38,6 @@ export default function ProductCard({ product }: ProductCardProps) {
   const hasVariants = product.variants && product.variants.length > 0;
 
   const handleAddToCart = () => {
-    // For products with variants, users must select options on the product page.
     if (hasVariants) {
         toast({
             title: "Please select options",

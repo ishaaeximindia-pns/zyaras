@@ -5,6 +5,8 @@ import { Toaster } from '@/components/ui/toaster';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { CartProvider } from '@/context/CartContext';
 import { SearchProvider } from '@/context/SearchContext';
+import { FirebaseClientProvider } from '@/firebase';
+
 
 export const metadata: Metadata = {
   title: 'Zyra',
@@ -27,13 +29,15 @@ export default function RootLayout({
         />
       </head>
       <body className="font-body antialiased">
-        <SearchProvider>
-          <CartProvider>
-            <SidebarProvider>
-              {children}
-            </SidebarProvider>
-          </CartProvider>
-        </SearchProvider>
+        <FirebaseClientProvider>
+          <SearchProvider>
+            <CartProvider>
+              <SidebarProvider>
+                {children}
+              </SidebarProvider>
+            </CartProvider>
+          </SearchProvider>
+        </FirebaseClientProvider>
         <Toaster />
       </body>
     </html>
