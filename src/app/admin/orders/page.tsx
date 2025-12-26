@@ -70,7 +70,7 @@ export default function AdminOrdersPage() {
               {orders.map((order) => (
                 <TableRow key={order.id}>
                   <TableCell className="font-medium">{order.id}</TableCell>
-                  <TableCell>Mock Customer</TableCell> {/* Placeholder */}
+                  <TableCell>Mock Customer</TableCell>
                   <TableCell>{order.date}</TableCell>
                   <TableCell className="text-right">${order.total.toFixed(2)}</TableCell>
                   <TableCell>
