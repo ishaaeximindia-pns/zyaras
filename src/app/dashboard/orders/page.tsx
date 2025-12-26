@@ -79,7 +79,7 @@ export default function OrdersPage() {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-8">
+    <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-headline font-bold">Order History</h1>

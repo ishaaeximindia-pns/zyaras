@@ -161,30 +161,10 @@ export default function DashboardNav() {
   const model = searchParams.get('model') || 'B2C';
   const { searchTerm, setSearchTerm } = useSearch();
 
-  const auth = useAuth();
-  const { user } = useUser();
-  const firestore = useFirestore();
-
-  const userDocRef = useMemoFirebase(() => {
-    if (!firestore || !user) return null;
-    return doc(firestore, 'users', user.uid);
-  }, [firestore, user]);
-
-  const { data: userProfile } = useDoc(userDocRef);
-
-
   const [isClient, setIsClient] = useState(false);
   useEffect(() => {
     setIsClient(true);
   }, []);
-
-  const handleLogout = () => {
-    signOut(auth);
-  };
-
-  const userName = userProfile ? `${userProfile.firstName} ${userProfile.lastName}` : user?.email;
-  const userEmail = userProfile?.email || user?.email;
-
 
   return (
     <Sidebar>
@@ -315,19 +295,6 @@ export default function DashboardNav() {
         </SidebarMenu>
       </SidebarContent>
       <SidebarFooter>
-        <div className="flex items-center gap-2 p-2 rounded-md bg-sidebar-accent">
-          <Avatar className="h-9 w-9">
-            <AvatarImage src={user?.photoURL || `https://picsum.photos/seed/${user?.uid}/100/100`} />
-            <AvatarFallback>{userName?.charAt(0).toUpperCase()}</AvatarFallback>
-          </Avatar>
-          <div className="flex flex-col text-sm">
-            <span className="font-semibold text-sidebar-accent-foreground">{userName}</span>
-            <span className="text-xs text-muted-foreground">{userEmail}</span>
-          </div>
-          <Button variant="ghost" size="icon" className="ml-auto text-sidebar-accent-foreground" onClick={handleLogout}>
-              <LogOut />
-          </Button>
-        </div>
       </SidebarFooter>
     </Sidebar>
   );

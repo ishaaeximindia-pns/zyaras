@@ -58,47 +58,45 @@ export default function DashboardPage() {
   }, [userProfile, user]);
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8">
-       <div className="space-y-12">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <div className="space-y-2">
-                    <h1 className="text-3xl font-headline font-bold">{welcomeMessage}</h1>
-                    <p className="text-muted-foreground">
-                    Here's your personal dashboard. Explore products, manage orders, and more.
-                    </p>
-                </div>
-                 <Tabs value={model} onValueChange={(value) => handleModelChange(value as 'B2B' | 'B2C')} className="w-full sm:w-auto">
-                    <TabsList>
-                        <TabsTrigger value="B2C">For Individuals (B2C)</TabsTrigger>
-                        <TabsTrigger value="B2B">For Business (B2B)</TabsTrigger>
-                    </TabsList>
-                </Tabs>
-            </div>
-            
-            {isLoading ? (
-              <div className="space-y-12">
-                <Skeleton className="h-48 w-full" />
-                <Skeleton className="h-48 w-full" />
-                <Skeleton className="h-48 w-full" />
-              </div>
-            ) : (
-              <>
-                {featuredProducts.length > 0 && (
-                    <ProductCarousel title="Featured Products" products={featuredProducts} />
-                )}
-                
-                {newProducts.length > 0 && (
-                    <ProductCarousel title="New Arrivals" products={newProducts} />
-                )}
-
-                {saleProducts.length > 0 && (
-                    <ProductCarousel title="On Sale Now" products={saleProducts} />
-                )}
-
-                <ProductShowcase allProducts={productsForModel || []} />
-              </>
-            )}
+    <div className="space-y-12">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div className="space-y-2">
+              <h1 className="text-3xl font-headline font-bold">{welcomeMessage}</h1>
+              <p className="text-muted-foreground">
+              Here's your personal dashboard. Explore products, manage orders, and more.
+              </p>
+          </div>
+            <Tabs value={model} onValueChange={(value) => handleModelChange(value as 'B2B' | 'B2C')} className="w-full sm:w-auto">
+              <TabsList>
+                  <TabsTrigger value="B2C">For Individuals (B2C)</TabsTrigger>
+                  <TabsTrigger value="B2B">For Business (B2B)</TabsTrigger>
+              </TabsList>
+          </Tabs>
+      </div>
+      
+      {isLoading ? (
+        <div className="space-y-12">
+          <Skeleton className="h-48 w-full" />
+          <Skeleton className="h-48 w-full" />
+          <Skeleton className="h-48 w-full" />
         </div>
-    </div>
+      ) : (
+        <>
+          {featuredProducts.length > 0 && (
+              <ProductCarousel title="Featured Products" products={featuredProducts} />
+          )}
+          
+          {newProducts.length > 0 && (
+              <ProductCarousel title="New Arrivals" products={newProducts} />
+          )}
+
+          {saleProducts.length > 0 && (
+              <ProductCarousel title="On Sale Now" products={saleProducts} />
+          )}
+
+          <ProductShowcase allProducts={productsForModel || []} />
+        </>
+      )}
+  </div>
   );
 }

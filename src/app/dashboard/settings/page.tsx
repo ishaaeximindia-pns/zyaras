@@ -69,7 +69,7 @@ export default function ProfileSettingsPage() {
 
   if (isUserLoading || isProfileLoading) {
     return (
-      <div className="p-4 sm:p-6 lg:p-8 space-y-8">
+      <div className="space-y-8">
         <Skeleton className="h-8 w-48" />
         <Skeleton className="h-6 w-96" />
         <Card>
@@ -99,7 +99,7 @@ export default function ProfileSettingsPage() {
 
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-8">
+    <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-headline font-bold">Account Settings</h1>
         <p className="text-muted-foreground">
