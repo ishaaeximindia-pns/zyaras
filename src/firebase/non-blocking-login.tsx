@@ -36,7 +36,7 @@ export async function initiateEmailSignIn(authInstance: Auth, email: string, pas
 }
 
 /** Initiate Google sign-in (non-blocking). */
-export async function initiateGoogleSignIn(authInstance: Auth): Promise<void> {
+export async function initiateGoogleSignIn(authInstance: Auth | null): Promise<any> {
   if (!authInstance) {
     throw new Error('Auth instance is not available');
   }
@@ -45,17 +45,20 @@ export async function initiateGoogleSignIn(authInstance: Auth): Promise<void> {
     prompt: 'select_account'
   });
   // This needs to be awaited as it opens a popup
-  await signInWithPopup(authInstance, provider);
+  return await signInWithPopup(authInstance, provider);
 }
 
 /** Initiate phone number sign-in. */
 export async function initiatePhoneSignIn(
-  authInstance: Auth,
+  authInstance: Auth | null,
   phoneNumber: string,
   recaptchaVerifier: RecaptchaVerifier
 ): Promise<ConfirmationResult> {
   if (!authInstance) {
     throw new Error('Auth instance is not available');
+  }
+  if (!recaptchaVerifier) {
+    throw new Error('reCAPTCHA verifier is not available');
   }
   return await signInWithPhoneNumber(authInstance, phoneNumber, recaptchaVerifier);
 }

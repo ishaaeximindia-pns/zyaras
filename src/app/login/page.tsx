@@ -61,26 +61,37 @@ export default function LoginPage() {
   }, [user, isUserLoading, router]);
 
   useEffect(() => {
-    // Initialize reCAPTCHA verifier
-    if (auth && typeof window !== 'undefined' && !recaptchaVerifierRef.current) {
-      recaptchaVerifierRef.current = new RecaptchaVerifier(auth, 'recaptcha-container', {
-        size: 'invisible',
-        callback: () => {
-          // reCAPTCHA solved
-        },
-        'expired-callback': () => {
-          toast({
-            title: 'reCAPTCHA expired',
-            description: 'Please try again.',
-            variant: 'destructive',
-          });
-        },
-      });
+    // Initialize reCAPTCHA verifier only if auth is available
+    if (!auth) return;
+    
+    if (typeof window !== 'undefined' && !recaptchaVerifierRef.current) {
+      try {
+        recaptchaVerifierRef.current = new RecaptchaVerifier(auth, 'recaptcha-container', {
+          size: 'invisible',
+          callback: () => {
+            // reCAPTCHA solved
+          },
+          'expired-callback': () => {
+            toast({
+              title: 'reCAPTCHA expired',
+              description: 'Please try again.',
+              variant: 'destructive',
+            });
+          },
+        });
+      } catch (error) {
+        console.error('Error initializing reCAPTCHA:', error);
+      }
     }
 
     return () => {
       if (recaptchaVerifierRef.current) {
-        recaptchaVerifierRef.current.clear();
+        try {
+          recaptchaVerifierRef.current.clear();
+        } catch (error) {
+          console.error('Error clearing reCAPTCHA:', error);
+        }
+        recaptchaVerifierRef.current = null;
       }
     };
   }, [auth, toast]);
@@ -96,10 +107,7 @@ export default function LoginPage() {
     }
     try {
       await initiateEmailSignIn(auth, data.email, data.password);
-      toast({
-        title: 'Logging in...',
-        description: 'You will be redirected shortly.',
-      });
+      // Don't show toast here - let the auth state change handle redirect
     } catch (error: any) {
       toast({
         title: 'Login failed',
@@ -110,7 +118,7 @@ export default function LoginPage() {
   };
 
   const handleGoogleSignIn = async () => {
-    if (!auth) {
+    if (!auth || !firestore) {
       toast({
         title: 'Error',
         description: 'Authentication service is not available.',
@@ -120,22 +128,19 @@ export default function LoginPage() {
     }
     setIsGoogleLoading(true);
     try {
-      await initiateGoogleSignIn(auth);
+      const result = await initiateGoogleSignIn(auth);
       // Create user profile if it doesn't exist
-      if (user && firestore) {
-        const userDocRef = doc(firestore, 'users', user.uid);
+      if (result?.user) {
+        const userDocRef = doc(firestore, 'users', result.user.uid);
         const userProfile = {
-          id: user.uid,
-          email: user.email,
-          firstName: user.displayName?.split(' ')[0] || '',
-          lastName: user.displayName?.split(' ').slice(1).join(' ') || '',
+          id: result.user.uid,
+          email: result.user.email,
+          firstName: result.user.displayName?.split(' ')[0] || '',
+          lastName: result.user.displayName?.split(' ').slice(1).join(' ') || '',
         };
         setDocumentNonBlocking(userDocRef, userProfile, { merge: true });
       }
-      toast({
-        title: 'Success',
-        description: 'Signed in with Google successfully.',
-      });
+      // Don't show toast - let auth state change handle redirect
     } catch (error: any) {
       toast({
         title: 'Google sign-in failed',
@@ -234,7 +239,7 @@ export default function LoginPage() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full" disabled={isUserLoading || !auth}>
+              <Button type="submit" className="w-full" disabled={isUserLoading}>
                 {isUserLoading ? 'Loading...' : 'Log in'}
               </Button>
             </form>
@@ -254,7 +259,7 @@ export default function LoginPage() {
               type="button"
               variant="outline"
               onClick={handleGoogleSignIn}
-              disabled={isGoogleLoading || !auth}
+              disabled={isGoogleLoading}
               className="w-full"
             >
               <Chrome className="mr-2 h-4 w-4" />
@@ -265,7 +270,6 @@ export default function LoginPage() {
               type="button"
               variant="outline"
               onClick={() => setShowPhoneAuth(!showPhoneAuth)}
-              disabled={!auth}
               className="w-full"
             >
               📱 {showPhoneAuth ? 'Hide' : 'Sign in with'} Phone
@@ -290,7 +294,7 @@ export default function LoginPage() {
                   <Button
                     type="button"
                     onClick={handlePhoneSignIn}
-                    disabled={!phoneNumber || !auth}
+                    disabled={!phoneNumber}
                     className="w-full"
                   >
                     Send OTP

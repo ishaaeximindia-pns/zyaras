@@ -65,26 +65,37 @@ export default function SignupPage() {
   }, [user, isUserLoading, router]);
 
   useEffect(() => {
-    // Initialize reCAPTCHA verifier
-    if (auth && typeof window !== 'undefined' && !recaptchaVerifierRef.current) {
-      recaptchaVerifierRef.current = new RecaptchaVerifier(auth, 'recaptcha-container-signup', {
-        size: 'invisible',
-        callback: () => {
-          // reCAPTCHA solved
-        },
-        'expired-callback': () => {
-          toast({
-            title: 'reCAPTCHA expired',
-            description: 'Please try again.',
-            variant: 'destructive',
-          });
-        },
-      });
+    // Initialize reCAPTCHA verifier only if auth is available
+    if (!auth) return;
+    
+    if (typeof window !== 'undefined' && !recaptchaVerifierRef.current) {
+      try {
+        recaptchaVerifierRef.current = new RecaptchaVerifier(auth, 'recaptcha-container-signup', {
+          size: 'invisible',
+          callback: () => {
+            // reCAPTCHA solved
+          },
+          'expired-callback': () => {
+            toast({
+              title: 'reCAPTCHA expired',
+              description: 'Please try again.',
+              variant: 'destructive',
+            });
+          },
+        });
+      } catch (error) {
+        console.error('Error initializing reCAPTCHA:', error);
+      }
     }
 
     return () => {
       if (recaptchaVerifierRef.current) {
-        recaptchaVerifierRef.current.clear();
+        try {
+          recaptchaVerifierRef.current.clear();
+        } catch (error) {
+          console.error('Error clearing reCAPTCHA:', error);
+        }
+        recaptchaVerifierRef.current = null;
       }
     };
   }, [auth, toast]);
