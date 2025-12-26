@@ -7,7 +7,7 @@ import { CartProvider } from '@/context/CartContext';
 import { SearchProvider } from '@/context/SearchContext';
 
 export const metadata: Metadata = {
-  title: 'Synergy Digital Suite',
+  title: 'Zyra',
   description: 'One unified ecosystem for all your digital products and services.',
 };
 

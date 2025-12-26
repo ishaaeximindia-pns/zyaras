@@ -15,8 +15,8 @@ export type StoreSettings = {
 
 // Mock settings data
 export const storeSettings: StoreSettings = {
-  storeName: 'Synergy Suite',
-  storeEmail: 'contact@synergysuite.com',
+  storeName: 'Zyra',
+  storeEmail: 'contact@zyra.com',
   storePhone: '123-456-7890',
   storeAddress: '123 Tech Lane, Innovation City, 12345',
   shippingFlatRate: 5.00,

@@ -1,3 +1,4 @@
+
 import Link from 'next/link';
 import Logo from '@/components/shared/Logo';
 
@@ -40,7 +41,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="mt-8 border-t pt-4 text-center text-sm text-muted-foreground">
-          © {new Date().getFullYear()} Synergy Digital Suite. All rights reserved.
+          © {new Date().getFullYear()} Zyra. All rights reserved.
         </div>
       </div>
     </footer>
