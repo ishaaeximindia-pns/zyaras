@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { ChevronDown, ChevronRight, CreditCard, ShoppingBag, Repeat, Download, Package, Edit } from 'lucide-react';
+import { ChevronDown, ChevronRight, CreditCard, ShoppingBag, Repeat, Download, Package, Edit, Truck } from 'lucide-react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { useCart } from '@/context/CartContext';
 import { useToast } from '@/hooks/use-toast';
@@ -157,8 +157,8 @@ export default function OrdersPage() {
                         <tr className="bg-muted/50">
                           <TableCell colSpan={5} className="p-0">
                             <div className="p-6 space-y-6">
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
+                              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div className="md:col-span-2">
                                   <h4 className="font-semibold mb-4 flex items-center gap-2"><ShoppingBag className="h-5 w-5" /> Order Items</h4>
                                   <Table>
                                     <TableHeader>
@@ -193,17 +193,38 @@ export default function OrdersPage() {
                                     </TableBody>
                                   </Table>
                                 </div>
-                                {order.transactionId && (
-                                  <div>
-                                    <h4 className="font-semibold mb-4 flex items-center gap-2"><CreditCard className="h-5 w-5" /> Transaction Details</h4>
-                                    <div className="space-y-2 text-sm">
-                                      <div className="flex justify-between">
-                                        <span className="text-muted-foreground">Transaction ID:</span>
-                                        <span className="font-medium">{order.transactionId}</span>
-                                      </div>
+                                <div className="space-y-6">
+                                    {order.transactionId && (
+                                    <div>
+                                        <h4 className="font-semibold mb-4 flex items-center gap-2"><CreditCard className="h-5 w-5" /> Transaction Details</h4>
+                                        <div className="space-y-2 text-sm">
+                                        <div className="flex justify-between">
+                                            <span className="text-muted-foreground">Transaction ID:</span>
+                                            <span className="font-medium">{order.transactionId}</span>
+                                        </div>
+                                        </div>
                                     </div>
-                                  </div>
-                                )}
+                                    )}
+                                    {(order.status === 'Shipped' || order.status === 'Delivered') && (
+                                    <div>
+                                        <h4 className="font-semibold mb-4 flex items-center gap-2"><Truck className="h-5 w-5" /> Shipping Details</h4>
+                                        <div className="space-y-2 text-sm">
+                                            {order.carrier && (
+                                                <div className="flex justify-between">
+                                                    <span className="text-muted-foreground">Carrier:</span>
+                                                    <span className="font-medium">{order.carrier}</span>
+                                                </div>
+                                            )}
+                                            {order.trackingNumber && (
+                                                 <div className="flex justify-between">
+                                                    <span className="text-muted-foreground">Tracking #:</span>
+                                                    <span className="font-mono text-xs">{order.trackingNumber}</span>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                    )}
+                                </div>
                               </div>
                               <div className="flex items-center justify-end gap-4">
                                 <Button variant="outline" onClick={() => handleRepeatOrder(order.items)}>
