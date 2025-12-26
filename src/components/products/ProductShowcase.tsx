@@ -20,6 +20,7 @@ export default function ProductShowcase({ allProducts }: ProductShowcaseProps) {
 
   const [isClient, setIsClient] = useState(false);
   const [category, setCategory] = useState('all');
+  const [subcategory, setSubcategory] = useState<string | null>(null);
   const [priceRange, setPriceRange] = useState('all');
   
   useEffect(() => {
@@ -27,13 +28,9 @@ export default function ProductShowcase({ allProducts }: ProductShowcaseProps) {
     const paramsCategory = searchParams.get('category') || 'all';
     const paramsSubCategory = searchParams.get('subcategory');
 
-    if (paramsSubCategory) {
-        if (paramsCategory) {
-            setCategory(paramsCategory);
-        }
-    } else {
-        setCategory(paramsCategory);
-    }
+    setCategory(paramsCategory);
+    setSubcategory(paramsSubCategory);
+
   }, [searchParams]);
 
   const categories = useMemo(() => ['all', ...Array.from(new Set(allProducts.map((p) => p.category)))], [allProducts]);
@@ -58,6 +55,8 @@ export default function ProductShowcase({ allProducts }: ProductShowcaseProps) {
         : true;
         
       const matchesCategory = category === 'all' || product.category === category;
+      const matchesSubcategory = !subcategory || product.subcategory === subcategory;
+
       const price = product.discountPrice || product.price;
       const matchesPrice =
         priceRange === 'all' ||
@@ -66,29 +65,40 @@ export default function ProductShowcase({ allProducts }: ProductShowcaseProps) {
         (priceRange === '100-500' && price > 100 && price <= 500) ||
         (priceRange === '500-plus' && price > 500);
 
-      return matchesSearch && matchesCategory && matchesPrice;
+      return matchesSearch && matchesCategory && matchesSubcategory && matchesPrice;
     });
-  }, [searchTerm, category, priceRange, allProducts]);
+  }, [searchTerm, category, subcategory, priceRange, allProducts]);
+
+  const handleCategoryChange = (newCategory: string) => {
+    setCategory(newCategory);
+    setSubcategory(null);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('category', newCategory);
+    params.delete('subcategory');
+    router.push(`${pathname}?${params.toString()}`);
+  }
   
   if (!isClient) {
     return null;
   }
+
+  const title = subcategory ? subcategory : category !== 'all' ? category : 'All Products';
 
   return (
     <div className="space-y-8">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-3xl font-headline font-bold capitalize">
-            {category !== 'all' ? category : 'All Products'}
+            {title}
           </h1>
           <p className="text-muted-foreground">
-            {category !== 'all' ? `Browse products in the ${category} category.` : 'Discover our curated collection of products.'}
+            {`Browse products ${subcategory ? `in the ${subcategory}` : category !== 'all' ? `in the ${category}` : ''} category.`}
           </p>
         </div>
       </div>
 
        <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <Select value={category} onValueChange={setCategory}>
+          <Select value={category} onValueChange={handleCategoryChange}>
             <SelectTrigger>
               <SelectValue placeholder="All Categories" />
             </SelectTrigger>
