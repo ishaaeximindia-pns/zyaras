@@ -165,6 +165,7 @@ function DashboardNavContent() {
   const isActive = (path: string) => pathname === path || pathname.startsWith(`${path}/`);
   const { cart } = useCart();
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const { user } = useUser();
 
   const model = searchParams.get('model') || 'B2C';
   const { searchTerm, setSearchTerm } = useSearch();
@@ -173,6 +174,11 @@ function DashboardNavContent() {
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  // Check if user is admin (UUID or email)
+  const SUPER_ADMIN_UID = '0Nmw3GyfeCUL0gpr5EWO29kODZA2';
+  const SUPER_ADMIN_EMAIL = 'ishaaeximindia@gmail.com';
+  const isAdmin = user && (user.uid === SUPER_ADMIN_UID || user.email === SUPER_ADMIN_EMAIL);
 
   return (
     <Sidebar>
@@ -283,22 +289,24 @@ function DashboardNavContent() {
             </SidebarMenuItem>
           </SidebarGroup>
 
-          <SidebarGroup>
-            <SidebarGroupLabel>Admin</SidebarGroupLabel>
-             <SidebarMenuItem>
-              <SidebarMenuButton
-                href="/admin"
-                asChild
-                isActive={isActive('/admin')}
-                tooltip="Admin Panel"
-              >
-                <Link href="/admin">
-                  <Shield />
-                  <span>Admin Panel</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarGroup>
+          {isAdmin && (
+            <SidebarGroup>
+              <SidebarGroupLabel>Admin</SidebarGroupLabel>
+               <SidebarMenuItem>
+                <SidebarMenuButton
+                  href="/admin"
+                  asChild
+                  isActive={isActive('/admin')}
+                  tooltip="Admin Panel"
+                >
+                  <Link href="/admin">
+                    <Shield />
+                    <span>Admin Panel</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarGroup>
+          )}
 
         </SidebarMenu>
       </SidebarContent>

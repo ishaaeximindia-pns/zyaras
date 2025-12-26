@@ -22,6 +22,7 @@ import { Button } from '@/components/ui/button';
 export const dynamic = 'force-dynamic';
 
 const SUPER_ADMIN_UID = '0Nmw3GyfeCUL0gpr5EWO29kODZA2';
+const SUPER_ADMIN_EMAIL = 'ishaaeximindia@gmail.com';
 
 const adminNavItems = [
   { href: '/admin', label: 'Dashboard', icon: LayoutGrid },
@@ -93,7 +94,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     return <div className="flex min-h-screen"><AdminLoadingSkeleton /></div>;
   }
   
-  if (!user || user.uid !== SUPER_ADMIN_UID) {
+  // Check if user is admin by UUID or email
+  const isAdmin = user && (user.uid === SUPER_ADMIN_UID || user.email === SUPER_ADMIN_EMAIL);
+  
+  if (!user || !isAdmin) {
     return <div className="flex min-h-screen"><AdminAccessDenied /></div>;
   }
 
