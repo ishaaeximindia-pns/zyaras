@@ -105,7 +105,7 @@ export default function OrdersPage() {
                 const transaction = transactions.find(t => t.id === order.transactionId);
                 return (
                   <Collapsible asChild key={order.id} open={openOrderId === order.id} onOpenChange={() => toggleOrder(order.id)}>
-                    <>
+                    <TableBody>
                       <TableRow className="cursor-pointer">
                         <TableCell>
                           <CollapsibleTrigger asChild>
@@ -210,7 +210,7 @@ export default function OrdersPage() {
                           </TableCell>
                         </tr>
                       </CollapsibleContent>
-                    </>
+                    </TableBody>
                   </Collapsible>
                 )
             })}
