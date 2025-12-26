@@ -14,11 +14,6 @@ export default function DashboardPage() {
   const pathname = usePathname();
   const model = (searchParams.get('model') as 'B2C' | 'B2B') || 'B2C';
   
-  const [isClient, setIsClient] = useState(false);
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-  
   const productsForModel = products.filter(p => p.model === model);
 
   const featuredProducts = productsForModel.filter(p => p.isFeatured);
@@ -51,23 +46,21 @@ export default function DashboardPage() {
                 </Tabs>
             </div>
             
-            {isClient && (
-                <>
-                {featuredProducts.length > 0 && (
-                    <ProductCarousel title="Featured Products" products={featuredProducts} />
-                )}
-                
-                {newProducts.length > 0 && (
-                    <ProductCarousel title="New Arrivals" products={newProducts} />
-                )}
+            <>
+              {featuredProducts.length > 0 && (
+                  <ProductCarousel title="Featured Products" products={featuredProducts} />
+              )}
+              
+              {newProducts.length > 0 && (
+                  <ProductCarousel title="New Arrivals" products={newProducts} />
+              )}
 
-                {saleProducts.length > 0 && (
-                    <ProductCarousel title="On Sale Now" products={saleProducts} />
-                )}
+              {saleProducts.length > 0 && (
+                  <ProductCarousel title="On Sale Now" products={saleProducts} />
+              )}
 
-                <ProductShowcase allProducts={productsForModel} />
-                </>
-            )}
+              <ProductShowcase allProducts={productsForModel} />
+            </>
         </div>
     </div>
   );

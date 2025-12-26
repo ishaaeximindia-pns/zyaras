@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import ProductCard from './ProductCard';
 import type { Product } from '@/lib/types';
 import { useSearch } from '@/context/SearchContext';
+import { Skeleton } from '../ui/skeleton';
 
 type ProductShowcaseProps = {
   allProducts: Product[];
@@ -18,18 +19,20 @@ export default function ProductShowcase({ allProducts }: ProductShowcaseProps) {
   const searchParams = useSearchParams();
   const { searchTerm } = useSearch();
 
-  const [isClient, setIsClient] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [category, setCategory] = useState('all');
   const [subcategory, setSubcategory] = useState<string | null>(null);
   const [priceRange, setPriceRange] = useState('all');
   
   useEffect(() => {
-    setIsClient(true);
+    setIsLoading(true);
     const paramsCategory = searchParams.get('category') || 'all';
     const paramsSubCategory = searchParams.get('subcategory');
 
     setCategory(paramsCategory);
     setSubcategory(paramsSubCategory);
+    const timer = setTimeout(() => setIsLoading(false), 300);
+    return () => clearTimeout(timer);
 
   }, [searchParams]);
 
@@ -70,16 +73,10 @@ export default function ProductShowcase({ allProducts }: ProductShowcaseProps) {
   }, [searchTerm, category, subcategory, priceRange, allProducts]);
 
   const handleCategoryChange = (newCategory: string) => {
-    setCategory(newCategory);
-    setSubcategory(null);
     const params = new URLSearchParams(searchParams.toString());
     params.set('category', newCategory);
     params.delete('subcategory');
     router.push(`${pathname}?${params.toString()}`);
-  }
-  
-  if (!isClient) {
-    return null;
   }
 
   const title = subcategory ? subcategory : category !== 'all' ? category : 'All Products';
@@ -125,7 +122,19 @@ export default function ProductShowcase({ allProducts }: ProductShowcaseProps) {
         </div>
 
 
-      {filteredProducts.length > 0 ? (
+      {isLoading ? (
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {Array.from({ length: 8 }).map((_, index) => (
+            <div key={index} className="space-y-4">
+              <Skeleton className="h-48 w-full" />
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-2/3" />
+                <Skeleton className="h-4 w-1/2" />
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : filteredProducts.length > 0 ? (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {filteredProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
