@@ -70,7 +70,8 @@ export const products: Product[] = [
     ],
      pricing: [
       { name: 'Standard', price: '68', priceSuffix: '', features: ['1-Year Warranty', 'Free Returns', 'Standard Shipping'], cta: 'Add to Cart', isFeatured: true },
-    ]
+    ],
+    recommendedProductIds: ['2', '6', '8'],
   },
   {
     id: '2',
@@ -130,7 +131,8 @@ export const products: Product[] = [
     ],
     pricing: [
        { name: 'Standard', price: '125', priceSuffix: '', features: ['Lifetime Warranty', 'Free Returns', 'Standard Shipping'], cta: 'Add to Cart', isFeatured: true },
-    ]
+    ],
+    recommendedProductIds: ['1', '6', '8'],
   },
   {
     id: '3',
@@ -187,7 +189,8 @@ export const products: Product[] = [
     ],
     pricing: [
         { name: 'Standard', price: '55', priceSuffix: '', features: ['1-Year Warranty', 'Free Returns', 'Standard Shipping'], cta: 'Add to Cart', isFeatured: true },
-    ]
+    ],
+    recommendedProductIds: ['7'],
   },
   {
     id: '4',
@@ -245,7 +248,8 @@ export const products: Product[] = [
     ],
     pricing: [
         { name: 'Standard', price: '35', priceSuffix: '', features: ['6-Month Warranty', 'Free Returns', 'Standard Shipping'], cta: 'Add to Cart', isFeatured: true },
-    ]
+    ],
+    recommendedProductIds: ['9'],
   },
   {
     id: '5',
@@ -282,7 +286,8 @@ export const products: Product[] = [
     faqs: [],
     pricing: [
         { name: 'Standard', price: '2500', priceSuffix: '/ project', features: ['Initial Consultation', 'Market Analysis Report', 'Strategic Roadmap'], cta: 'Inquire Now', isFeatured: true },
-    ]
+    ],
+    recommendedProductIds: ['10', '11', '12', '13', '14'],
   },
   {
     id: '6',
@@ -308,7 +313,8 @@ export const products: Product[] = [
     faqs: [],
     pricing: [
       { name: 'Standard', price: '45', priceSuffix: '', features: ['Free Shipping', 'Easy Returns'], cta: 'Add to Cart', isFeatured: true },
-    ]
+    ],
+    recommendedProductIds: ['1', '2', '8'],
   },
   {
     id: '7',
@@ -334,7 +340,8 @@ export const products: Product[] = [
     faqs: [],
     pricing: [
       { name: 'Standard', price: '48', priceSuffix: '', features: ['5-Year Warranty', 'Free Shipping'], cta: 'Add to Cart', isFeatured: true },
-    ]
+    ],
+    recommendedProductIds: ['3'],
   },
   {
     id: '8',
@@ -359,7 +366,8 @@ export const products: Product[] = [
     faqs: [],
     pricing: [
       { name: 'Standard', price: '85', priceSuffix: '', features: ['Free Shipping', 'Easy Returns'], cta: 'Add to Cart', isFeatured: true },
-    ]
+    ],
+    recommendedProductIds: ['1', '2', '6'],
   },
   {
     id: '9',
@@ -385,7 +393,8 @@ export const products: Product[] = [
     faqs: [],
     pricing: [
       { name: 'Standard', price: '22', priceSuffix: '', features: ['Free Shipping on orders over $50', 'Easy Returns'], cta: 'Add to Cart', isFeatured: true },
-    ]
+    ],
+    recommendedProductIds: ['4'],
   },
   {
     id: '10',
@@ -410,7 +419,8 @@ export const products: Product[] = [
     faqs: [],
     pricing: [
       { name: 'Per Traveler', price: '800', priceSuffix: '', features: ['Full application handling', 'Document checklist', 'Status updates'], cta: 'Get Started', isFeatured: true }
-    ]
+    ],
+    recommendedProductIds: ['5', '11', '12', '13', '14'],
   },
   {
     id: '11',
@@ -435,7 +445,8 @@ export const products: Product[] = [
     faqs: [],
     pricing: [
       { name: 'Per Shipment', price: '3200', priceSuffix: '', features: ['Customs filing', 'Freight coordination', 'Real-time tracking'], cta: 'Get a Quote', isFeatured: true }
-    ]
+    ],
+    recommendedProductIds: ['5', '10', '12', '13', '14'],
   },
   {
     id: '12',
@@ -460,7 +471,8 @@ export const products: Product[] = [
     faqs: [],
     pricing: [
       { name: 'Per Market', price: '5500', priceSuffix: '', features: ['Full market report', 'Competitor benchmark', 'Strategic recommendations'], cta: 'Learn More', isFeatured: true }
-    ]
+    ],
+    recommendedProductIds: ['5', '10', '11', '13', '14'],
   },
   {
     id: '13',
@@ -485,7 +497,8 @@ export const products: Product[] = [
     faqs: [],
     pricing: [
       { name: 'Per Traveler', price: '1200', priceSuffix: '', features: ['Flight & hotel booking', '24/7 travel support', 'Itinerary management'], cta: 'Arrange Trip', isFeatured: true }
-    ]
+    ],
+    recommendedProductIds: ['5', '10', '11', '12', '14'],
   },
   {
     id: '14',
@@ -512,6 +525,7 @@ export const products: Product[] = [
     faqs: [],
     pricing: [
       { name: 'Complete Package', price: '8500', priceSuffix: '/ project', features: ['Visa & Travel for 1', '1 Market Analysis Report', '1 Shipment Logistics', 'Dedicated Manager'], cta: 'Launch Globally', isFeatured: true }
-    ]
+    ],
+    recommendedProductIds: ['5', '10', '11', '12', '13'],
   }
 ];

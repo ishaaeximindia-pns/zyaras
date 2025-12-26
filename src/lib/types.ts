@@ -53,6 +53,7 @@ export type Product = {
   useCases: { title: string; description: string; image: string }[];
   faqs: ProductFAQ[];
   pricing?: PricingTier[]; // Optional pricing tiers
+  recommendedProductIds?: string[];
 };
 
 export type CartItem = {

@@ -56,9 +56,15 @@ export default function ProductPage() {
   const heroImage = PlaceHolderImages.find((p) => p.id === product.heroImage);
   const currencySymbol = storeSettings.currency === 'INR' ? '₹' : '$';
 
-  const recommendedProducts = products.filter(
-    (p) => p.category === product.category && p.id !== product.id
-  );
+  const recommendedProducts = useMemo(() => {
+    if (product?.recommendedProductIds) {
+      return products.filter(p => product.recommendedProductIds!.includes(p.id));
+    }
+    // Fallback to category-based recommendations if none are specified
+    return products.filter(
+      (p) => p.category === product.category && p.id !== product.id
+    );
+  }, [product]);
 
   return (
     <div className="bg-background">

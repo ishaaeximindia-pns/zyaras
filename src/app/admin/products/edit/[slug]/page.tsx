@@ -3,7 +3,7 @@
 
 import { products } from '@/data';
 import { notFound, useParams, useRouter } from 'next/navigation';
-import { useForm, useFieldArray } from 'react-hook-form';
+import { useForm, useFieldArray, useFormContext } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Button } from '@/components/ui/button';
@@ -15,6 +15,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { ChevronLeft, PlusCircle, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { Switch } from '@/components/ui/switch';
+import { MultiSelect } from '@/components/ui/multi-select';
 
 const variantOptionSchema = z.object({
   value: z.string().min(1, 'Option value cannot be empty'),
@@ -44,6 +45,7 @@ const productSchema = z.object({
     icon: z.string().min(1),
   })).optional(),
   variants: z.array(variantSchema).optional(),
+  recommendedProductIds: z.array(z.string()).max(5, 'You can select up to 5 recommended products.').optional(),
 });
 
 type ProductFormValues = z.infer<typeof productSchema>;
@@ -55,12 +57,17 @@ export default function ProductEditPage() {
   const isNewProduct = slug === 'new';
   const product = isNewProduct ? null : products.find((p) => p.slug === slug);
 
+  const productOptions = products
+    .filter(p => p.slug !== slug)
+    .map(p => ({ value: p.id, label: p.name }));
+
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
     defaultValues: product ? {
       ...product,
       features: product.features || [],
       variants: product.variants || [],
+      recommendedProductIds: product.recommendedProductIds || [],
     } : {
       name: '',
       slug: '',
@@ -76,6 +83,7 @@ export default function ProductEditPage() {
       isFeatured: false,
       features: [],
       variants: [],
+      recommendedProductIds: [],
     },
   });
 
@@ -159,6 +167,34 @@ export default function ProductEditPage() {
                     <FormItem>
                       <FormLabel>Description</FormLabel>
                       <FormControl><Textarea {...field} rows={5} /></FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </CardContent>
+            </Card>
+
+             <Card>
+              <CardHeader>
+                <CardTitle>Recommended Products</CardTitle>
+                <CardDescription>Select up to 5 products to recommend.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                 <FormField
+                  control={form.control}
+                  name="recommendedProductIds"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Recommended Products</FormLabel>
+                      <FormControl>
+                        <MultiSelect
+                          options={productOptions}
+                          selected={field.value || []}
+                          onChange={field.onChange}
+                          placeholder="Select products..."
+                          maxSelected={5}
+                        />
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -419,7 +455,7 @@ export default function ProductEditPage() {
 }
 
 function VariantOptionsArray({ variantIndex }: { variantIndex: number }) {
-    const { control } = useFormContext();
+    const { control } = useFormContext<ProductFormValues>();
     const { fields, append, remove } = useFieldArray({
       control: control,
       name: `variants.${variantIndex}.options`
