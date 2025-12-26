@@ -16,6 +16,7 @@ import {
 import { useUser } from '@/firebase';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 
 const SUPER_ADMIN_UID = '0Nmw3GyfeCUL0gpr5EWO29kODZA2';
 
