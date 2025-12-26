@@ -1,0 +1,104 @@
+/**
+ * Core Philosophy: This ruleset implements a dual security model. It provides public, read-only
+ * access to shared data (like products) while enforcing a strict user-ownership model for all
+ * private user-specific data (profiles, subscriptions). The primary goal is to ensure users can
+ * only access and manage their own information.
+ *
+ * Data Structure: The data is organized into a top-level `/products` collection for all publicly
+ * visible items. All user-specific data is hierarchically nested under the `/users/{userId}` path,
+ * including a user's profile and their subscriptions in a subcollection. This structure leverages
+ * path-based security to simplify and strengthen access control.
+ *
+ * Key Security Decisions:
+ * - Product data in `/products` is public for reads. Writes are currently disabled pending the
+ *   addition of an administrative role or an ownership field on the product documents.
+ * - User data in `/users/{userId}` is strictly private. A user can only read or write their own
+ *   document. Listing all users is explicitly forbidden.
+ * - Subscriptions in `/users/{userId}/subscriptions` are also strictly private, accessible only
+ *   to the user specified in the path.
+ *
+ * Denormalization for Authorization: The rules rely on path-based ownership (`/users/{userId}/...`)
+ * to avoid costly `get()` calls. For documents within these paths, we also enforce that an internal
+ * `userId` field matches the `userId` in the path, ensuring relational integrity and preventing
+ * data from being created in the wrong user's data tree.
+ *
+ * Structural Segregation: Public data (`/products`) is stored in a separate top-level collection
+ * from private user data (`/users`). This segregation is fundamental to the security model, as it
+ * allows for simple, performant rules that grant broad read access to public data while strictly
+ * locking down private data without complex filtering.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions for reusable logic
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /**
+     * Checks if the currently authenticated user is the owner of a document,
+     * identified by the userId passed from the path.
+     */
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    /**
+     * Checks if a document exists and if the current user is its owner.
+     * Used for safe update and delete operations.
+     */
+    function isExistingOwner(userId) {
+      return isOwner(userId) && resource != null;
+    }
+
+    /**
+     * @description Publicly readable catalog of products. Writes are disabled.
+     * @path /products/{productId}
+     * @allow (get) Any user, signed in or not, can read a product's details.
+     * @deny (create) No user can create a new product.
+     * @principle Implements a public read-only collection. Writes are blocked until an ownership/admin model is defined.
+     */
+    match /products/{productId} {
+      allow get, list: if true;
+
+      // CRITICAL: Cannot implement owner-only writes. The 'Product' entity is missing an 'ownerId' or 'authorId' field.
+      // Writes are disabled to prevent unauthorized data modification.
+      allow create, update, delete: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
+    }
+
+    /**
+     * @description A user's own profile document.
+     * @path /users/{userId}
+     * @allow (get) A signed-in user can get their own profile document.
+     * @allow (create) A new user can create their own profile document.
+     * @deny (get) A user cannot get another user's profile.
+     * @deny (list) No user can list all documents in the `/users` collection.
+     * @principle Restricts access to a user's own data tree and prevents user enumeration.
+     */
+    match /users/{userId} {
+      allow get: if isOwner(userId);
+      allow create: if isOwner(userId) && request.resource.data.id == userId;
+      allow update: if isExistingOwner(userId) && request.resource.data.id == resource.data.id;
+      allow delete: if isExistingOwner(userId);
+
+      allow list: if false;
+    }
+
+    /**
+     * @description A user's private list of product subscriptions.
+     * @path /users/{userId}/subscriptions/{subscriptionId}
+     * @allow (list) A signed-in user can list all of their own subscriptions.
+     * @allow (create) A signed-in user can create a new subscription for themselves.
+     * @deny (get) A user cannot read another user's subscription details.
+     * @deny (update) A user cannot modify another user's subscription.
+     * @principle Enforces document ownership for a user's private subcollection.
+     */
+    match /users/{userId}/subscriptions/{subscriptionId} {
+      allow get, list: if isOwner(userId);
+      allow create: if isOwner(userId) && request.resource.data.userId == userId;
+      allow update: if isExistingOwner(userId) && request.resource.data.userId == resource.data.userId;
+      allow delete: if isExistingOwner(userId);
+    }
+  }
+}
