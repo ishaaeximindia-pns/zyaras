@@ -19,6 +19,7 @@ import { Trash2 } from 'lucide-react';
 import { Alert, AlertDescription } from '../ui/alert';
 import { storeSettings } from '@/data/settings';
 import type { ProductDocument } from '@/lib/types';
+import Link from 'next/link';
 
 const B2B_MINIMUM_CART_VALUE = 15000;
 
@@ -147,8 +148,8 @@ export default function CartSheet({ children, model }: { children: React.ReactNo
                 </Alert>
               )}
 
-              <Button className="w-full" disabled={isBelowB2BMinimum}>
-                Proceed to Checkout
+              <Button className="w-full" disabled={isBelowB2BMinimum} asChild>
+                <Link href="/checkout">Proceed to Checkout</Link>
               </Button>
               <Button variant="outline" className="w-full" onClick={clearCart}>
                 Clear Cart

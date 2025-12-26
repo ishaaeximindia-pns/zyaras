@@ -1,3 +1,4 @@
+
 import { type LucideIcon } from 'lucide-react';
 import { type DocumentData, type Timestamp } from 'firebase/firestore';
 
@@ -104,3 +105,14 @@ export type Address = {
 };
 
 export type AddressDocument = Address | DocumentData;
+
+export type Subscription = {
+  id: string;
+  userId: string;
+  productId: string;
+  startDate: Timestamp;
+  endDate: Timestamp;
+  status: 'Active' | 'Cancelled' | 'Expired';
+};
+
+export type SubscriptionDocument = Subscription | DocumentData;
