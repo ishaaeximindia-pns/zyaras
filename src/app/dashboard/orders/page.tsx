@@ -100,12 +100,12 @@ export default function OrdersPage() {
                 <TableHead className="text-right">Total</TableHead>
               </TableRow>
             </TableHeader>
-            <TableBody>
-              {orders.map((order) => {
+            {orders.map((order) => {
                 const transaction = transactions.find(t => t.id === order.transactionId);
                 const isOpen = openOrderId === order.id;
                 return (
-                    <Collapsible key={order.id} asChild open={isOpen} onOpenChange={() => toggleOrder(order.id)}>
+                    <TableBody key={order.id}>
+                        <Collapsible asChild open={isOpen} onOpenChange={() => toggleOrder(order.id)}>
                         <>
                             <TableRow className="cursor-pointer">
                                 <TableCell>
@@ -211,11 +211,11 @@ export default function OrdersPage() {
                                 </TableCell>
                                 </tr>
                             </CollapsibleContent>
-                        </>
-                    </Collapsible>
+                            </>
+                        </Collapsible>
+                    </TableBody>
                 )
             })}
-            </TableBody>
           </Table>
         </CardContent>
       </Card>
