@@ -21,6 +21,75 @@ import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
+// --- START DUMMY DATA ---
+const dummyProducts: ProductDocument[] = [
+    {
+        id: '1',
+        slug: 'classic-blue-jeans',
+        name: 'Classic Blue Jeans',
+        category: 'Women',
+        subcategory: 'Jeans',
+        model: 'B2C',
+        tagline: 'Timeless style and comfort.',
+        description: 'Our Classic Blue Jeans are made from premium denim for a perfect fit that lasts.',
+        keyBenefit: 'Perfect Fit',
+        price: 68,
+        heroImage: 'product-nexus-flow',
+        features: [],
+        useCases: [],
+        faqs: [],
+    },
+    {
+        id: '3',
+        slug: 'mens-oxford-shirt',
+        name: 'Men\'s Oxford Shirt',
+        category: 'Men',
+        subcategory: 'Shirts',
+        model: 'B2C',
+        tagline: 'A timeless classic for the modern man.',
+        description: 'Our signature Oxford shirt is cut from high-quality cotton.',
+        keyBenefit: 'All-Day Comfort',
+        price: 55,
+        discountPrice: 45,
+        heroImage: 'product-data-sphere',
+        features: [],
+        useCases: [],
+        faqs: [],
+    },
+];
+
+const dummyCart = [
+    { product: dummyProducts[0], quantity: 1, selectedVariants: { Size: '30', Color: 'Dark Wash' } },
+    { product: dummyProducts[1], quantity: 2 },
+];
+
+const dummyAddresses: AddressDocument[] = [
+    {
+        id: 'addr_1',
+        userId: 'dummy_user',
+        type: 'Home',
+        addressLine1: '123 Innovation Drive',
+        city: 'Techville',
+        state: 'CA',
+        postalCode: '90210',
+        country: 'USA',
+        isDefault: true,
+    },
+    {
+        id: 'addr_2',
+        userId: 'dummy_user',
+        type: 'Office',
+        addressLine1: '456 Enterprise Way',
+        city: 'Metropolis',
+        state: 'NY',
+        postalCode: '10001',
+        country: 'USA',
+        isDefault: false,
+    }
+];
+// --- END DUMMY DATA ---
+
+
 function CheckoutSkeleton() {
     return (
         <div className="container mx-auto max-w-6xl px-4 py-12 md:px-6">
@@ -69,28 +138,16 @@ export default function CheckoutPage() {
   const router = useRouter();
   const { user, isUserLoading } = useUser();
   const firestore = useFirestore();
-  const { cart, clearCart } = useCart();
+  const { clearCart } = useCart();
   
   const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
   const [isAddressDialogOpen, setIsAddressDialogOpen] = useState(false);
 
-  const addressesCollectionRef = useMemoFirebase(() => {
-    if (!firestore || !user) return null;
-    return collection(firestore, 'users', user.uid, 'addresses');
-  }, [firestore, user]);
+  // Using dummy data for demonstration
+  const cart = dummyCart;
+  const addresses = dummyAddresses;
+  const areAddressesLoading = false;
 
-  const { data: addresses, isLoading: areAddressesLoading } = useCollection<AddressDocument>(addressesCollectionRef);
-
-  useEffect(() => {
-    // If not loading and not logged in, redirect to login
-    if (!isUserLoading && !user) {
-      router.push('/login');
-    }
-    // If cart is empty, redirect to dashboard
-    if (cart.length === 0) {
-      router.push('/dashboard');
-    }
-  }, [isUserLoading, user, cart, router]);
 
   useEffect(() => {
     // Set default address if it exists
@@ -112,47 +169,13 @@ export default function CheckoutPage() {
   const grandTotal = subtotal + taxAmount + shippingAmount + additionalFee;
 
   const handlePlaceOrder = async () => {
-    if (!firestore || !user || !selectedAddress) return;
-
-    const ordersCollection = collection(firestore, 'users', user.uid, 'orders');
+    // In a real scenario, we'd check for firestore, user, etc.
     const newOrderId = `ORD-${Date.now()}`;
-    const newTransactionId = `TRN-${Date.now()}`;
-    
-    const orderItems: OrderItem[] = cart.map(item => {
-        const product = item.product as ProductDocument;
-        return {
-            name: product.name,
-            quantity: item.quantity,
-            price: product.discountPrice || product.price
-        };
-    });
-
-    const newOrder: Order = {
-        id: newOrderId,
-        transactionId: newTransactionId,
-        date: new Date().toISOString().split('T')[0],
-        status: 'Processing',
-        total: grandTotal,
-        items: orderItems,
-    };
-    
-    addDocumentNonBlocking(ordersCollection, newOrder);
-
-    // Normally, you would also create a transaction record here
-    // and process payment via a payment gateway.
-
-    clearCart();
-
-    // Redirect to a confirmation page
     router.push(`/confirmation/${newOrderId}`);
   };
 
   if (isUserLoading || areAddressesLoading) {
     return <CheckoutSkeleton />;
-  }
-
-  if (!user || cart.length === 0) {
-    return null; // or a redirect handled by useEffect
   }
   
   const getAddressIcon = (type: AddressDocument['type']) => {
@@ -247,6 +270,11 @@ export default function CheckoutPage() {
                         </div>
                         <div className="flex-1">
                           <p className="font-medium">{product.name}</p>
+                           {item.selectedVariants && Object.keys(item.selectedVariants).length > 0 && (
+                            <p className="text-xs text-muted-foreground">
+                                {Object.values(item.selectedVariants).join(' / ')}
+                            </p>
+                           )}
                           <p className="text-muted-foreground">Qty: {item.quantity}</p>
                         </div>
                         <p className="font-medium">{currencySymbol}{((product.discountPrice || product.price) * item.quantity).toFixed(2)}</p>
@@ -297,3 +325,5 @@ export default function CheckoutPage() {
     </>
   );
 }
+
+    

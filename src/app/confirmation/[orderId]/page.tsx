@@ -14,6 +14,20 @@ import { Separator } from '@/components/ui/separator';
 import { storeSettings } from '@/data/settings';
 import { Skeleton } from '@/components/ui/skeleton';
 
+// --- START DUMMY DATA ---
+const dummyOrder: Order = {
+    id: 'ORD-123456789',
+    transactionId: 'TRN-987654321',
+    date: new Date().toISOString().split('T')[0],
+    status: 'Processing',
+    total: 158.00,
+    items: [
+        { name: 'Classic Blue Jeans', quantity: 1, price: 68.00 },
+        { name: 'Men\'s Oxford Shirt', quantity: 2, price: 45.00 },
+    ],
+};
+// --- END DUMMY DATA ---
+
 function ConfirmationSkeleton() {
     return (
          <div className="flex min-h-[calc(100vh-10rem)] items-center justify-center p-4">
@@ -47,26 +61,11 @@ export default function ConfirmationPage() {
     const params = useParams();
     const router = useRouter();
     const { orderId } = params;
-    const { user, isUserLoading } = useUser();
-    const firestore = useFirestore();
 
-    const orderDocRef = useMemoFirebase(() => {
-        if (!firestore || !user || !orderId) return null;
-        return doc(firestore, 'users', user.uid, 'orders', orderId as string);
-    }, [firestore, user, orderId]);
+    // Use dummy data for demonstration
+    const order = dummyOrder;
+    const isLoading = false;
 
-    const { data: order, isLoading } = useDoc<Order>(orderDocRef);
-    
-    useEffect(() => {
-        if (!isUserLoading && !user) {
-            router.push('/login');
-        }
-    }, [isUserLoading, user, router]);
-
-    if (isLoading || isUserLoading) {
-        return <ConfirmationSkeleton />;
-    }
-    
     if (!order) {
         return (
             <div className="flex min-h-[calc(100vh-10rem)] items-center justify-center p-4">
@@ -86,6 +85,12 @@ export default function ConfirmationPage() {
     }
     
     const currencySymbol = storeSettings.currency === 'INR' ? '₹' : '$';
+    
+    // Calculate subtotal from items for display, though total is on the order object
+    const subtotal = order.items.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+    const taxAmount = storeSettings.enableTaxes ? subtotal * (storeSettings.taxRate / 100) : 0;
+    const shippingAmount = storeSettings.shippingFlatRate > 0 ? storeSettings.shippingFlatRate : 0;
+    const additionalFee = storeSettings.additionalFeeAmount || 0;
 
     return (
         <div className="bg-background">
@@ -123,9 +128,26 @@ export default function ConfirmationPage() {
                                 <div className="space-y-1 text-sm">
                                     <div className="flex justify-between">
                                         <p className="text-muted-foreground">Subtotal</p>
-                                        <p>{currencySymbol}{(order.total).toFixed(2)}</p>
+                                        <p>{currencySymbol}{subtotal.toFixed(2)}</p>
                                     </div>
-                                    {/* You can add shipping, tax display here if they are stored in the order doc */}
+                                    {shippingAmount > 0 && (
+                                        <div className="flex justify-between">
+                                            <span className="text-muted-foreground">Shipping</span>
+                                            <span>{currencySymbol}{shippingAmount.toFixed(2)}</span>
+                                        </div>
+                                    )}
+                                    {taxAmount > 0 && (
+                                        <div className="flex justify-between">
+                                            <span className="text-muted-foreground">GST ({storeSettings.taxRate}%)</span>
+                                            <span>{currencySymbol}{taxAmount.toFixed(2)}</span>
+                                        </div>
+                                    )}
+                                    {additionalFee > 0 && storeSettings.additionalFeeName && (
+                                        <div className="flex justify-between">
+                                            <span className="text-muted-foreground">{storeSettings.additionalFeeName}</span>
+                                            <span>{currencySymbol}{additionalFee.toFixed(2)}</span>
+                                        </div>
+                                    )}
                                 </div>
                                 <Separator />
                                 <div className="flex justify-between font-bold text-lg">
@@ -148,3 +170,5 @@ export default function ConfirmationPage() {
         </div>
     );
 }
+
+    
