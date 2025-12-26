@@ -103,14 +103,15 @@ export default function OrdersPage() {
             <TableBody>
               {orders.map((order) => {
                 const transaction = transactions.find(t => t.id === order.transactionId);
+                const isOpen = openOrderId === order.id;
                 return (
-                  <Collapsible asChild key={order.id} open={openOrderId === order.id} onOpenChange={() => toggleOrder(order.id)}>
-                    <TableBody>
+                  <Collapsible asChild key={order.id} open={isOpen} onOpenChange={() => toggleOrder(order.id)}>
+                    <>
                       <TableRow className="cursor-pointer">
                         <TableCell>
                           <CollapsibleTrigger asChild>
                             <button className="p-1">
-                              {openOrderId === order.id ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                              {isOpen ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
                             </button>
                           </CollapsibleTrigger>
                         </TableCell>
@@ -210,7 +211,7 @@ export default function OrdersPage() {
                           </TableCell>
                         </tr>
                       </CollapsibleContent>
-                    </TableBody>
+                    </>
                   </Collapsible>
                 )
             })}
