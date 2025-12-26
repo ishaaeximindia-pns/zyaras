@@ -75,6 +75,19 @@ service cloud.firestore {
             allow update: if isExistingOwner(userId) && request.resource.data.userId == resource.data.userId;
             allow delete: if isExistingOwner(userId);
         }
+
+        /**
+         * @description A user's private list of orders.
+         * @path /users/{userId}/orders/{orderId}
+         * @allow (list, get, create) A signed-in user can manage their own orders.
+         * @principle Enforces document ownership for a user's private order history.
+         */
+        match /orders/{orderId} {
+            allow list, get, create: if isOwner(userId);
+            // Generally, orders should be immutable once created by a user.
+            // Updates (e.g., status changes) should be handled by a backend process.
+            allow update, delete: if false; 
+        }
     }
   }
 }

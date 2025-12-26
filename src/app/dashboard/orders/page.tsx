@@ -5,28 +5,33 @@ import { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { orders as staticOrders, transactions } from "@/data/account";
 import { cn } from "@/lib/utils";
-import { ChevronDown, ChevronRight, CreditCard, ShoppingBag, Repeat, Download } from 'lucide-react';
+import { ChevronDown, ChevronRight, CreditCard, ShoppingBag, Repeat, Download, Package } from 'lucide-react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Separator } from '@/components/ui/separator';
 import { useCart } from '@/context/CartContext';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
-import type { CartItem, OrderItem, ProductDocument } from '@/lib/types';
-import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
-import { collection } from 'firebase/firestore';
+import type { CartItem, Order, OrderItem, ProductDocument } from '@/lib/types';
+import { useCollection, useFirestore, useMemoFirebase, useUser } from '@/firebase';
+import { collection, query } from 'firebase/firestore';
+import { Skeleton } from '@/components/ui/skeleton';
 
 
 export default function OrdersPage() {
   const [openOrderId, setOpenOrderId] = useState<string | null>(null);
   const { addMultipleToCart } = useCart();
   const { toast } = useToast();
+  const { user } = useUser();
   const firestore = useFirestore();
 
-  // For now, we will continue to use static orders until we implement order creation
-  const orders = staticOrders;
-  
+  const ordersQuery = useMemoFirebase(() => {
+    if (!firestore || !user) return null;
+    return query(collection(firestore, 'users', user.uid, 'orders'));
+  }, [firestore, user]);
+
+  const { data: orders, isLoading: areOrdersLoading } = useCollection<Order>(ordersQuery);
+
   const productsQuery = useMemoFirebase(() => {
     if (!firestore) return null;
     return collection(firestore, 'products');
@@ -101,8 +106,18 @@ export default function OrdersPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {orders.map((order) => {
-                const transaction = transactions.find(t => t.id === order.transactionId);
+              {areOrdersLoading && (
+                Array.from({ length: 3 }).map((_, i) => (
+                  <TableRow key={i}>
+                    <TableCell><Skeleton className="h-5 w-5 rounded-full" /></TableCell>
+                    <TableCell><Skeleton className="h-4 w-24" /></TableCell>
+                    <TableCell><Skeleton className="h-4 w-20" /></TableCell>
+                    <TableCell><Skeleton className="h-6 w-20 rounded-full" /></TableCell>
+                    <TableCell className="text-right"><Skeleton className="h-4 w-16 ml-auto" /></TableCell>
+                  </TableRow>
+                ))
+              )}
+              {!areOrdersLoading && orders && orders.length > 0 && orders.map((order) => {
                 const isOpen = openOrderId === order.id;
                 return (
                   <Collapsible asChild key={order.id} open={isOpen} onOpenChange={() => toggleOrder(order.id)}>
@@ -116,7 +131,7 @@ export default function OrdersPage() {
                           </CollapsibleTrigger>
                         </TableCell>
                         <TableCell className="font-medium">{order.id}</TableCell>
-                        <TableCell>{order.date}</TableCell>
+                        <TableCell>{new Date(order.date).toLocaleDateString()}</TableCell>
                         <TableCell>
                           <Badge
                             variant={
@@ -164,34 +179,13 @@ export default function OrdersPage() {
                                     </TableBody>
                                   </Table>
                                 </div>
-                                {transaction && (
+                                {order.transactionId && (
                                   <div>
                                     <h4 className="font-semibold mb-4 flex items-center gap-2"><CreditCard className="h-5 w-5" /> Transaction Details</h4>
                                     <div className="space-y-2 text-sm">
                                       <div className="flex justify-between">
                                         <span className="text-muted-foreground">Transaction ID:</span>
-                                        <span className="font-medium">{transaction.id}</span>
-                                      </div>
-                                      <div className="flex justify-between">
-                                        <span className="text-muted-foreground">Payment Method:</span>
-                                        <span className="font-medium">{transaction.paymentMethod}</span>
-                                      </div>
-                                      <div className="flex justify-between">
-                                        <span className="text-muted-foreground">Transaction Status:</span>
-                                        <Badge
-                                          variant={transaction.status === "Completed" ? "default" : "secondary"}
-                                          className={cn({
-                                            "bg-green-500/10 text-green-700 border-green-500/20": transaction.status === 'Completed',
-                                            "bg-yellow-500/10 text-yellow-700 border-yellow-500/20": transaction.status === 'Pending',
-                                          })}
-                                        >
-                                          {transaction.status}
-                                        </Badge>
-                                      </div>
-                                      <Separator className="my-2" />
-                                      <div className="flex justify-between font-semibold">
-                                        <span className="text-muted-foreground">Amount Paid:</span>
-                                        <span>${transaction.amount.toFixed(2)}</span>
+                                        <span className="font-medium">{order.transactionId}</span>
                                       </div>
                                     </div>
                                   </div>
@@ -217,6 +211,16 @@ export default function OrdersPage() {
               })}
             </TableBody>
           </Table>
+           {!areOrdersLoading && (!orders || orders.length === 0) && (
+              <div className="flex flex-col items-center justify-center p-12 text-center">
+                  <Package className="h-12 w-12 text-muted-foreground" />
+                  <h3 className="mt-4 text-xl font-semibold">No Orders Yet</h3>
+                  <p className="mt-2 text-muted-foreground">You haven't placed any orders. Start shopping to see them here.</p>
+                  <Button asChild className="mt-6">
+                      <a href="/dashboard">Start Shopping</a>
+                  </Button>
+              </div>
+            )}
         </CardContent>
       </Card>
     </div>

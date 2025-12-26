@@ -13,82 +13,13 @@ import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import type { AddressDocument, ProductDocument, Order, OrderItem } from '@/lib/types';
 import { addDocumentNonBlocking } from '@/firebase/non-blocking-updates';
-import { collection } from 'firebase/firestore';
+import { collection, doc } from 'firebase/firestore';
 import { storeSettings } from '@/data/settings';
 import { AddressFormDialog } from '@/components/dashboard/AddressFormDialog';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-
-// --- START DUMMY DATA ---
-const dummyProducts: ProductDocument[] = [
-    {
-        id: '1',
-        slug: 'classic-blue-jeans',
-        name: 'Classic Blue Jeans',
-        category: 'Women',
-        subcategory: 'Jeans',
-        model: 'B2C',
-        tagline: 'Timeless style and comfort.',
-        description: 'Our Classic Blue Jeans are made from premium denim for a perfect fit that lasts.',
-        keyBenefit: 'Perfect Fit',
-        price: 68,
-        heroImage: 'product-nexus-flow',
-        features: [],
-        useCases: [],
-        faqs: [],
-    },
-    {
-        id: '3',
-        slug: 'mens-oxford-shirt',
-        name: 'Men\'s Oxford Shirt',
-        category: 'Men',
-        subcategory: 'Shirts',
-        model: 'B2C',
-        tagline: 'A timeless classic for the modern man.',
-        description: 'Our signature Oxford shirt is cut from high-quality cotton.',
-        keyBenefit: 'All-Day Comfort',
-        price: 55,
-        discountPrice: 45,
-        heroImage: 'product-data-sphere',
-        features: [],
-        useCases: [],
-        faqs: [],
-    },
-];
-
-const dummyCart = [
-    { product: dummyProducts[0], quantity: 1, selectedVariants: { Size: '30', Color: 'Dark Wash' } },
-    { product: dummyProducts[1], quantity: 2 },
-];
-
-const dummyAddresses: AddressDocument[] = [
-    {
-        id: 'addr_1',
-        userId: 'dummy_user',
-        type: 'Home',
-        addressLine1: '123 Innovation Drive',
-        city: 'Techville',
-        state: 'CA',
-        postalCode: '90210',
-        country: 'USA',
-        isDefault: true,
-    },
-    {
-        id: 'addr_2',
-        userId: 'dummy_user',
-        type: 'Office',
-        addressLine1: '456 Enterprise Way',
-        city: 'Metropolis',
-        state: 'NY',
-        postalCode: '10001',
-        country: 'USA',
-        isDefault: false,
-    }
-];
-// --- END DUMMY DATA ---
-
 
 function CheckoutSkeleton() {
     return (
@@ -138,16 +69,23 @@ export default function CheckoutPage() {
   const router = useRouter();
   const { user, isUserLoading } = useUser();
   const firestore = useFirestore();
-  const { clearCart } = useCart();
+  const { cart, clearCart } = useCart();
   
   const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
   const [isAddressDialogOpen, setIsAddressDialogOpen] = useState(false);
 
-  // Using dummy data for demonstration
-  const cart = dummyCart;
-  const addresses = dummyAddresses;
-  const areAddressesLoading = false;
+  const addressesQuery = useMemoFirebase(() => {
+    if (!user || !firestore) return null;
+    return collection(firestore, 'users', user.uid, 'addresses');
+  }, [user, firestore]);
 
+  const { data: addresses, isLoading: areAddressesLoading } = useCollection<AddressDocument>(addressesQuery);
+
+  useEffect(() => {
+    if (!isUserLoading && !user) {
+      router.push('/login');
+    }
+  }, [isUserLoading, user, router]);
 
   useEffect(() => {
     // Set default address if it exists
@@ -169,8 +107,30 @@ export default function CheckoutPage() {
   const grandTotal = subtotal + taxAmount + shippingAmount + additionalFee;
 
   const handlePlaceOrder = async () => {
-    // In a real scenario, we'd check for firestore, user, etc.
-    const newOrderId = `ORD-${Date.now()}`;
+    if (!firestore || !user || !selectedAddress || cart.length === 0) return;
+
+    const ordersCollection = collection(firestore, 'users', user.uid, 'orders');
+    const newOrderId = doc(ordersCollection).id;
+    const newOrderRef = doc(ordersCollection, newOrderId);
+
+    const orderItems: OrderItem[] = cart.map(item => ({
+        name: (item.product as ProductDocument).name,
+        quantity: item.quantity,
+        price: (item.product as ProductDocument).discountPrice || (item.product as ProductDocument).price
+    }));
+
+    const newOrder: Order = {
+        id: newOrderId,
+        transactionId: `TRN-${Date.now()}`, // Mock transaction ID
+        date: new Date().toISOString(),
+        status: 'Processing',
+        total: grandTotal,
+        items: orderItems,
+    };
+    
+    addDocumentNonBlocking(ordersCollection, newOrder);
+    clearCart();
+
     router.push(`/confirmation/${newOrderId}`);
   };
 
@@ -185,6 +145,11 @@ export default function CheckoutPage() {
       default: return <MapPin className="h-5 w-5" />;
     }
   };
+
+  if (cart.length === 0 && !isUserLoading) {
+    router.push('/dashboard');
+    return null;
+  }
 
   return (
     <>
@@ -263,8 +228,9 @@ export default function CheckoutPage() {
                   {cart.map(item => {
                     const product = item.product as ProductDocument;
                     const productImage = PlaceHolderImages.find(p => p.id === product.heroImage);
+                    const cartItemId = `${product.id}-${JSON.stringify(item.selectedVariants)}`;
                     return (
-                      <div key={item.product.id} className="flex items-center gap-4 text-sm">
+                      <div key={cartItemId} className="flex items-center gap-4 text-sm">
                         <div className="relative h-12 w-12 rounded-md overflow-hidden">
                           {productImage && <Image src={productImage.imageUrl} alt={product.name} fill className="object-cover" />}
                         </div>
@@ -325,5 +291,3 @@ export default function CheckoutPage() {
     </>
   );
 }
-
-    

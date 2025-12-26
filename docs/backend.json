@@ -185,6 +185,32 @@
         "endDate",
         "status"
       ]
+    },
+    "Order": {
+        "title": "Order",
+        "type": "object",
+        "description": "Represents a customer's order.",
+        "properties": {
+            "id": { "type": "string" },
+            "userId": { "type": "string" },
+            "transactionId": { "type": "string" },
+            "date": { "type": "string", "format": "date-time" },
+            "status": { "type": "string", "enum": ["Processing", "Shipped", "Delivered", "Cancelled"] },
+            "total": { "type": "number" },
+            "items": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "name": { "type": "string" },
+                        "quantity": { "type": "number" },
+                        "price": { "type": "number" }
+                    },
+                    "required": ["name", "quantity", "price"]
+                }
+            }
+        },
+        "required": ["id", "userId", "date", "status", "total", "items"]
     }
   },
   "auth": {
@@ -234,6 +260,14 @@
           },
           "description": "Stores shipping and billing addresses for a specific user. Only accessible by the user themselves."
         }
+      },
+      {
+          "path": "/users/{userId}/orders/{orderId}",
+          "definition": {
+              "entityName": "Order",
+              "schema": { "$ref": "#/backend/entities/Order" },
+              "description": "Stores orders for a specific user. Only accessible by the user themselves."
+          }
       }
     ]
   }

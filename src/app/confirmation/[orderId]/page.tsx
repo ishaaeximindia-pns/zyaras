@@ -14,20 +14,6 @@ import { Separator } from '@/components/ui/separator';
 import { storeSettings } from '@/data/settings';
 import { Skeleton } from '@/components/ui/skeleton';
 
-// --- START DUMMY DATA ---
-const dummyOrder: Order = {
-    id: 'ORD-123456789',
-    transactionId: 'TRN-987654321',
-    date: new Date().toISOString().split('T')[0],
-    status: 'Processing',
-    total: 158.00,
-    items: [
-        { name: 'Classic Blue Jeans', quantity: 1, price: 68.00 },
-        { name: 'Men\'s Oxford Shirt', quantity: 2, price: 45.00 },
-    ],
-};
-// --- END DUMMY DATA ---
-
 function ConfirmationSkeleton() {
     return (
          <div className="flex min-h-[calc(100vh-10rem)] items-center justify-center p-4">
@@ -61,10 +47,27 @@ export default function ConfirmationPage() {
     const params = useParams();
     const router = useRouter();
     const { orderId } = params;
+    const { user } = useUser();
+    const firestore = useFirestore();
 
-    // Use dummy data for demonstration
-    const order = dummyOrder;
-    const isLoading = false;
+    const orderDocRef = useMemoFirebase(() => {
+        if (!firestore || !user || !orderId) return null;
+        return doc(firestore, 'users', user.uid, 'orders', orderId as string);
+    }, [firestore, user, orderId]);
+    
+    const { data: order, isLoading } = useDoc<Order>(orderDocRef);
+
+    useEffect(() => {
+      if (!isLoading && !order) {
+        // Maybe redirect to a 404 page or the orders history
+        // router.push('/dashboard/orders');
+      }
+    }, [isLoading, order, router]);
+
+
+    if (isLoading) {
+        return <ConfirmationSkeleton />;
+    }
 
     if (!order) {
         return (
@@ -170,5 +173,3 @@ export default function ConfirmationPage() {
         </div>
     );
 }
-
-    
