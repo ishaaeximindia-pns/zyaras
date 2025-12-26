@@ -80,9 +80,69 @@
       },
       "required": [
         "id",
-        "email",
-        "firstName",
-        "lastName"
+        "email"
+      ]
+    },
+    "Address": {
+      "title": "Address",
+      "type": "object",
+      "description": "Represents a user's shipping or billing address.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the address."
+        },
+        "userId": {
+          "type": "string",
+          "description": "The ID of the user this address belongs to."
+        },
+        "type": {
+          "type": "string",
+          "description": "Type of address.",
+          "enum": [
+            "Home",
+            "Office",
+            "Other"
+          ]
+        },
+        "addressLine1": {
+          "type": "string",
+          "description": "The first line of the address."
+        },
+        "addressLine2": {
+          "type": "string",
+          "description": "The second line of the address (optional)."
+        },
+        "city": {
+          "type": "string",
+          "description": "The city."
+        },
+        "state": {
+          "type": "string",
+          "description": "The state or province."
+        },
+        "postalCode": {
+          "type": "string",
+          "description": "The postal or ZIP code."
+        },
+        "country": {
+          "type": "string",
+          "description": "The country."
+        },
+        "isDefault": {
+          "type": "boolean",
+          "description": "Whether this is the user's default address."
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "type",
+        "addressLine1",
+        "city",
+        "state",
+        "postalCode",
+        "country"
       ]
     },
     "Subscription": {
@@ -163,6 +223,16 @@
             "$ref": "#/backend/entities/Subscription"
           },
           "description": "Stores subscription information for a specific user. Only accessible by the user themselves."
+        }
+      },
+      {
+        "path": "/users/{userId}/addresses/{addressId}",
+        "definition": {
+          "entityName": "Address",
+          "schema": {
+            "$ref": "#/backend/entities/Address"
+          },
+          "description": "Stores shipping and billing addresses for a specific user. Only accessible by the user themselves."
         }
       }
     ]

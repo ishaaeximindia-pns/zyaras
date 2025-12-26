@@ -88,4 +88,19 @@ export type Transaction = {
     amount: number;
     paymentMethod: string;
     status: 'Completed' | 'Pending' | 'Failed';
-}
+};
+
+export type Address = {
+    id: string;
+    userId: string;
+    type: 'Home' | 'Office' | 'Other';
+    addressLine1: string;
+    addressLine2?: string;
+    city: string;
+    state: string;
+    postalCode: string;
+    country: string;
+    isDefault?: boolean;
+};
+
+export type AddressDocument = Address | DocumentData;

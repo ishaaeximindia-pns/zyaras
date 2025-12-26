@@ -49,22 +49,32 @@ service cloud.firestore {
       allow get, create, update: if isOwner(userId);
       allow delete: if isExistingOwner(userId);
       allow list: if false;
-    }
 
-    /**
-     * @description A user's private list of product subscriptions.
-     * @path /users/{userId}/subscriptions/{subscriptionId}
-     * @allow (list) A signed-in user can list all of their own subscriptions.
-     * @allow (create) A signed-in user can create a new subscription for themselves.
-     * @deny (get) A user cannot read another user's subscription.
-     * @deny (update) A user cannot modify another user's subscription.
-     * @principle Enforces document ownership for a user's private subcollection.
-     */
-    match /users/{userId}/subscriptions/{subscriptionId} {
-      allow get, list: if isOwner(userId);
-      allow create: if isOwner(userId) && request.resource.data.userId == userId;
-      allow update: if isExistingOwner(userId) && request.resource.data.userId == resource.data.userId;
-      allow delete: if isExistingOwner(userId);
+        /**
+         * @description A user's private list of shipping/billing addresses.
+         * @path /users/{userId}/addresses/{addressId}
+         * @allow (list, get, create, update, delete) A signed-in user can manage their own addresses.
+         * @principle Enforces document ownership for a user's private subcollection.
+         */
+        match /addresses/{addressId} {
+            allow list, get, create, update, delete: if isOwner(userId);
+        }
+
+        /**
+         * @description A user's private list of product subscriptions.
+         * @path /users/{userId}/subscriptions/{subscriptionId}
+         * @allow (list) A signed-in user can list all of their own subscriptions.
+         * @allow (create) A signed-in user can create a new subscription for themselves.
+         * @deny (get) A user cannot read another user's subscription.
+         * @deny (update) A user cannot modify another user's subscription.
+         * @principle Enforces document ownership for a user's private subcollection.
+         */
+        match /subscriptions/{subscriptionId} {
+            allow get, list: if isOwner(userId);
+            allow create: if isOwner(userId) && request.resource.data.userId == userId;
+            allow update: if isExistingOwner(userId) && request.resource.data.userId == resource.data.userId;
+            allow delete: if isExistingOwner(userId);
+        }
     }
   }
 }

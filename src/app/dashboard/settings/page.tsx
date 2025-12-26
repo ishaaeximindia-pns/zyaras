@@ -13,6 +13,8 @@ import { doc } from 'firebase/firestore';
 import { useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Home, MapPin } from 'lucide-react';
+import Link from 'next/link';
 
 const profileSchema = z.object({
   firstName: z.string().min(1, 'First name is required'),
@@ -52,7 +54,6 @@ export default function ProfileSettingsPage() {
   const onSubmit = (data: ProfileFormValues) => {
     if (!userDocRef) return;
     
-    // We only want to update fields that are editable
     const dataToSave = {
         firstName: data.firstName,
         lastName: data.lastName,
@@ -102,59 +103,77 @@ export default function ProfileSettingsPage() {
       <div>
         <h1 className="text-3xl font-headline font-bold">Account Settings</h1>
         <p className="text-muted-foreground">
-          Manage your personal information and account settings.
+          Manage your personal information, addresses, and account settings.
         </p>
       </div>
 
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <Card>
+                <CardHeader>
+                <CardTitle>Personal Information</CardTitle>
+                <CardDescription>Update your name and email address.</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                    control={form.control}
+                    name="firstName"
+                    render={({ field }) => (
+                        <FormItem>
+                        <FormLabel>First Name</FormLabel>
+                        <FormControl><Input {...field} /></FormControl>
+                        <FormMessage />
+                        </FormItem>
+                    )}
+                    />
+                    <FormField
+                    control={form.control}
+                    name="lastName"
+                    render={({ field }) => (
+                        <FormItem>
+                        <FormLabel>Last Name</FormLabel>
+                        <FormControl><Input {...field} /></FormControl>
+                        <FormMessage />
+                        </FormItem>
+                    )}
+                    />
+                </div>
+                <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Email</FormLabel>
+                        <FormControl><Input {...field} readOnly disabled /></FormControl>
+                        <FormMessage />
+                    </FormItem>
+                    )}
+                />
+                </CardContent>
+            </Card>
+            
+            <Button type="submit">Save Changes</Button>
+            </form>
+        </Form>
+        <div className="space-y-6">
           <Card>
-            <CardHeader>
-              <CardTitle>Personal Information</CardTitle>
-              <CardDescription>Update your name and email address.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="firstName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>First Name</FormLabel>
-                      <FormControl><Input {...field} /></FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="lastName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Last Name</FormLabel>
-                      <FormControl><Input {...field} /></FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl><Input {...field} readOnly disabled /></FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </CardContent>
+              <CardHeader>
+                  <CardTitle>Address Book</CardTitle>
+                  <CardDescription>Manage your saved shipping addresses.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                  <p className="text-muted-foreground mb-4">You have not saved any addresses yet.</p>
+                  <Button variant="outline" asChild>
+                      <Link href="/dashboard/settings/addresses">
+                          <MapPin className="mr-2 h-4 w-4" /> Manage Addresses
+                      </Link>
+                  </Button>
+              </CardContent>
           </Card>
-          
-          <Button type="submit">Save Changes</Button>
-        </form>
-      </Form>
+        </div>
+      </div>
     </div>
   );
 }
