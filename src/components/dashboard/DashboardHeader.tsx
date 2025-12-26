@@ -17,7 +17,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
-import { LogOut, Settings, User as UserIcon } from 'lucide-react';
+import { LogOut, Settings } from 'lucide-react';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { ModeToggle } from '@/components/shared/ModeToggle';
 import { Themes } from '@/components/themes';
@@ -86,12 +86,6 @@ export function DashboardHeader() {
                     <Link href="/dashboard/settings">
                         <Settings className="mr-2 h-4 w-4" />
                         <span>Settings</span>
-                    </Link>
-                </DropdownMenuItem>
-                 <DropdownMenuItem asChild>
-                    <Link href="/dashboard/settings">
-                        <UserIcon className="mr-2 h-4 w-4" />
-                        <span>Profile</span>
                     </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
