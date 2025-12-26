@@ -6,16 +6,16 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { ChevronDown, ChevronRight, CreditCard, ShoppingBag, Repeat, Download, Package } from 'lucide-react';
+import { ChevronDown, ChevronRight, CreditCard, ShoppingBag, Repeat, Download, Package, Edit } from 'lucide-react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { Separator } from '@/components/ui/separator';
 import { useCart } from '@/context/CartContext';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import type { CartItem, Order, OrderItem, ProductDocument } from '@/lib/types';
 import { useCollection, useFirestore, useMemoFirebase, useUser } from '@/firebase';
-import { collection, query } from 'firebase/firestore';
+import { collection, query, where } from 'firebase/firestore';
 import { Skeleton } from '@/components/ui/skeleton';
+import Link from 'next/link';
 
 
 export default function OrdersPage() {
@@ -105,7 +105,7 @@ export default function OrdersPage() {
                 <TableHead className="text-right">Total</TableHead>
               </TableRow>
             </TableHeader>
-            <TableBody>
+             <TableBody>
               {areOrdersLoading && (
                 Array.from({ length: 3 }).map((_, i) => (
                   <TableRow key={i}>
@@ -166,16 +166,30 @@ export default function OrdersPage() {
                                         <TableHead>Product</TableHead>
                                         <TableHead className="w-[100px]">Quantity</TableHead>
                                         <TableHead className="w-[100px] text-right">Price</TableHead>
+                                        {order.status === 'Delivered' && <TableHead className="w-[150px] text-right">Actions</TableHead>}
                                       </TableRow>
                                     </TableHeader>
                                     <TableBody>
-                                      {order.items.map((item, index) => (
-                                        <TableRow key={index} className="border-none">
-                                          <TableCell>{item.name}</TableCell>
-                                          <TableCell>{item.quantity}</TableCell>
-                                          <TableCell className="text-right">${item.price.toFixed(2)}</TableCell>
-                                        </TableRow>
-                                      ))}
+                                      {order.items.map((item, index) => {
+                                        const product = products?.find(p => p.name === item.name);
+                                        return (
+                                            <TableRow key={index} className="border-none">
+                                                <TableCell>{item.name}</TableCell>
+                                                <TableCell>{item.quantity}</TableCell>
+                                                <TableCell className="text-right">${item.price.toFixed(2)}</TableCell>
+                                                {order.status === 'Delivered' && product && (
+                                                    <TableCell className="text-right">
+                                                        <Button variant="outline" size="sm" asChild>
+                                                            <Link href={`/products/${product.slug}?review=true`}>
+                                                                <Edit className="mr-2 h-3 w-3" />
+                                                                Write Review
+                                                            </Link>
+                                                        </Button>
+                                                    </TableCell>
+                                                )}
+                                            </TableRow>
+                                        );
+                                      })}
                                     </TableBody>
                                   </Table>
                                 </div>
@@ -217,7 +231,7 @@ export default function OrdersPage() {
                   <h3 className="mt-4 text-xl font-semibold">No Orders Yet</h3>
                   <p className="mt-2 text-muted-foreground">You haven't placed any orders. Start shopping to see them here.</p>
                   <Button asChild className="mt-6">
-                      <a href="/dashboard">Start Shopping</a>
+                      <Link href="/dashboard">Start Shopping</Link>
                   </Button>
               </div>
             )}

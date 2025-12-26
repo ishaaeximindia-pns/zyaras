@@ -33,7 +33,20 @@ service cloud.firestore {
      */
     match /products/{productId} {
       allow get, list: if true;
-      allow create, update, delete: if isSignedIn(); 
+      allow create, update, delete: if isSignedIn();
+
+       /**
+         * @description Publicly readable reviews for a product.
+         * @path /products/{productId}/reviews/{reviewId}
+         * @allow (list, get) Any user can read reviews.
+         * @allow (create) A signed-in user can create a review.
+         * @principle Enforces public read access for reviews, but write access is restricted.
+         */
+        match /reviews/{reviewId} {
+            allow list, get: if true;
+            allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+            allow update, delete: if isOwner(request.resource.data.userId);
+        }
     }
 
     /**

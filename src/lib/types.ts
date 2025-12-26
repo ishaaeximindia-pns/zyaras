@@ -1,4 +1,5 @@
 
+
 import { type LucideIcon } from 'lucide-react';
 import { type DocumentData, type Timestamp } from 'firebase/firestore';
 
@@ -116,3 +117,16 @@ export type Subscription = {
 };
 
 export type SubscriptionDocument = Subscription | DocumentData;
+
+export type Review = {
+    id: string;
+    productId: string;
+    userId: string;
+    userName: string;
+    rating: number;
+    comment: string;
+    createdAt: string; // ISO string
+};
+
+export type ReviewDocument = Review | DocumentData;
+
