@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Button } from '@/components/ui/button';
@@ -10,14 +11,17 @@ import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import Link from 'next/link';
 import { storeSettings } from '@/data/settings';
-import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
-import { collection } from 'firebase/firestore';
+import { useCollection, useFirestore, useMemoFirebase, deleteDocumentNonBlocking } from '@/firebase';
+import { collection, doc } from 'firebase/firestore';
 import type { ProductDocument } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { useToast } from '@/hooks/use-toast';
 
 export default function AdminProductsPage() {
   const currencySymbol = storeSettings.currency === 'INR' ? '₹' : '$';
   const firestore = useFirestore();
+  const { toast } = useToast();
 
   const productsQuery = useMemoFirebase(() => {
     if (!firestore) return null;
@@ -25,6 +29,16 @@ export default function AdminProductsPage() {
   }, [firestore]);
 
   const { data: products, isLoading } = useCollection<ProductDocument>(productsQuery);
+
+  const handleDelete = (productId: string) => {
+    if (!firestore) return;
+    const docRef = doc(firestore, 'products', productId);
+    deleteDocumentNonBlocking(docRef);
+    toast({
+        title: 'Product Deleted',
+        description: 'The product has been successfully removed.',
+    });
+  }
 
   return (
     <div>
@@ -105,7 +119,26 @@ export default function AdminProductsPage() {
                             <DropdownMenuItem asChild>
                               <Link href={`/admin/products/edit/${product.slug}`}>Edit</Link>
                             </DropdownMenuItem>
-                            <DropdownMenuItem>Delete</DropdownMenuItem>
+                            <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                    <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="text-destructive">
+                                        Delete
+                                    </DropdownMenuItem>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                <AlertDialogHeader>
+                                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                    This action cannot be undone. This will permanently delete this
+                                    product and all associated data.
+                                    </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                    <AlertDialogAction onClick={() => handleDelete(product.id)} className="bg-destructive hover:bg-destructive/90">Delete</AlertDialogAction>
+                                </AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialog>
                             </DropdownMenuContent>
                         </DropdownMenu>
                         </TableCell>

@@ -1,4 +1,6 @@
 
+'use client';
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { PlusCircle, MoreHorizontal } from 'lucide-react';
@@ -6,6 +8,8 @@ import { products } from '@/data';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { useToast } from '@/hooks/use-toast';
 
 const getCategories = () => {
     const categoryMap: Record<string, Set<string>> = {};
@@ -25,6 +29,16 @@ const getCategories = () => {
 
 export default function AdminCategoriesPage() {
   const categories = getCategories();
+  const { toast } = useToast();
+
+  const handleDelete = (categoryName: string) => {
+    // This is a mock delete. In a real app, you would delete from your database.
+    toast({
+        title: 'Category Deleted',
+        description: `${categoryName} has been removed.`,
+        variant: 'destructive'
+    });
+  }
 
   return (
     <div>
@@ -69,7 +83,26 @@ export default function AdminCategoriesPage() {
                                        <DropdownMenuItem asChild>
                                         <Link href={`/admin/categories/edit/${encodeURIComponent(category.name)}`}>Edit</Link>
                                        </DropdownMenuItem>
-                                      <DropdownMenuItem>Delete</DropdownMenuItem>
+                                       <AlertDialog>
+                                            <AlertDialogTrigger asChild>
+                                                <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="text-destructive">
+                                                    Delete
+                                                </DropdownMenuItem>
+                                            </AlertDialogTrigger>
+                                            <AlertDialogContent>
+                                                <AlertDialogHeader>
+                                                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                                    <AlertDialogDescription>
+                                                        This action cannot be undone. This will permanently delete the
+                                                        category. Products in this category will not be deleted.
+                                                    </AlertDialogDescription>
+                                                </AlertDialogHeader>
+                                                <AlertDialogFooter>
+                                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                    <AlertDialogAction onClick={() => handleDelete(category.name)} className="bg-destructive hover:bg-destructive/90">Delete</AlertDialogAction>
+                                                </AlertDialogFooter>
+                                            </AlertDialogContent>
+                                        </AlertDialog>
                                   </DropdownMenuContent>
                               </DropdownMenu>
                           </TableCell>

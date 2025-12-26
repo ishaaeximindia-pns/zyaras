@@ -10,8 +10,11 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import Link from 'next/link';
 import { promotions } from '@/data/promotions';
 import { customers } from '@/data/customers';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { useToast } from '@/hooks/use-toast';
 
 export default function AdminPromotionsPage() {
+    const { toast } = useToast();
 
   const getDiscountDisplay = (promo: typeof promotions[0]) => {
     switch (promo.discountType) {
@@ -35,6 +38,15 @@ export default function AdminPromotionsPage() {
     }
     return promo.customerIds.map(id => customers.find(c => c.id === id)?.name || 'Unknown').join(', ');
   };
+
+  const handleDelete = (promoCode: string) => {
+    // This is a mock delete. In a real app, you would delete from your database.
+    toast({
+        title: 'Promotion Deleted',
+        description: `The coupon code ${promoCode} has been removed.`,
+        variant: 'destructive'
+    });
+  }
 
 
   return (
@@ -96,7 +108,25 @@ export default function AdminPromotionsPage() {
                                 <DropdownMenuItem asChild>
                                 <Link href={`/admin/promotions/edit/${promo.code}`}>Edit</Link>
                                 </DropdownMenuItem>
-                              <DropdownMenuItem>Delete</DropdownMenuItem>
+                                <AlertDialog>
+                                    <AlertDialogTrigger asChild>
+                                        <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="text-destructive">
+                                            Delete
+                                        </DropdownMenuItem>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                        <AlertDialogHeader>
+                                            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                            <AlertDialogDescription>
+                                                This action cannot be undone. This will permanently delete this coupon code.
+                                            </AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                            <AlertDialogAction onClick={() => handleDelete(promo.code)} className="bg-destructive hover:bg-destructive/90">Delete</AlertDialogAction>
+                                        </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                </AlertDialog>
                           </DropdownMenuContent>
                       </DropdownMenu>
                     </TableCell>
@@ -109,4 +139,3 @@ export default function AdminPromotionsPage() {
     </div>
   );
 }
-
