@@ -18,7 +18,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
-import { LogOut, Settings } from 'lucide-react';
+import { LogOut, Settings, User } from 'lucide-react';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { ModeToggle } from '@/components/shared/ModeToggle';
 import { Themes } from '@/components/themes';
@@ -102,10 +102,18 @@ export function DashboardHeader() {
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                 <Button variant="secondary" size="icon" className="rounded-full">
-                    <Avatar>
-                        <AvatarImage src={user?.photoURL || `https://picsum.photos/seed/${user?.uid}/100/100`} />
-                        <AvatarFallback>{userInitial}</AvatarFallback>
-                    </Avatar>
+                    {user ? (
+                      <Avatar>
+                          <AvatarImage src={user?.photoURL || `https://picsum.photos/seed/${user?.uid}/100/100`} />
+                          <AvatarFallback>{userInitial}</AvatarFallback>
+                      </Avatar>
+                    ) : (
+                      <Avatar>
+                          <AvatarFallback>
+                              <User className="h-4 w-4" />
+                          </AvatarFallback>
+                      </Avatar>
+                    )}
                     <span className="sr-only">Toggle user menu</span>
                 </Button>
                 </DropdownMenuTrigger>
