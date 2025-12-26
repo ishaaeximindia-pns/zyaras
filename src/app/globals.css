@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
+  :root, .theme-default {
     --background: 0 0% 96.1%; /* #F5F5F5 */
     --foreground: 224 71.4% 4.1%;
 
@@ -50,7 +50,7 @@
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
-  .dark {
+  .dark.theme-default, .dark {
     --background: 224 71.4% 4.1%;
     --foreground: 210 20% 98%;
 
@@ -93,6 +93,39 @@
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .red {
+    --primary: 0 72% 51%; /* #d92626 */
+    --accent: 30 90% 55%; 
+    --ring: 0 72% 51%;
+  }
+  .dark .red {
+    --primary: 0 82% 61%;
+    --accent: 30 90% 55%;
+    --ring: 0 82% 61%;
+  }
+
+  .blue {
+    --primary: 217 91% 60%; /* #4285f4 */
+    --accent: 260 90% 65%;
+    --ring: 217 91% 60%;
+  }
+  .dark .blue {
+    --primary: 217 91% 70%;
+    --accent: 260 90% 75%;
+    --ring: 217 91% 70%;
+  }
+
+  .green {
+    --primary: 142 76% 36%; /* #1a8a3f */
+    --accent: 100 80% 45%;
+    --ring: 142 76% 36%;
+  }
+  .dark .green {
+    --primary: 142 66% 46%;
+    --accent: 100 70% 55%;
+    --ring: 142 66% 46%;
   }
 }
 
