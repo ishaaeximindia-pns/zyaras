@@ -1,0 +1,531 @@
+import type { Product } from '@/lib/types';
+
+export const products: Product[] = [
+  {
+    id: '1',
+    slug: 'classic-blue-jeans',
+    name: 'Classic Blue Jeans',
+    category: 'Women',
+    subcategory: 'Jeans',
+    model: 'B2C',
+    tagline: 'Timeless style and comfort.',
+    description:
+      'Our Classic Blue Jeans are made from premium denim for a perfect fit that lasts. A wardrobe staple for any occasion.',
+    keyBenefit: 'Perfect Fit',
+    price: 68,
+    status: 'Popular',
+    isFeatured: true,
+    heroImage: 'product-nexus-flow',
+    variants: [
+      {
+        name: 'Size',
+        options: [{ value: '28' }, { value: '30' }, { value: '32' }, { value: '34' }],
+      },
+      {
+        name: 'Color',
+        options: [{ value: 'Light Wash' }, { value: 'Dark Wash' }],
+      },
+    ],
+    features: [
+      {
+        title: 'Premium Denim',
+        description: 'Made with high-quality, durable denim that softens with every wash.',
+        icon: 'Copy',
+      },
+      {
+        title: 'Flattering Fit',
+        description: 'Designed to hug your curves in all the right places for a confident look.',
+        icon: 'PersonStanding',
+      },
+      {
+        title: 'Versatile Style',
+        description: 'Easily dress them up or down for a casual day out or a night on the town.',
+        icon: 'Sparkles',
+      },
+    ],
+    useCases: [
+      {
+        title: 'Casual Weekend Wear',
+        description:
+          'Pair with a simple t-shirt and sneakers for a relaxed and stylish weekend outfit.',
+        image: 'use-case-1',
+      },
+      {
+        title: 'Evening Out',
+        description:
+          'Combine with a chic blouse and heels for a sophisticated evening look.',
+        image: 'use-case-2',
+      },
+    ],
+    faqs: [
+      {
+        question: 'What is the inseam length?',
+        answer: 'Our Classic Blue Jeans come in three inseam lengths: 28" (petite), 30" (regular), and 32" (tall).',
+      },
+      {
+        question: 'How should I care for my jeans?',
+        answer:
+          'To maintain the color and fit, we recommend washing in cold water and hanging to dry.',
+      },
+    ],
+     pricing: [
+      { name: 'Standard', price: '68', priceSuffix: '', features: ['1-Year Warranty', 'Free Returns', 'Standard Shipping'], cta: 'Add to Cart', isFeatured: true },
+    ],
+    recommendedProductIds: ['2', '6', '8'],
+  },
+  {
+    id: '2',
+    slug: 'leather-tote-bag',
+    name: 'Leather Tote Bag',
+    category: 'Women',
+    subcategory: 'Handbags',
+    model: 'B2C',
+    tagline: 'Effortless elegance for your daily essentials.',
+    description:
+      'This luxurious leather tote bag is handcrafted from the finest materials, offering both style and functionality. Spacious enough for your laptop and daily necessities.',
+    keyBenefit: 'Spacious & Stylish',
+    price: 125,
+    status: 'New',
+    isFeatured: true,
+    heroImage: 'product-pixel-forge',
+    features: [
+      {
+        title: 'Genuine Leather',
+        description: 'Crafted from soft, full-grain leather that develops a beautiful patina over time.',
+        icon: 'Gem',
+      },
+      {
+        title: 'Spacious Interior',
+        description: 'Features multiple compartments, including a padded laptop sleeve.',
+        icon: 'Laptop',
+      },
+      {
+        title: 'Handmade Quality',
+        description: 'Meticulously stitched by artisans for a bag that is built to last.',
+        icon: 'Hand',
+      },
+    ],
+    useCases: [
+      {
+        title: 'For the Office',
+        description: 'A professional and stylish companion to carry your work essentials.',
+        image: 'use-case-2',
+      },
+      {
+        title: 'For Weekend Trips',
+        description:
+          'The perfect size for a weekend getaway, fitting all your essentials with ease.',
+        image: 'use-case-1',
+      },
+    ],
+    faqs: [
+      {
+        question: 'What are the dimensions of the bag?',
+        answer: 'The tote measures 15" W x 12" H x 6" D, with a handle drop of 10 inches.',
+      },
+      {
+        question: 'How do I care for the leather?',
+        answer:
+          'Wipe with a damp cloth and use a quality leather conditioner periodically to keep it supple.',
+      },
+    ],
+    pricing: [
+       { name: 'Standard', price: '125', priceSuffix: '', features: ['Lifetime Warranty', 'Free Returns', 'Standard Shipping'], cta: 'Add to Cart', isFeatured: true },
+    ],
+    recommendedProductIds: ['1', '6', '8'],
+  },
+  {
+    id: '3',
+    slug: 'mens-oxford-shirt',
+    name: 'Men\'s Oxford Shirt',
+    category: 'Men',
+    subcategory: 'Shirts',
+    model: 'B2C',
+    tagline: 'A timeless classic for the modern man.',
+    description:
+      'Our signature Oxford shirt is cut from high-quality cotton for a soft, breathable feel. A versatile piece for any wardrobe.',
+    keyBenefit: 'All-Day Comfort',
+    price: 55,
+    isFeatured: true,
+    heroImage: 'product-data-sphere',
+    features: [
+      {
+        title: '100% Cotton',
+        description: 'Woven from premium long-staple cotton for superior softness and durability.',
+        icon: 'Leaf',
+      },
+      {
+        title: 'Modern Fit',
+        description: 'A tailored silhouette that looks sharp on its own or layered under a blazer.',
+        icon: 'PersonStanding',
+      },
+      {
+        title: 'Button-Down Collar',
+        description: 'A classic button-down collar that maintains its shape for a polished look.',
+        icon: 'Check',
+      },
+    ],
+    useCases: [
+        {
+            title: "Business Casual",
+            description: "Pair with chinos and loafers for a smart, business-casual ensemble.",
+            image: "use-case-1"
+        },
+        {
+            title: "Weekend Ready",
+            description: "Wear it untucked with jeans for a relaxed yet put-together weekend style.",
+            image: "use-case-2"
+        }
+    ],
+    faqs: [
+        {
+            question: "Is this shirt machine washable?",
+            answer: "Yes, it is machine washable. We recommend washing on a gentle cycle and tumble drying on low."
+        },
+        {
+            question: "Does the shirt run true to size?",
+            answer: "Our Oxford shirts have a modern, tailored fit. If you prefer a more relaxed fit, we recommend sizing up."
+        }
+    ],
+    pricing: [
+        { name: 'Standard', price: '55', priceSuffix: '', features: ['1-Year Warranty', 'Free Returns', 'Standard Shipping'], cta: 'Add to Cart', isFeatured: true },
+    ],
+    recommendedProductIds: ['7'],
+  },
+  {
+    id: '4',
+    slug: 'kids-dino-pajamas',
+    name: 'Kids\' Dino Pajamas',
+    category: 'Kids',
+    subcategory: 'Pajamas',
+    model: 'B2C',
+    tagline: 'Roar into dreamland!',
+    description: 'These fun dinosaur-print pajamas are made from ultra-soft organic cotton, perfect for a cozy night\'s sleep.',
+    keyBenefit: 'Ultra-Soft Comfort',
+    price: 35,
+    discountPrice: 28,
+    status: 'Sale',
+    isFeatured: false,
+    heroImage: 'product-connect-iq',
+    features: [
+        {
+            title: "Organic Cotton",
+            description: "GOTS-certified organic cotton that's gentle on sensitive skin.",
+            icon: 'Sprout'
+        },
+        {
+            title: "Fun Dinosaur Print",
+            description: "A playful and vibrant print that kids will love.",
+            icon: 'Laugh'
+        },
+        {
+            title: "Snug Fit",
+            description: "Designed for safety and comfort, with a snug fit that stays in place.",
+            icon: 'Bed'
+        }
+    ],
+    useCases: [
+        {
+            title: "Bedtime Stories",
+            description: "The perfect comfy attire for snuggling up with a good book before bed.",
+            image: "use-case-2"
+        },
+        {
+            title: "Pajama Day at School",
+            description: "Let your little one show off their cool dino style on pajama day.",
+            image: "use-case-1"
+        }
+    ],
+    faqs: [
+        {
+            question: "What sizes are available?",
+            answer: "Our pajamas are available in sizes 2T through 8Y."
+        },
+        {
+            question: "Are these pajamas flame-resistant?",
+            answer: "For child's safety, this garment should fit snugly. This garment is not flame resistant."
+        }
+    ],
+    pricing: [
+        { name: 'Standard', price: '35', priceSuffix: '', features: ['6-Month Warranty', 'Free Returns', 'Standard Shipping'], cta: 'Add to Cart', isFeatured: true },
+    ],
+    recommendedProductIds: ['9'],
+  },
+  {
+    id: '5',
+    slug: 'business-consulting-package',
+    name: 'Business Consulting',
+    category: 'Services',
+    subcategory: 'Consulting',
+    model: 'B2B',
+    tagline: 'Strategic guidance for growth.',
+    description:
+      'Our business consulting package provides expert advice to help you scale your operations, optimize your strategy, and increase profitability.',
+    keyBenefit: 'Expert Strategy',
+    price: 2500,
+    isFeatured: true,
+    heroImage: 'use-case-1',
+    features: [
+        {
+            title: "Market Analysis",
+            description: "In-depth analysis of your market landscape and competitive positioning.",
+            icon: 'PieChart'
+        },
+        {
+            title: "Strategic Roadmap",
+            description: "A tailored roadmap with actionable steps to achieve your business goals.",
+            icon: 'Map'
+        },
+        {
+            title: "Dedicated Consultant",
+            description: "A dedicated consultant to guide you through every step of the process.",
+            icon: 'UserCheck'
+        }
+    ],
+    useCases: [],
+    faqs: [],
+    pricing: [
+        { name: 'Standard', price: '2500', priceSuffix: '/ project', features: ['Initial Consultation', 'Market Analysis Report', 'Strategic Roadmap'], cta: 'Inquire Now', isFeatured: true },
+    ],
+    recommendedProductIds: ['10', '11', '12', '13', '14'],
+  },
+  {
+    id: '6',
+    slug: 'silk-blend-scarf',
+    name: 'Silk Blend Scarf',
+    category: 'Women',
+    subcategory: 'Accessories',
+    model: 'B2C',
+    tagline: 'An elegant touch of color.',
+    description: 'A beautiful and lightweight scarf made from a blend of silk and modal. Perfect for adding a pop of color to any outfit.',
+    keyBenefit: 'Lightweight & Versatile',
+    price: 45,
+    discountPrice: 35,
+    status: 'Sale',
+    isFeatured: true,
+    heroImage: 'use-case-1',
+    features: [
+      { title: 'Vibrant Colors', description: 'Available in a wide range of rich, vibrant colors.', icon: 'Palette' },
+      { title: 'Luxurious Feel', description: 'The silk-modal blend is incredibly soft and smooth to the touch.', icon: 'Feather' },
+      { title: 'Year-Round Wear', description: 'Lightweight enough for spring and summer, yet provides warmth in cooler months.', icon: 'CalendarDays' },
+    ],
+    useCases: [],
+    faqs: [],
+    pricing: [
+      { name: 'Standard', price: '45', priceSuffix: '', features: ['Free Shipping', 'Easy Returns'], cta: 'Add to Cart', isFeatured: true },
+    ],
+    recommendedProductIds: ['1', '2', '8'],
+  },
+  {
+    id: '7',
+    slug: 'mens-leather-belt',
+    name: 'Men\'s Leather Belt',
+    category: 'Men',
+    subcategory: 'Accessories',
+    model: 'B2C',
+    tagline: 'The perfect finishing touch.',
+    description: 'A classic leather belt made from genuine leather with a solid brass buckle. A durable and stylish accessory for any man.',
+    keyBenefit: 'Durable & Classic',
+    price: 48,
+    status: 'Popular',
+    isFeatured: true,
+    offer: 'BOGO',
+    heroImage: 'use-case-2',
+    features: [
+      { title: 'Full-Grain Leather', description: 'Made from high-quality full-grain leather that will last for years.', icon: 'ShieldCheck' },
+      { title: 'Solid Brass Buckle', description: 'A sturdy and stylish buckle that resists corrosion.', icon: 'Gem' },
+      { title: 'Versatile Style', description: 'Perfect for both casual and formal occasions.', icon: 'Users' },
+    ],
+    useCases: [],
+    faqs: [],
+    pricing: [
+      { name: 'Standard', price: '48', priceSuffix: '', features: ['5-Year Warranty', 'Free Shipping'], cta: 'Add to Cart', isFeatured: true },
+    ],
+    recommendedProductIds: ['3'],
+  },
+  {
+    id: '8',
+    slug: 'floral-print-dress',
+    name: 'Floral Print Dress',
+    category: 'Women',
+    subcategory: 'Dresses',
+    model: 'B2C',
+    tagline: 'Bloom with style.',
+    description: 'A beautiful floral dress with a flattering silhouette. Made from lightweight fabric, it\'s perfect for sunny days.',
+    keyBenefit: 'Light & Airy',
+    price: 85,
+    status: 'New',
+    isFeatured: true,
+    heroImage: 'product-pixel-forge',
+    features: [
+      { title: 'Vibrant Floral Print', description: 'A stunning and colorful print that stands out.', icon: 'Flower' },
+      { title: 'Comfortable Fabric', description: 'Made from a soft, breathable material for all-day comfort.', icon: 'Wind' },
+      { title: 'Elegant Design', description: 'Features a cinched waist and flowing skirt for a classic look.', icon: 'Sparkles' },
+    ],
+    useCases: [],
+    faqs: [],
+    pricing: [
+      { name: 'Standard', price: '85', priceSuffix: '', features: ['Free Shipping', 'Easy Returns'], cta: 'Add to Cart', isFeatured: true },
+    ],
+    recommendedProductIds: ['1', '2', '6'],
+  },
+  {
+    id: '9',
+    slug: 'graphic-print-tshirt',
+    name: 'Kids\' Graphic T-Shirt',
+    category: 'Kids',
+    subcategory: 'T-Shirts',
+    model: 'B2C',
+    tagline: 'Cool and comfy for everyday adventures.',
+    description: 'A fun and comfortable t-shirt with a playful graphic print. Made from 100% cotton for a soft feel.',
+    keyBenefit: 'Playful & Durable',
+    price: 22,
+    status: 'New',
+    isFeatured: false,
+    offer: 'B2G1',
+    heroImage: 'product-connect-iq',
+    features: [
+      { title: '100% Cotton', description: 'Soft and breathable cotton that\'s perfect for kids.', icon: 'Leaf' },
+      { title: 'Fun Graphic', description: 'A cool, kid-friendly graphic that adds a touch of personality.', icon: 'Smile' },
+      { title: 'Durable Construction', description: 'Made to withstand playtime and frequent washing.', icon: 'ShieldCheck' },
+    ],
+    useCases: [],
+    faqs: [],
+    pricing: [
+      { name: 'Standard', price: '22', priceSuffix: '', features: ['Free Shipping on orders over $50', 'Easy Returns'], cta: 'Add to Cart', isFeatured: true },
+    ],
+    recommendedProductIds: ['4'],
+  },
+  {
+    id: '10',
+    slug: 'visa-processing-compliance',
+    name: 'Visa Processing & Compliance',
+    category: 'Services',
+    subcategory: 'Global Trade',
+    model: 'B2B',
+    tagline: 'Navigate international travel regulations with ease.',
+    description: 'Our experts handle the entire visa application process, ensuring all documentation is accurate and compliant with the latest regulations for your destination country.',
+    keyBenefit: 'Hassle-Free Visas',
+    price: 800,
+    status: 'New',
+    isFeatured: false,
+    heroImage: 'service-visa',
+    features: [
+      { title: 'End-to-End Application Management', description: 'We manage everything from form submission to appointment scheduling.', icon: 'FileCheck' },
+      { title: 'Documentation Verification', description: 'Thorough review of all required documents to prevent delays or rejections.', icon: 'ClipboardCheck' },
+      { title: 'Regulatory Updates', description: 'Stay informed on changing visa policies and entry requirements.', icon: 'Globe' }
+    ],
+    useCases: [],
+    faqs: [],
+    pricing: [
+      { name: 'Per Traveler', price: '800', priceSuffix: '', features: ['Full application handling', 'Document checklist', 'Status updates'], cta: 'Get Started', isFeatured: true }
+    ],
+    recommendedProductIds: ['5', '11', '12', '13', '14'],
+  },
+  {
+    id: '11',
+    slug: 'logistics-customs-clearance',
+    name: 'Logistics & Customs Clearance',
+    category: 'Services',
+    subcategory: 'Global Trade',
+    model: 'B2B',
+    tagline: 'Streamline your international shipping and importing.',
+    description: 'We provide comprehensive logistics support, from freight forwarding to customs brokerage, ensuring your goods cross borders smoothly and efficiently.',
+    keyBenefit: 'Efficient Importing',
+    price: 3200,
+    status: 'New',
+    isFeatured: false,
+    heroImage: 'service-logistics',
+    features: [
+      { title: 'Freight Forwarding', description: 'Reliable and cost-effective shipping solutions by air, sea, and land.', icon: 'Ship' },
+      { title: 'Customs Brokerage', description: 'Expert handling of all customs documentation and duties to ensure compliance.', icon: 'BookUser' },
+      { title: 'Warehouse & Distribution', description: 'Secure storage and efficient distribution of your imported goods.', icon: 'Warehouse' }
+    ],
+    useCases: [],
+    faqs: [],
+    pricing: [
+      { name: 'Per Shipment', price: '3200', priceSuffix: '', features: ['Customs filing', 'Freight coordination', 'Real-time tracking'], cta: 'Get a Quote', isFeatured: true }
+    ],
+    recommendedProductIds: ['5', '10', '12', '13', '14'],
+  },
+  {
+    id: '12',
+    slug: 'market-analysis-entry',
+    name: 'Market Analysis & Entry Strategy',
+    category: 'Services',
+    subcategory: 'Global Trade',
+    model: 'B2B',
+    tagline: 'Enter new markets with data-driven confidence.',
+    description: 'Our team delivers in-depth market research, competitive analysis, and a tailored entry strategy to maximize your success in foreign markets.',
+    keyBenefit: 'Informed Decisions',
+    price: 5500,
+    status: 'Popular',
+    isFeatured: false,
+    heroImage: 'service-market-analysis',
+    features: [
+      { title: 'Competitive Landscape', description: 'Comprehensive analysis of key competitors, pricing, and market share.', icon: 'Target' },
+      { title: 'Consumer Behavior Insights', description: 'Understand local customer needs, preferences, and purchasing habits.', icon: 'Users' },
+      { title: 'Go-to-Market Roadmap', description: 'A step-by-step plan for product launch, marketing, and sales channel development.', icon: 'Map' }
+    ],
+    useCases: [],
+    faqs: [],
+    pricing: [
+      { name: 'Per Market', price: '5500', priceSuffix: '', features: ['Full market report', 'Competitor benchmark', 'Strategic recommendations'], cta: 'Learn More', isFeatured: true }
+    ],
+    recommendedProductIds: ['5', '10', '11', '13', '14'],
+  },
+  {
+    id: '13',
+    slug: 'travel-accommodation-logistics',
+    name: 'Travel & Accommodation Logistics',
+    category: 'Services',
+    subcategory: 'Global Trade',
+    model: 'B2B',
+    tagline: 'Seamless travel arrangements for your business trip.',
+    description: 'We handle all aspects of your business travel, including flight bookings, ground transportation, and accommodations that meet your professional needs and budget.',
+    keyBenefit: 'Stress-Free Travel',
+    price: 1200,
+    status: 'New',
+    isFeatured: false,
+    heroImage: 'service-travel',
+    features: [
+      { title: 'Optimized Flight Itineraries', description: 'Booking the most efficient and cost-effective routes for your team.', icon: 'Plane' },
+      { title: 'Corporate Housing', description: 'Comfortable and convenient accommodations, from hotels to serviced apartments.', icon: 'Hotel' },
+      { title: 'Ground Transportation', description: 'Coordination of airport transfers, rental cars, and local transport.', icon: 'Car' }
+    ],
+    useCases: [],
+    faqs: [],
+    pricing: [
+      { name: 'Per Traveler', price: '1200', priceSuffix: '', features: ['Flight & hotel booking', '24/7 travel support', 'Itinerary management'], cta: 'Arrange Trip', isFeatured: true }
+    ],
+    recommendedProductIds: ['5', '10', '11', '12', '14'],
+  },
+  {
+    id: '14',
+    slug: 'global-trade-accelerator-package',
+    name: 'Global Trade Accelerator Package',
+    category: 'Services',
+    subcategory: 'Global Trade',
+    model: 'B2B',
+    tagline: 'Your all-in-one solution for international expansion.',
+    description: 'This comprehensive package combines all our essential global trade services to provide a seamless, end-to-end solution for your foreign business ventures. From initial market research to final customs clearance, we\'ve got you covered.',
+    keyBenefit: 'Seamless Expansion',
+    price: 9500,
+    discountPrice: 8500,
+    status: 'Popular',
+    isFeatured: true,
+    heroImage: 'service-package',
+    videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+    features: [
+      { title: 'All-Inclusive Services', description: 'Includes Visa Processing, Logistics, Market Analysis, and Travel Arrangements.', icon: 'Package' },
+      { title: 'Dedicated Project Manager', description: 'A single point of contact to coordinate all aspects of your project.', icon: 'UserCog' },
+      { title: 'Cost Savings', description: 'Bundled pricing offers significant savings compared to individual service costs.', icon: 'BadgePercent' }
+    ],
+    useCases: [],
+    faqs: [],
+    pricing: [
+      { name: 'Complete Package', price: '8500', priceSuffix: '/ project', features: ['Visa & Travel for 1', '1 Market Analysis Report', '1 Shipment Logistics', 'Dedicated Manager'], cta: 'Launch Globally', isFeatured: true }
+    ],
+    recommendedProductIds: ['5', '10', '11', '12', '13'],
+  }
+];

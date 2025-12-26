@@ -1,0 +1,76 @@
+{
+  "placeholderImages": [
+    {
+      "id": "hero-main",
+      "description": "Abstract hero image for the main page",
+      "imageUrl": "https://images.unsplash.com/photo-1604079628040-94301bb21b91?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMGdyYWRpZW50fGVufDB8fHx8MTc2NjQxNzQ1OHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "abstract gradient"
+    },
+    {
+      "id": "product-nexus-flow",
+      "description": "Image for NexusFlow product",
+      "imageUrl": "https://images.unsplash.com/photo-1759661990336-51bd4b951fea?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxkYXRhJTIwZmxvd2NoYXJ0fGVufDB8fHx8MTc2NjM3NzU3MXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "data flowchart"
+    },
+    {
+      "id": "product-pixel-forge",
+      "description": "Image for PixelForge product",
+      "imageUrl": "https://images.unsplash.com/photo-1635322966219-b75ed372eb01?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxkaWdpdGFsJTIwYXJ0fGVufDB8fHx8MTc2NjQwOTc1OXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "digital art"
+    },
+    {
+      "id": "product-data-sphere",
+      "description": "Image for DataSphere product",
+      "imageUrl": "https://images.unsplash.com/photo-1666875753105-c63a6f3bdc86?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxkYXRhJTIwYW5hbHl0aWNzfGVufDB8fHx8MTc2NjQ5MTQzOXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "data analytics"
+    },
+    {
+      "id": "product-connect-iq",
+      "description": "Image for ConnectIQ product",
+      "imageUrl": "https://images.unsplash.com/photo-1600880292089-90a7e086ee0c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx0ZWFtJTIwY29sbGFib3JhdGlvbnxlbnwwfHx8fDE3NjY0NTYyMTl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "team collaboration"
+    },
+    {
+      "id": "use-case-1",
+      "description": "An image illustrating a use case for a product",
+      "imageUrl": "https://images.unsplash.com/photo-1616587656977-ac36a5a430bc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxidXNpbmVzcyUyMG1lZXRpbmd8ZW58MHx8fHwxNzY2NDY1MDc3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "business meeting"
+    },
+    {
+      "id": "use-case-2",
+      "description": "An image illustrating another use case for a product",
+      "imageUrl": "https://images.unsplash.com/photo-1613666517563-d19a4585d1fe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxjcmVhdGl2ZSUyMHdvcmtzaG9wfGVufDB8fHx8MTc2NjQ5NTUwOXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "creative workshop"
+    },
+    {
+      "id": "service-visa",
+      "description": "Image for Visa Processing service",
+      "imageUrl": "https://images.unsplash.com/photo-1765372807652-090c8f6e118f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxwYXNzcG9ydCUyMGRvY3VtZW50c3xlbnwwfHx8fDE3NjY1NTczOTN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "passport documents"
+    },
+    {
+      "id": "service-logistics",
+      "description": "Image for Logistics & Customs service",
+      "imageUrl": "https://images.unsplash.com/photo-1613690399151-65ea69478674?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxjYXJnbyUyMHNoaXB8ZW58MHx8fHwxNzY2NDg1MzA5fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cargo ship"
+    },
+    {
+      "id": "service-market-analysis",
+      "description": "Image for Market Analysis service",
+      "imageUrl": "https://images.unsplash.com/photo-1628348068343-c6a848d2b6dd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMGNoYXJ0c3xlbnwwfHx8fDE3NjY1NTczOTR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "business charts"
+    },
+    {
+      "id": "service-travel",
+      "description": "Image for Travel & Accommodation service",
+      "imageUrl": "https://images.unsplash.com/photo-1632504102536-6e1e1bb00a8e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxhaXJwb3J0JTIwbG9iYnl8ZW58MHx8fHwxNzY2NTU3MzkzfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "airport lobby"
+    },
+    {
+      "id": "service-package",
+      "description": "Image for the Global Trade Accelerator Package",
+      "imageUrl": "https://images.unsplash.com/photo-1462899006636-339e08d1844e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxnbG9iYWwlMjBidXNpbmVzc3xlbnwwfHx8fDE3NjY1NTczOTN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "global business"
+    }
+  ]
+}
