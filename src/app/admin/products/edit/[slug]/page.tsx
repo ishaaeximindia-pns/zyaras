@@ -24,6 +24,7 @@ import { useEffect } from 'react';
 import { setDocumentNonBlocking } from '@/firebase';
 import type { ProductDocument } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
+import { ProductHeroImageField } from '@/components/admin/ProductHeroImageField';
 
 const variantOptionSchema = z.object({
   value: z.string().min(1, 'Option value cannot be empty'),
@@ -351,9 +352,7 @@ export default function ProductEditPage() {
               <CardHeader>
                 <CardTitle>Product image</CardTitle>
                 <CardDescription>
-                  Use a preset image ID (e.g. <code className="text-xs">product-nexus-flow</code>) from the catalog in{' '}
-                  <code className="text-xs">placeholder-images.json</code>, or paste a full <strong>https://</strong> URL
-                  (Firebase Storage, CDN, etc.).
+                  Upload from your device or use the camera on mobile. You can still use a preset ID or paste a URL via the link below.
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -362,13 +361,13 @@ export default function ProductEditPage() {
                   name="heroImage"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Image ID or URL</FormLabel>
                       <FormControl>
-                        <Input {...field} placeholder="product-nexus-flow or https://..." />
+                        <ProductHeroImageField
+                          value={field.value}
+                          onChange={field.onChange}
+                          disabled={field.disabled}
+                        />
                       </FormControl>
-                      <FormDescription>
-                        There is no in-browser file upload yet—upload the file in Firebase Storage (or another host), copy the public URL, and paste it here.
-                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
