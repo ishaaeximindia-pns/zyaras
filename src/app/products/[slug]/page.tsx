@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 import { Suspense } from 'react';
 import { notFound, useParams, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { resolveHeroImage } from '@/lib/placeholder-images';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/context/CartContext';
 import { useToast } from '@/hooks/use-toast';
@@ -110,7 +110,7 @@ function ProductPageContent() {
 
   const heroImage = useMemo(() => {
     if (!product) return null;
-    return PlaceHolderImages.find((p) => p.id === product.heroImage);
+    return resolveHeroImage(product.heroImage);
   }, [product]);
   
   const currencySymbol = storeSettings.currency === 'INR' ? '₹' : '$';
@@ -238,13 +238,22 @@ function ProductPageContent() {
                   allowFullScreen
                 ></iframe>
               ) : heroImage && (
-                <Image
-                  src={heroImage.imageUrl}
-                  alt={product.name}
-                  fill
-                  className="object-cover"
-                  data-ai-hint={heroImage.imageHint}
-                />
+                heroImage.isDirectUrl ? (
+                  <img
+                    src={heroImage.imageUrl}
+                    alt={product.name}
+                    className="absolute inset-0 h-full w-full object-cover"
+                    data-ai-hint={heroImage.imageHint}
+                  />
+                ) : (
+                  <Image
+                    src={heroImage.imageUrl}
+                    alt={product.name}
+                    fill
+                    className="object-cover"
+                    data-ai-hint={heroImage.imageHint}
+                  />
+                )
               )}
             </div>
           </div>

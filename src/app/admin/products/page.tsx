@@ -11,7 +11,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import Image from 'next/image';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { resolveHeroImage } from '@/lib/placeholder-images';
 import Link from 'next/link';
 import { storeSettings } from '@/data/settings';
 import { useCollection, useFirestore, useMemoFirebase, deleteDocumentNonBlocking } from '@/firebase';
@@ -87,18 +87,26 @@ export default function AdminProductsPage() {
                 </TableRow>
               ))}
               {products && products.map((product) => {
-                 const productImage = PlaceHolderImages.find(p => p.id === product.heroImage);
+                 const productImage = resolveHeroImage(product.heroImage);
                  return (
                     <TableRow key={product.id}>
                         <TableCell className="hidden sm:table-cell">
                         {productImage && (
-                            <Image
+                            productImage.isDirectUrl ? (
+                              <img
+                                alt={product.name}
+                                className="aspect-square h-16 w-16 rounded-md object-cover"
+                                src={productImage.imageUrl}
+                              />
+                            ) : (
+                              <Image
                                 alt={product.name}
                                 className="aspect-square rounded-md object-cover"
                                 height="64"
                                 src={productImage.imageUrl}
                                 width="64"
-                            />
+                              />
+                            )
                         )}
                         </TableCell>
                         <TableCell className="font-medium">{product.name}</TableCell>

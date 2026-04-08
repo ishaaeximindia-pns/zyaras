@@ -14,7 +14,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import type { ProductDocument } from '@/lib/types';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { resolveHeroImage } from '@/lib/placeholder-images';
 import { ArrowRight, Plus, Minus } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useToast } from '@/hooks/use-toast';
@@ -26,7 +26,7 @@ type ProductCardProps = {
 };
 
 export default function ProductCard({ product }: ProductCardProps) {
-  const productImage = PlaceHolderImages.find((p) => p.id === product.heroImage);
+  const productImage = resolveHeroImage(product.heroImage);
   const { cart, addToCart, updateQuantity, removeFromCart, getCartItemId } = useCart();
   const { toast } = useToast();
 
@@ -77,14 +77,23 @@ export default function ProductCard({ product }: ProductCardProps) {
         <Link href={`/products/${product.slug}`} className="block">
           <div className="relative h-48 w-full">
             {productImage ? (
-              <Image
-                src={productImage.imageUrl}
-                alt={product.name}
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                data-ai-hint={productImage.imageHint}
-              />
+              productImage.isDirectUrl ? (
+                <img
+                  src={productImage.imageUrl}
+                  alt={product.name}
+                  className="absolute inset-0 h-full w-full object-cover"
+                  data-ai-hint={productImage.imageHint}
+                />
+              ) : (
+                <Image
+                  src={productImage.imageUrl}
+                  alt={product.name}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  data-ai-hint={productImage.imageHint}
+                />
+              )
             ) : (
               <div className="h-full w-full bg-muted" />
             )}

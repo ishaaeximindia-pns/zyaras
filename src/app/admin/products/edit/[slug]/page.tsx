@@ -105,6 +105,7 @@ export default function ProductEditPage() {
       features: [],
       variants: [],
       recommendedProductIds: [],
+      heroImage: 'product-nexus-flow',
     },
   });
 
@@ -346,6 +347,35 @@ export default function ProductEditPage() {
           </div>
           
           <div className="lg:col-span-1 grid gap-6 content-start">
+            <Card>
+              <CardHeader>
+                <CardTitle>Product image</CardTitle>
+                <CardDescription>
+                  Use a preset image ID (e.g. <code className="text-xs">product-nexus-flow</code>) from the catalog in{' '}
+                  <code className="text-xs">placeholder-images.json</code>, or paste a full <strong>https://</strong> URL
+                  (Firebase Storage, CDN, etc.).
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <FormField
+                  control={form.control}
+                  name="heroImage"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Image ID or URL</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="product-nexus-flow or https://..." />
+                      </FormControl>
+                      <FormDescription>
+                        There is no in-browser file upload yet—upload the file in Firebase Storage (or another host), copy the public URL, and paste it here.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </CardContent>
+            </Card>
+
              <Card>
               <CardHeader>
                 <CardTitle>Organize</CardTitle>

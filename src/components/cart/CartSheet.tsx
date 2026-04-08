@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useCart } from '@/context/CartContext';
 import Image from 'next/image';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { resolveHeroImage } from '@/lib/placeholder-images';
 import { Input } from '../ui/input';
 import { Trash2 } from 'lucide-react';
 import { Alert, AlertDescription } from '../ui/alert';
@@ -50,18 +50,26 @@ export default function CartSheet({ children, model }: { children: React.ReactNo
             <div className="space-y-4">
               {cart.map((item) => {
                 const product = item.product as ProductDocument;
-                const productImage = PlaceHolderImages.find(p => p.id === product.heroImage)
+                const productImage = resolveHeroImage(product.heroImage)
                 const cartItemId = getCartItemId(product, item.selectedVariants);
                 return (
                   <div key={cartItemId} className="flex items-start gap-4">
                      <div className="relative h-16 w-16 rounded-md overflow-hidden">
                         {productImage && (
-                          <Image
-                            src={productImage.imageUrl}
-                            alt={product.name}
-                            fill
-                            className="object-cover"
-                          />
+                          productImage.isDirectUrl ? (
+                            <img
+                              src={productImage.imageUrl}
+                              alt={product.name}
+                              className="absolute inset-0 h-full w-full object-cover"
+                            />
+                          ) : (
+                            <Image
+                              src={productImage.imageUrl}
+                              alt={product.name}
+                              fill
+                              className="object-cover"
+                            />
+                          )
                         )}
                      </div>
                     <div className="flex-1">

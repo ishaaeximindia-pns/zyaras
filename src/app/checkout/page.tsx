@@ -13,7 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Separator } from '@/components/ui/separator';
 import { useCart } from '@/context/CartContext';
 import Image from 'next/image';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { resolveHeroImage } from '@/lib/placeholder-images';
 import type { AddressDocument, ProductDocument, Order, OrderItem } from '@/lib/types';
 import { addDocumentNonBlocking } from '@/firebase/non-blocking-updates';
 import { collection, doc } from 'firebase/firestore';
@@ -230,12 +230,22 @@ export default function CheckoutPage() {
                 <div className="space-y-2 max-h-64 overflow-y-auto pr-2">
                   {cart.map(item => {
                     const product = item.product as ProductDocument;
-                    const productImage = PlaceHolderImages.find(p => p.id === product.heroImage);
+                    const productImage = resolveHeroImage(product.heroImage);
                     const cartItemId = `${product.id}-${JSON.stringify(item.selectedVariants)}`;
                     return (
                       <div key={cartItemId} className="flex items-center gap-4 text-sm">
                         <div className="relative h-12 w-12 rounded-md overflow-hidden">
-                          {productImage && <Image src={productImage.imageUrl} alt={product.name} fill className="object-cover" />}
+                          {productImage && (
+                            productImage.isDirectUrl ? (
+                              <img
+                                src={productImage.imageUrl}
+                                alt={product.name}
+                                className="absolute inset-0 h-full w-full object-cover"
+                              />
+                            ) : (
+                              <Image src={productImage.imageUrl} alt={product.name} fill className="object-cover" />
+                            )
+                          )}
                         </div>
                         <div className="flex-1">
                           <p className="font-medium">{product.name}</p>
