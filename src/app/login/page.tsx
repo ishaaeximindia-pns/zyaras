@@ -20,7 +20,7 @@ import { useAuth, useUser, useFirestore, initiateEmailSignIn, initiateGoogleSign
 import { useRouter } from 'next/navigation';
 import { useEffect, useState, useRef } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { RecaptchaVerifier, ConfirmationResult } from 'firebase/auth';
+import { RecaptchaVerifier, ConfirmationResult, sendPasswordResetEmail } from 'firebase/auth';
 import { setDocumentNonBlocking } from '@/firebase';
 import { doc } from 'firebase/firestore';
 import { Chrome } from 'lucide-react';
@@ -44,6 +44,7 @@ export default function LoginPage() {
   const [showPhoneAuth, setShowPhoneAuth] = useState(false);
   const [confirmationResult, setConfirmationResult] = useState<ConfirmationResult | null>(null);
   const [otp, setOtp] = useState('');
+  const [isSendingReset, setIsSendingReset] = useState(false);
   const recaptchaVerifierRef = useRef<RecaptchaVerifier | null>(null);
 
   const form = useForm<LoginFormValues>({
@@ -114,6 +115,42 @@ export default function LoginPage() {
         description: error.message || 'An error occurred during login.',
         variant: 'destructive',
       });
+    }
+  };
+
+  const handleForgotPassword = async () => {
+    const email = form.getValues('email').trim();
+    if (!email) {
+      toast({
+        title: 'Email required',
+        description: 'Enter your email above, then tap Forgot your password?',
+        variant: 'destructive',
+      });
+      return;
+    }
+    if (!auth) {
+      toast({
+        title: 'Error',
+        description: 'Authentication service is not available.',
+        variant: 'destructive',
+      });
+      return;
+    }
+    setIsSendingReset(true);
+    try {
+      await sendPasswordResetEmail(auth, email);
+      toast({
+        title: 'Check your email',
+        description: `We sent a password reset link to ${email}.`,
+      });
+    } catch (error: any) {
+      toast({
+        title: 'Could not send reset email',
+        description: error.message || 'Try again or contact support.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsSendingReset(false);
     }
   };
 
@@ -228,9 +265,14 @@ export default function LoginPage() {
                   <FormItem>
                      <div className="flex items-center">
                         <FormLabel>Password</FormLabel>
-                        <Link href="#" className="ml-auto inline-block text-sm underline">
-                        Forgot your password?
-                        </Link>
+                        <button
+                          type="button"
+                          onClick={handleForgotPassword}
+                          disabled={isSendingReset}
+                          className="ml-auto inline-block text-sm underline text-primary hover:text-primary/80 disabled:opacity-50"
+                        >
+                          {isSendingReset ? 'Sending…' : 'Forgot your password?'}
+                        </button>
                     </div>
                     <FormControl>
                       <PasswordInput {...field} />
